@@ -43,7 +43,7 @@ public class Player {
     }
 
     public void turn() {
-        int stepVal = roll(); // old version in Java
+        int stepVal = roll();
         move(stepVal);
     }
 
@@ -61,17 +61,19 @@ public class Player {
         System.out.println(prevRoll);
         System.out.println(location.getSeqNum());
 
+        // getting ratios
         float xFraction = ((float) location.getX()) / game.getBoard().getXrange();
         float yFraction = ((float) location.getY()) / game.getBoard().getYrange();
-//        gameUI.batch.begin();
+
+        // drawing player piece
         gameUI.batch.draw(playerTexture,
                 xFraction * Gdx.graphics.getWidth(), yFraction * Gdx.graphics.getHeight(),
                 sizeWidth, sizeHeight);
+
+        // outputting data about player's move
         gameUI.font.draw(gameUI.batch, name + " previous moving roll: " + prevRoll, 0, 440 - 20 * playerNum);
         gameUI.font.draw(gameUI.batch, name + " previous position: " + prevLocation.getSeqNum(), 0, 380 - 20 * playerNum);
         gameUI.font.draw(gameUI.batch, name + " current position: " + location.getSeqNum(), 0, 300 - 20 * playerNum);
-//        gameUI.batch.end();
-//        gameUI.font.draw(gameUI.batch, name + " previous roll: " + prevRoll, 0, 400 + 20 *);
 
     }
 
@@ -80,10 +82,8 @@ public class Player {
         if (set) {
             prevRoll = roll;
         }
-//        prevRoll = game.getDice().nextVal();
         System.out.println(name + " rolled a " + prevRoll); // debugging line
         return roll;
-//        return prevRoll;
     }
 
     private int roll() {
