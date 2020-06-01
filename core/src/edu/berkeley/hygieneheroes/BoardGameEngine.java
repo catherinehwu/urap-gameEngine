@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -45,6 +46,17 @@ public class BoardGameEngine implements ApplicationListener {
 	// Main Menu with Stage & Buttons
 	private Stage stage;
 	private Skin skin;
+	private TextButton singlePlay;
+	private TextButton doublePlay;
+	private TextButton triplePlay;
+	private TextButton quadPlay;
+	private Label name;
+	private Label gameName;
+	private Label instruction;
+	private TextField player4;
+	private TextField player3;
+	private TextField player2;
+	private TextField player1;
 
 	@Override
 	public void create () {
@@ -83,12 +95,9 @@ public class BoardGameEngine implements ApplicationListener {
 			mainMenuButton();
 
 			// ORIGINAL MAIN MENU
-			// mainMenu();
+//			mainMenu();
 
-			// Switch from Main to Game
-			// old conditional statement
-			// Gdx.input.isTouched() || Gdx.input.isKeyPressed(Input.Keys.SPACE)
-
+			// Switch from Main to Game for ORIGINAL MAIN MENU
 			if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)
 					|| Gdx.input.isKeyPressed(Input.Keys.NUMPAD_1)) {
 				setGame(1);
@@ -104,15 +113,8 @@ public class BoardGameEngine implements ApplicationListener {
 			}
 
 		} else if (gameNotOver){
+			// GAME SCREEN
 			gameScreen();
-//			if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
-//				Player p = game.currentPlayer();
-//				p.guiMove(1);
-//				batch.begin();
-//				p.draw(this);
-//				batch.end();
-////				game.activate();
-//			}
 
 			// checking for wins
 			if (game.gameOver()) {
@@ -120,84 +122,70 @@ public class BoardGameEngine implements ApplicationListener {
 				winner = game.winner();
 			}
 		} else {
+			// WINNING - GAME OVER SCREEN
 			winningScreen();
 		}
-
-//		batch.draw(img, 0, 0);
-//		batch.end();
 	}
 
 	private void setMainMenu() {
 		stage = new Stage();
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-		final TextButton singlePlay = new TextButton("1 Player", skin);
+		singlePlay = new TextButton("1 Player", skin);
 		singlePlay.setWidth(150);
 		singlePlay.setHeight(100);
 		singlePlay.setPosition(windWidth / 8, 150, Align.center);
 		singlePlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				singlePlay.remove();
-				Label caption = new Label("Game Begins!", skin);
-				caption.setX(windWidth / 2, Align.center);
-				stage.addActor(caption);
+				getPlayerDetails(1);
 			}
 		});
 
-		final TextButton doublePlay = new TextButton("2 Player", skin);
+		doublePlay = new TextButton("2 Player", skin);
 		doublePlay.setWidth(150);
 		doublePlay.setHeight(100);
 		doublePlay.setPosition(3 * windWidth / 8, 150, Align.center);
 		doublePlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				doublePlay.remove();
-				Label caption = new Label("Game Begins (2)!", skin);
-				caption.setX(windWidth / 2, Align.center);
-				stage.addActor(caption);
+				getPlayerDetails(2);
 			}
 		});
 
-		final TextButton triplePlay = new TextButton("3 Player", skin);
+		triplePlay = new TextButton("3 Player", skin);
 		triplePlay.setWidth(150);
 		triplePlay.setHeight(100);
 		triplePlay.setPosition(5 * windWidth / 8, 150, Align.center);
 		triplePlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				triplePlay.remove();
-				Label caption = new Label("Game Begins (3)!", skin);
-				caption.setX(windWidth / 2, Align.center);
-				stage.addActor(caption);
+				getPlayerDetails(3);
 			}
 		});
 
-		final TextButton quadPlay = new TextButton("4 Player", skin);
+		quadPlay = new TextButton("4 Player", skin);
 		quadPlay.setWidth(150);
 		quadPlay.setHeight(100);
 		quadPlay.setPosition(7 * windWidth / 8, 150, Align.center);
 		quadPlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				quadPlay.remove();
-				Label caption = new Label("Game Begins (4)!", skin);
-				caption.setX(windWidth / 2, Align.center);
-				stage.addActor(caption);
+				getPlayerDetails(4);
 			}
 		});
 
-		Label name = new Label("Hygiene Heroes", skin);
+		name = new Label("Hygiene Heroes", skin);
 		name.setColor(Color.BLACK);
 		name.setX(windWidth / 2, Align.center);
 		name.setY(windHeight - windHeight / 12);
 
-		Label gameName = new Label("Dental Hygiene Game", skin);
+		gameName = new Label("Dental Hygiene Game", skin);
 		gameName.setColor(Color.BLACK);
 		gameName.setX(windWidth / 2, Align.center);
 		gameName.setY(windHeight - 2 * windHeight / 12);
 
-		Label instruction = new Label("Choose number of players to start game!", skin);
+		instruction = new Label("Choose number of players to start game!", skin);
 		instruction.setColor(Color.BLACK);
 		instruction.setX(windWidth / 2, Align.center);
 		instruction.setY(windHeight - 3 * windHeight / 12);
@@ -210,6 +198,78 @@ public class BoardGameEngine implements ApplicationListener {
 		stage.addActor(gameName);
 		stage.addActor(instruction);
 		Gdx.input.setInputProcessor(stage);
+	}
+
+	private void getPlayerDetails(final int num) {
+		singlePlay.remove();
+		doublePlay.remove();
+		triplePlay.remove();
+		quadPlay.remove();
+
+		instruction.setText("Enter the name of each player.");
+		instruction.setAlignment(Align.center);
+
+		switch(num) {
+			case 4:
+				player4 = new TextField("Player 4", skin);
+				player4.setPosition(windWidth / 2, (windHeight - 90)- 4 * windHeight / 6, Align.center);
+				Label player4Des = new Label("Type in Player 4's Name", skin);
+				player4Des.setColor(Color.BLUE);
+				player4Des.setPosition(windWidth / 2, (windHeight - 60)- 4 * windHeight / 6, Align.center);
+				stage.addActor(player4);
+				stage.addActor(player4Des);
+			case 3:
+				player3 = new TextField("Player 3", skin);
+				player3.setPosition(windWidth / 2, (windHeight - 90)- 3 * windHeight / 6, Align.center);
+				Label player3Des = new Label("Type in Player 3's Name", skin);
+				player3Des.setColor(Color.BLUE);
+				player3Des.setPosition(windWidth / 2, (windHeight - 60)- 3 * windHeight / 6, Align.center);
+				stage.addActor(player3);
+				stage.addActor(player3Des);
+			case 2:
+				player2 = new TextField("Player 2", skin);
+				player2.setPosition(windWidth / 2, (windHeight - 90)-  2 * windHeight / 6, Align.center);
+				Label player2Des = new Label("Type in Player 2's Name", skin);
+				player2Des.setColor(Color.BLUE);
+				player2Des.setPosition(windWidth / 2, (windHeight - 60)- 2 * windHeight / 6, Align.center);
+				stage.addActor(player2);
+				stage.addActor(player2Des);
+			case 1:
+				player1 = new TextField("Player 1", skin);
+				player1.setPosition(windWidth / 2, (windHeight - 90)- windHeight / 6, Align.center);
+				Label player1Des = new Label("Type in Player 1's Name", skin);
+				player1Des.setColor(Color.BLUE);
+				player1Des.setPosition(windWidth / 2, (windHeight - 60)- windHeight / 6, Align.center);
+				stage.addActor(player1);
+				stage.addActor(player1Des);
+				break;
+		}
+
+		TextButton submit = new TextButton("Start Game!", skin);
+		submit.setColor(Color.GREEN);
+		submit.setPosition(windWidth / 2, windHeight / 15, Align.center);
+		submit.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				buttonSetGame(num);
+				switch(num){
+					case 4:
+						String p4Name = player4.getText();
+						setPlayer(p4Name, 4);
+					case 3:
+						String p3Name = player3.getText();
+						setPlayer(p3Name, 3);
+					case 2:
+						String p2Name = player2.getText();
+						setPlayer(p2Name, 2);
+					case 1:
+						String p1Name = player1.getText();
+						setPlayer(p1Name, 1);
+						break;
+				}
+			}
+		});
+		stage.addActor(submit);
 	}
 
 	private void mainMenuButton() {
@@ -288,14 +348,10 @@ public class BoardGameEngine implements ApplicationListener {
 
 		int lineHeight = 0;
 		if (game != null) {
-//			int playerNum = 1;
 			for (Player p : game.getPlayersList()) {
 				layout.setText(font, p.getName(), Color.BLACK, width, Align.center, true);
 				font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 				p.draw(this);
-//				font.draw(batch, p.getName() + " previous roll: " + p.getPrevRoll(), 0, 440 - 20 * playerNum);
-
-//				playerNum += 1;
 				lineHeight += 50;
 			}
 		}
@@ -307,20 +363,12 @@ public class BoardGameEngine implements ApplicationListener {
 		layout.setText(font, "Tap or press space to roll.", Color.BLACK, width, Align.center, true);
 		font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 
-//		int counter = 0;
 		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
-//			Player p = game.currentPlayer();
-//			p.guiMove(1);
-//			p.draw(this);
-//			System.out.println(counter);
+			// Making a game move
 			game.activate(this);
-//			System.out.println("counter: " + counter);
-//			counter += 1;
 		}
 
-//		if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
-//			game.activate();
-//		}
+		// Displays message about the details of the last special move
 		displayGameMessage();
 		batch.end();
 	}
@@ -340,11 +388,23 @@ public class BoardGameEngine implements ApplicationListener {
 			initialize();
 			setPlayers();
 		} catch (Exception e) {
-			// do something
+			// do something - File Reading Errors
+		}
+	}
+
+	private void buttonSetGame(int num) {
+		numOfPlayers = num;
+		mainMenu = false;
+		try {
+			initialize();
+			game.setNumOfPlayers(num);
+		} catch (Exception e) {
+			// do something - File Reading Errors
 		}
 	}
 
 	private void initialize() throws FileNotFoundException {
+		// Currently Reading Config File for Dental Game
 		FileHandle configText = Gdx.files.internal("dental.txt");
 		Scanner config = new Scanner(configText.file());
 		Scanner setUp = new Scanner(config.nextLine());
@@ -389,6 +449,11 @@ public class BoardGameEngine implements ApplicationListener {
 			game.addPlayer(name, image, i);
 		}
 		game.setNumOfPlayers(numOfPlayers);
+	}
+
+	private void setPlayer(String name, int num) {
+		String image = "player" + num + ".png";
+		game.addPlayer(name, image, num);
 	}
 
 	@Override
