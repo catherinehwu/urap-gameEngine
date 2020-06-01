@@ -9,6 +9,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.io.FileNotFoundException;
@@ -16,11 +22,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BoardGameEngine implements ApplicationListener {
+	// Overall GUI
 	public SpriteBatch batch;
-	public Texture img;
 	public BitmapFont font;
 	public GlyphLayout layout;
 
+	// Game Functionality Parameters
 	private boolean mainMenu;
 	private boolean gameNotOver;
 	private Player winner;
@@ -29,28 +36,39 @@ public class BoardGameEngine implements ApplicationListener {
 	private String gameMessage;
 	private int gameMessNum;
 
+	// Background Image Layout
 	private Sprite sprite;
 	private Texture texture;
 	private int windWidth = 800;
 	private int windHeight = 480;
 
+	// Main Menu with Stage & Buttons
+	private Stage stage;
+	private Skin skin;
+
 	@Override
 	public void create () {
+		// Overall GUI
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		font.setColor(Color.BLACK);
 		layout = new GlyphLayout();
+
+		// Background board image
 		texture = new Texture(Gdx.files.internal("rectangularBoard.png"));
 		sprite = new Sprite(texture);
+
+		// Game Functionality
 		mainMenu = true;
 		gameNotOver = true;
 		winner = null;
-
 		gameMessage = "";
 		gameMessNum = 0;
 
+		// Main Menu Screen with Stage & Buttons
+		setMainMenu();
+
 //		this.setScreen(new MainMenuScreen(this));
-//		img = new Texture("badlogic.jpg");
 	}
 
 	@Override
@@ -61,7 +79,11 @@ public class BoardGameEngine implements ApplicationListener {
 //		batch.begin();
 
 		if (mainMenu) {
-			mainMenu();
+			// BUTTON MAIN MENU
+			mainMenuButton();
+
+			// ORIGINAL MAIN MENU
+			// mainMenu();
 
 			// Switch from Main to Game
 			// old conditional statement
@@ -103,6 +125,99 @@ public class BoardGameEngine implements ApplicationListener {
 
 //		batch.draw(img, 0, 0);
 //		batch.end();
+	}
+
+	private void setMainMenu() {
+		stage = new Stage();
+		skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+		final TextButton singlePlay = new TextButton("1 Player", skin);
+		singlePlay.setWidth(150);
+		singlePlay.setHeight(100);
+		singlePlay.setPosition(windWidth / 8, 150, Align.center);
+		singlePlay.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				singlePlay.remove();
+				Label caption = new Label("Game Begins!", skin);
+				caption.setX(windWidth / 2, Align.center);
+				stage.addActor(caption);
+			}
+		});
+
+		final TextButton doublePlay = new TextButton("2 Player", skin);
+		doublePlay.setWidth(150);
+		doublePlay.setHeight(100);
+		doublePlay.setPosition(3 * windWidth / 8, 150, Align.center);
+		doublePlay.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				doublePlay.remove();
+				Label caption = new Label("Game Begins (2)!", skin);
+				caption.setX(windWidth / 2, Align.center);
+				stage.addActor(caption);
+			}
+		});
+
+		final TextButton triplePlay = new TextButton("3 Player", skin);
+		triplePlay.setWidth(150);
+		triplePlay.setHeight(100);
+		triplePlay.setPosition(5 * windWidth / 8, 150, Align.center);
+		triplePlay.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				triplePlay.remove();
+				Label caption = new Label("Game Begins (3)!", skin);
+				caption.setX(windWidth / 2, Align.center);
+				stage.addActor(caption);
+			}
+		});
+
+		final TextButton quadPlay = new TextButton("4 Player", skin);
+		quadPlay.setWidth(150);
+		quadPlay.setHeight(100);
+		quadPlay.setPosition(7 * windWidth / 8, 150, Align.center);
+		quadPlay.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				quadPlay.remove();
+				Label caption = new Label("Game Begins (4)!", skin);
+				caption.setX(windWidth / 2, Align.center);
+				stage.addActor(caption);
+			}
+		});
+
+		Label name = new Label("Hygiene Heroes", skin);
+		name.setColor(Color.BLACK);
+		name.setX(windWidth / 2, Align.center);
+		name.setY(windHeight - windHeight / 12);
+
+		Label gameName = new Label("Dental Hygiene Game", skin);
+		gameName.setColor(Color.BLACK);
+		gameName.setX(windWidth / 2, Align.center);
+		gameName.setY(windHeight - 2 * windHeight / 12);
+
+		Label instruction = new Label("Choose number of players to start game!", skin);
+		instruction.setColor(Color.BLACK);
+		instruction.setX(windWidth / 2, Align.center);
+		instruction.setY(windHeight - 3 * windHeight / 12);
+
+		stage.addActor(singlePlay);
+		stage.addActor(doublePlay);
+		stage.addActor(triplePlay);
+		stage.addActor(quadPlay);
+		stage.addActor(name);
+		stage.addActor(gameName);
+		stage.addActor(instruction);
+		Gdx.input.setInputProcessor(stage);
+	}
+
+	private void mainMenuButton() {
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		stage.draw();
+		batch.end();
 	}
 
 	private void mainMenu() {
@@ -294,7 +409,6 @@ public class BoardGameEngine implements ApplicationListener {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
 		font.dispose();
 		texture.dispose();
 	}
