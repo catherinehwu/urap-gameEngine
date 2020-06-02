@@ -85,10 +85,6 @@ public class BoardGameEngine implements ApplicationListener {
 
 	@Override
 	public void render () {
-//		super.render();
-//		Gdx.gl.glClearColor(1, 1, 1, 1);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//		batch.begin();
 
 		if (mainMenu) {
 			// BUTTON MAIN MENU
@@ -112,18 +108,15 @@ public class BoardGameEngine implements ApplicationListener {
 				setGame(4);
 			}
 
-		} else if (gameNotOver){
+		} else {
 			// GAME SCREEN
 			gameScreen();
 
 			// checking for wins
-			if (game.gameOver()) {
+			if (gameNotOver && game.gameOver()) {
 				gameNotOver = false;
 				winner = game.winner();
 			}
-		} else {
-			// WINNING - GAME OVER SCREEN
-			winningScreen();
 		}
 	}
 
@@ -131,6 +124,7 @@ public class BoardGameEngine implements ApplicationListener {
 		stage = new Stage();
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 
+		// Single Player Button
 		singlePlay = new TextButton("1 Player", skin);
 		singlePlay.setWidth(150);
 		singlePlay.setHeight(100);
@@ -142,6 +136,7 @@ public class BoardGameEngine implements ApplicationListener {
 			}
 		});
 
+		// Two Player Button
 		doublePlay = new TextButton("2 Player", skin);
 		doublePlay.setWidth(150);
 		doublePlay.setHeight(100);
@@ -153,6 +148,7 @@ public class BoardGameEngine implements ApplicationListener {
 			}
 		});
 
+		// Three Player Button
 		triplePlay = new TextButton("3 Player", skin);
 		triplePlay.setWidth(150);
 		triplePlay.setHeight(100);
@@ -164,6 +160,7 @@ public class BoardGameEngine implements ApplicationListener {
 			}
 		});
 
+		// Four Player Button
 		quadPlay = new TextButton("4 Player", skin);
 		quadPlay.setWidth(150);
 		quadPlay.setHeight(100);
@@ -175,21 +172,25 @@ public class BoardGameEngine implements ApplicationListener {
 			}
 		});
 
+		// Label for Name
 		name = new Label("Hygiene Heroes", skin);
 		name.setColor(Color.BLACK);
 		name.setX(windWidth / 2, Align.center);
 		name.setY(windHeight - windHeight / 12);
 
+		// Label for Specific Game Name
 		gameName = new Label("Dental Hygiene Game", skin);
 		gameName.setColor(Color.BLACK);
 		gameName.setX(windWidth / 2, Align.center);
 		gameName.setY(windHeight - 2 * windHeight / 12);
 
+		// Label for Instructions
 		instruction = new Label("Choose number of players to start game!", skin);
 		instruction.setColor(Color.BLACK);
 		instruction.setX(windWidth / 2, Align.center);
 		instruction.setY(windHeight - 3 * windHeight / 12);
 
+		// Adding Buttons & Labels to the Stage
 		stage.addActor(singlePlay);
 		stage.addActor(doublePlay);
 		stage.addActor(triplePlay);
@@ -209,6 +210,7 @@ public class BoardGameEngine implements ApplicationListener {
 		instruction.setText("Enter the name of each player.");
 		instruction.setAlignment(Align.center);
 
+		// Adds TextFields for each player to enter their name
 		switch(num) {
 			case 4:
 				player4 = new TextField("Player 4", skin);
@@ -245,6 +247,7 @@ public class BoardGameEngine implements ApplicationListener {
 				break;
 		}
 
+		// Submission Button that processes player names & starts the game
 		TextButton submit = new TextButton("Start Game!", skin);
 		submit.setColor(Color.GREEN);
 		submit.setPosition(windWidth / 2, windHeight / 15, Align.center);
@@ -299,35 +302,11 @@ public class BoardGameEngine implements ApplicationListener {
 		batch.end();
 	}
 
-	private void winningScreen() {
-		Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-
+	private void winningScreen(int lineHeight) {
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
-
-		batch.draw(texture, 0, 0, 800, 480);
-
-		layout.setText(font, "Dental Game Board", Color.BLACK, width, Align.center, true);
-		font.draw(batch, layout, 0, height / 2 + layout.height / 2 + 100);
-
-		layout.setText(font, "Players: " + numOfPlayers, Color.BLACK, width, Align.center, true);
-		font.draw(batch, layout, 0, height / 2 + layout.height / 2 + 50);
-
-		int lineHeight = 0;
-		if (game != null) {
-			for (Player p : game.getPlayersList()) {
-				layout.setText(font, p.getName(), Color.BLACK, width, Align.center, true);
-				font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
-				p.draw(this);
-				lineHeight += 50;
-			}
-		}
-
 		layout.setText(font, "Winner: " + winner.getName(), Color.BLACK, width, Align.center, true);
 		font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
-		batch.end();
 	}
 
 	private void gameScreen() {
@@ -356,24 +335,32 @@ public class BoardGameEngine implements ApplicationListener {
 			}
 		}
 
-		layout.setText(font, game.currentTurnStr(), Color.BLACK, width, Align.center, true);
-		font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
-		lineHeight += 50;
+		if (gameNotOver) {
+			layout.setText(font, game.currentTurnStr(), Color.BLACK, width, Align.center, true);
+			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
+			lineHeight += 50;
 
-		layout.setText(font, "Tap or press space to roll.", Color.BLACK, width, Align.center, true);
-		font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
+			layout.setText(font, "Tap or press space to roll.", Color.BLACK, width, Align.center, true);
+			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
-			// Making a game move
-			game.activate(this);
+			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
+				// Making a game move
+				game.activate(this);
+			}
+
+			// Displays message about the details of the last special move
+			displayGameMessage();
+
+		} else {
+			// Displays Winning Screen Message if Game Over
+			winningScreen(lineHeight);
 		}
 
-		// Displays message about the details of the last special move
-		displayGameMessage();
 		batch.end();
 	}
 
 	public void setGameMessage(String message, int num) {
+		// Setting the game message (moved to sq #) for a specific player NUM
 		gameMessage = message;
 		gameMessNum = num;
 	}
@@ -442,6 +429,7 @@ public class BoardGameEngine implements ApplicationListener {
 				attributes[0], attributes[1], attributes[2], listOfActions);
 	}
 
+	// Setting up players for default input (with keyboard)
 	private void setPlayers() {
 		for (int i = 1; i <= numOfPlayers; i += 1) {
 			String name = "Player " + i;
@@ -451,6 +439,7 @@ public class BoardGameEngine implements ApplicationListener {
 		game.setNumOfPlayers(numOfPlayers);
 	}
 
+	// Setting an individual player with default image
 	private void setPlayer(String name, int num) {
 		String image = "player" + num + ".png";
 		game.addPlayer(name, image, num);
@@ -476,5 +465,7 @@ public class BoardGameEngine implements ApplicationListener {
 		batch.dispose();
 		font.dispose();
 		texture.dispose();
+		stage.dispose();
+		skin.dispose();
 	}
 }
