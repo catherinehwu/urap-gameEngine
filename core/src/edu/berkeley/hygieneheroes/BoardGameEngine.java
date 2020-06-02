@@ -20,7 +20,6 @@ import com.badlogic.gdx.utils.Align;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class BoardGameEngine implements ApplicationListener {
 	// Overall GUI
@@ -393,40 +392,46 @@ public class BoardGameEngine implements ApplicationListener {
 	private void initialize() throws FileNotFoundException {
 		// Currently Reading Config File for Dental Game
 		FileHandle configText = Gdx.files.internal("dental.txt");
-		Scanner config = new Scanner(configText.file());
-		Scanner setUp = new Scanner(config.nextLine());
-		int rowNum = setUp.nextInt();
-		int colNum = setUp.nextInt();
-		int endPosNum = setUp.nextInt();
+
+		// Regex approach
+		String config = configText.readString();
+		String[] lines = config.split("\n");
+		String setUp = lines[0];
+		String[] setUpSettings = setUp.split(" ");
+
+		int rowNum = Integer.valueOf(setUpSettings[0]);
+		int colNum = Integer.valueOf(setUpSettings[1]);
+		int endPosNum = Integer.valueOf(setUpSettings[2]);
 		game = new GameEngine(rowNum, colNum, endPosNum);
 
-		while (config.hasNextLine()) {
-			String nextSqSettings = config.nextLine();
-			setUpSquare(nextSqSettings);
+		for (int i = 1; i < lines.length; i += 1) {
+			setUpSquare(lines[i]);
 		}
+
 	}
 
 	private void setUpSquare(String settings) {
-		Scanner sqSettings = new Scanner(settings);
-		int seqNum = sqSettings.nextInt();
-		int xVal = sqSettings.nextInt();
-		int yVal = sqSettings.nextInt();
+		String[] line = settings.split(" ");
+		int seqNum = Integer.valueOf(line[0]);
+		int xVal = Integer.valueOf(line[1]);
+		int yVal = Integer.valueOf(line[2]);
 
 		String[] attributes = new String[3];
 		for (int i = 0; i < 3; i += 1) {
-			attributes[i] = sqSettings.next();
+			attributes[i] = line[i + 3];
 			if (attributes[i].equals("*")) {
 				attributes[i] = null;
 			}
 		}
 
 		ArrayList<String> listOfActions = new ArrayList<>();
-		while (sqSettings.hasNext()) {
-			listOfActions.add(sqSettings.next());
+		for (int i = 6; i < line.length; i += 1) {
+			listOfActions.add(line[i]);
 		}
 
 		game.addSquare(seqNum, xVal, yVal,
 				attributes[0], attributes[1], attributes[2], listOfActions);
+
 	}
 
 	// Setting up players for default input (with keyboard)
