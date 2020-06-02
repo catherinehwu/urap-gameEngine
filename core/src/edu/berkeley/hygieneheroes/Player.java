@@ -9,12 +9,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Player {
+    // Player attributes
     private String name;
     private String imageFileName;
     private Square location;
     private GameEngine game;
     private boolean skipTurn;
 
+    // Player GUI details
     private Sprite playerSprite;
     private Texture playerTexture;
     private int sizeWidth = 32;
@@ -23,6 +25,7 @@ public class Player {
     private int playerNum;
     private Square prevLocation;
 
+    // Player turn continuation tracker
     private boolean determineAction;
     private String savedAction;
 
@@ -41,12 +44,7 @@ public class Player {
         playerTexture = new Texture(Gdx.files.internal(imageFileName));
         playerSprite = new Sprite(playerTexture);
     }
-
-    public void turn() {
-        int stepVal = roll();
-        move(stepVal);
-    }
-
+    
     public boolean guiTurn(BoardGameEngine gameUI) {
         Square curLoc = location;
         int stepVal = guiRoll(true);
@@ -86,22 +84,7 @@ public class Player {
         return roll;
     }
 
-    private int roll() {
-        /* Human input dice roll
-        String steps = game.readLine();
-        int stepVal = Integer.valueOf(steps);
-        return stepVal;
-        */
-
-        // Random dice role
-        game.readLine();
-        int nextVal = game.getDice().nextVal();
-        System.out.println(name + " rolled a " + nextVal);
-        return nextVal;
-    }
-
-    // temporary change to public
-    public boolean guiMove(int num, BoardGameEngine gameUI) {
+    private boolean guiMove(int num, BoardGameEngine gameUI) {
         Board gameBoard = game.getBoard();
         int newLocationSeqNum = safeMove(num, gameBoard);
 
@@ -109,49 +92,23 @@ public class Player {
         location = futureLoc;
 
         draw(gameUI);
-        game.display();
+        game.display(); // debugging line
 
         boolean complete = true;
         for (String action : location.getActions()) {
             // assuming movement isn't an issue because game logic makes sense
+            // (as in don't roll again and move to another square)
             // boolean used to relay whether turn is complete
             complete = complete && this.guiAct(action, gameUI);
             draw(gameUI);
-//            if (moved) {
-//                return;
-//            }
         }
         return complete;
-    }
-
-    //temporary change to public
-    private void move(int num) {
-        Board gameBoard = game.getBoard();
-        int newLocationSeqNum = safeMove(num, gameBoard);
-
-        Square futureLoc = gameBoard.getSquare(newLocationSeqNum);
-        location = futureLoc;
-
-        game.display();
-
-        for (String action : location.getActions()) {
-            boolean moved = this.act(action);
-            if (moved) {
-                return;
-            }
-        }
     }
 
     private void guiMoveTo(int sqNum, BoardGameEngine gameUI) {
         int curNum = location.getSeqNum();
         int difference = sqNum - curNum;
         guiMove(difference, gameUI);
-    }
-
-    private void moveTo(int sqNum) {
-        int curNum = location.getSeqNum();
-        int difference = sqNum - curNum;
-        move(difference);
     }
 
     private int safeMove(int num, Board gameBoard) {
@@ -179,9 +136,7 @@ public class Player {
             case 'A':
                 // roll again
                 System.out.println("Roll again!");
-//                gameUI.font.draw(gameUI.batch, name + " roll again!", 0, 100 - 20 * playerNum);
                 gameUI.setGameMessage(name + " roll again!", playerNum);
-//                guiTurn(gameUI);
                 return false;
             case 'b':
             case 'B':
@@ -189,7 +144,6 @@ public class Player {
                 // positive is move forward
                 int steps = Integer.valueOf(key.substring(1));
                 System.out.println("Moving " + steps + " forward!");
-//                gameUI.font.draw(gameUI.batch, name + " moving " + steps + " forward!", 0, 100 - 20 * playerNum);
                 gameUI.setGameMessage(name + " moving " + steps + " forward!", playerNum);
                 guiMove(steps, gameUI);
                 return true;
@@ -199,7 +153,6 @@ public class Player {
                 // negative is move backward
                 int backSteps = Integer.valueOf(key.substring(1));
                 System.out.println("Moving " + backSteps + " backwards!");
-//                gameUI.font.draw(gameUI.batch, name + " moving " + backSteps + " backwards!", 0, 100 - 20 * playerNum);
                 gameUI.setGameMessage(name + " moving " + backSteps + " backwards!", playerNum);
                 guiMove(backSteps * -1, gameUI);
                 return true;
@@ -208,7 +161,6 @@ public class Player {
                 // go to a certain square
                 int sqNum = Integer.valueOf(key.substring(1));
                 System.out.println("Moving to square #" + sqNum + "!");
-//                gameUI.font.draw(gameUI.batch, name + " Moving to square #" + sqNum + "!", 0, 100 - 20 * playerNum);
                 gameUI.setGameMessage(name + " Moving to square #" + sqNum + "!", playerNum);
                 guiMoveTo(sqNum, gameUI);
                 return true;
@@ -217,7 +169,6 @@ public class Player {
                 // skip this player's next turn
                 skipTurn = true;
                 System.out.println("Next turn skipped!");
-//                gameUI.font.draw(gameUI.batch, name + " Next turn skipped!", 0, 100 - 20 * playerNum);
                 gameUI.setGameMessage(name + " Next turn skipped!", playerNum);
                 return true;
             case 'f':
@@ -225,7 +176,6 @@ public class Player {
                 // cycle reversed
                 game.reverse();
                 System.out.println("Turn order reversed!");
-//                gameUI.font.draw(gameUI.batch, name + " caused a turn order to reverse!", 0, 100 - 20 * playerNum);
                 gameUI.setGameMessage(name + " caused a turn order to reverse!", playerNum);
                 return true;
             case 'g':
@@ -233,80 +183,10 @@ public class Player {
                 // if roll certain number
                 // do the following action
                 System.out.println("Roll again to determine action!");
-//                gameUI.font.draw(gameUI.batch, name + " Roll again to determine action!", 0, 100 - 20 * playerNum);
                 gameUI.setGameMessage(name + " Roll again to determine action!", playerNum);
                 determineAction = true;
                 savedAction = key;
                 return false;
-            default:
-                System.out.println("Unknown command.");
-                break;
-        }
-        return false;
-    }
-
-    private boolean act(String key) {
-        char type = key.charAt(0);
-        switch(type) {
-            case 'a':
-            case 'A':
-                // roll again
-                System.out.println("Roll Again!");
-                turn();
-                return true;
-            case 'b':
-            case 'B':
-                // change square by certain number
-                // positive is move forward
-                int steps = Integer.valueOf(key.substring(1));
-                System.out.println("Moving " + steps + " forward!");
-                move(steps);
-                return true;
-            case 'c':
-            case 'C':
-                // change square by certain number
-                // negative is move backward
-                int backSteps = Integer.valueOf(key.substring(1));
-                System.out.println("Moving " + backSteps + " backwards!");
-                move(backSteps * -1);
-                return true;
-            case 'd':
-            case 'D':
-                // go to a certain square
-                int sqNum = Integer.valueOf(key.substring(1));
-                System.out.println("Moving to square #" + sqNum + "!");
-                moveTo(sqNum);
-                return true;
-            case 'e':
-            case 'E':
-                // skip this player's next turn
-                skipTurn = true;
-                System.out.println("Next turn skipped!");
-                break;
-            case 'f':
-            case 'F':
-                // cycle reversed
-                game.reverse();
-                System.out.println("Turn order reversed!");
-                break;
-            case 'g':
-            case 'G':
-                // if roll certain number
-                // do the following action
-                System.out.println("Roll again to determine action!");
-                int number = roll();
-                String format = "[gG]([\\d]+)(.*)";
-                Matcher match = Pattern.compile(format).matcher(key);
-                int target = -1;
-                if (match.matches()) {
-                    target = Integer.valueOf(match.group(1));
-                }
-                if (number == target) {
-                    act(match.group(2));
-                } else {
-                    System.out.println("No action occurred!");
-                }
-                break;
             default:
                 System.out.println("Unknown command.");
                 break;
