@@ -33,6 +33,7 @@ public class Board {
         }
     }
 
+    // Output board - for debugging use
     public void display() {
         StringBuffer boardRep = new StringBuffer();
         for (int y = Yrange - 1; y >= 0; y -= 1) {

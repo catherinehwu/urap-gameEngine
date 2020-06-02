@@ -1,7 +1,6 @@
 package edu.berkeley.hygieneheroes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
@@ -44,7 +43,7 @@ public class Player {
         playerTexture = new Texture(Gdx.files.internal(imageFileName));
         playerSprite = new Sprite(playerTexture);
     }
-    
+
     public boolean guiTurn(BoardGameEngine gameUI) {
         Square curLoc = location;
         int stepVal = guiRoll(true);
