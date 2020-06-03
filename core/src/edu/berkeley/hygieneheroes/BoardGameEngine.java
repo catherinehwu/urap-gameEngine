@@ -313,20 +313,41 @@ public class BoardGameEngine implements ApplicationListener {
 		font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 	}
 
+	private void setUpGameScreen() {
+		// Stage Game Screen Version
+		stage.clear();
+		background.setPosition(0,0);
+//		WidgetGroup backgroundImage = new WidgetGroup(background);
+//		backgroundImage.setPosition(0,0);
+		stage.addActor(background);
+
+		Label name = new Label("Dental Game Board", skin);
+		name.setColor(Color.BLACK);
+//		name.setAlignment(Align.left, Align.center);
+//		name.setPosition(background.getImageWidth(), 0);
+//		WidgetGroup labelling = new WidgetGroup(name);
+//		labelling.setPosition(backgroundImage.getX(), 0);
+//		SplitPane split = new SplitPane(backgroundImage, labelling, false, skin);
+//		stage.addActor(split);
+		stage.addActor(name);
+
+		Table table = new Table(skin);
+		table.add("Testing Board");
+		table.row();
+		table.add(name);
+		table.setColor(Color.WHITE);
+		table.setPosition(background.getImageWidth(), 200);
+		stage.addActor(table);
+		stage.draw();
+	}
+
 	private void gameScreen() {
 		Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 
 		// Stage Game Screen Version
-//		spritedraw.draw(batch, 0, 0, 600, 480);
-//		background.setPosition(0, 0, Align.bottomLeft);
-		background.setPosition(0,0);
-//		background.setX(0, Align.left);
-//		background.setY(0, Align.top);
-//		background.setSize(800, 480);
-		stage.addActor(background);
-		stage.draw();
+		// setUpGameScreen();
 
 		// Old version
 		int width = Gdx.graphics.getWidth();
@@ -370,8 +391,6 @@ public class BoardGameEngine implements ApplicationListener {
 			// Displays Winning Screen Message if Game Over
 			winningScreen(lineHeight);
 		}
-
-
 		batch.end();
 	}
 
