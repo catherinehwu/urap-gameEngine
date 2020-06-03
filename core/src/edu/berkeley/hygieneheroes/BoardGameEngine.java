@@ -9,14 +9,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -39,8 +38,11 @@ public class BoardGameEngine implements ApplicationListener {
 	// Background Image Layout
 	private Sprite sprite;
 	private Texture texture;
+	private Image background;
 	private int windWidth = 800;
 	private int windHeight = 480;
+	private int imageW = 800;
+	private int imageH = 480;
 
 	// Main Menu with Stage & Buttons
 	private Stage stage;
@@ -68,6 +70,9 @@ public class BoardGameEngine implements ApplicationListener {
 		// Background board image
 		texture = new Texture(Gdx.files.internal("rectangularBoard.png"));
 		sprite = new Sprite(texture);
+		background = new Image(texture);
+		Vector2 pos = Scaling.fit.apply(texture.getWidth(), texture.getHeight(), imageW, imageH);
+		background.setSize(pos.x, pos.y);
 
 		// Game Functionality
 		mainMenu = true;
@@ -313,6 +318,17 @@ public class BoardGameEngine implements ApplicationListener {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 
+		// Stage Game Screen Version
+//		spritedraw.draw(batch, 0, 0, 600, 480);
+//		background.setPosition(0, 0, Align.bottomLeft);
+		background.setPosition(0,0);
+//		background.setX(0, Align.left);
+//		background.setY(0, Align.top);
+//		background.setSize(800, 480);
+		stage.addActor(background);
+		stage.draw();
+
+		// Old version
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 
@@ -355,6 +371,7 @@ public class BoardGameEngine implements ApplicationListener {
 			winningScreen(lineHeight);
 		}
 
+
 		batch.end();
 	}
 
@@ -384,6 +401,7 @@ public class BoardGameEngine implements ApplicationListener {
 		try {
 			initialize();
 			game.setNumOfPlayers(num);
+			stage.clear();
 		} catch (Exception e) {
 			// do something - File Reading Errors
 		}
