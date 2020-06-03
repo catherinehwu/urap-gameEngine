@@ -195,7 +195,11 @@ public class Player {
 
     public boolean completeAction(BoardGameEngine gameUI) {
         determineAction = false;
-        int number = guiRoll(false);
+        // Records this rolls in output
+        int number = guiRoll(true);
+        // Doesn't record rolls in output
+        // int number = guiRoll(false);
+
         String format = "[gG]([\\d]+)(.*)";
         Matcher match = Pattern.compile(format).matcher(savedAction);
         int target = -1;
