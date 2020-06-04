@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -36,13 +38,16 @@ public class BoardGameEngine implements ApplicationListener {
 	private int gameMessNum;
 
 	// Background Image Layout
-	private Sprite sprite;
+	private OrthographicCamera camera;
+	private FitViewport viewport;
+	private Sprite boardWorld;
 	private Texture texture;
 	private Image background;
 	private int windWidth = 800;
 	private int windHeight = 480;
-	private int imageW = 800;
-	private int imageH = 480;
+	private int newWindW = 920;
+	public int boardW = 800;
+	public int boardH = 480;
 
 	// Main Menu with Stage & Buttons
 	private Stage stage;
@@ -69,10 +74,19 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Background board image
 		texture = new Texture(Gdx.files.internal("rectangularBoard.png"));
-		sprite = new Sprite(texture);
-		background = new Image(texture);
-		Vector2 pos = Scaling.fit.apply(texture.getWidth(), texture.getHeight(), imageW, imageH);
-		background.setSize(pos.x, pos.y);
+		boardWorld = new Sprite(texture);
+		boardWorld.setPosition(0,0);
+		boardWorld.setSize(boardW, boardH);
+		float ratio = (float)Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth();
+		camera = new OrthographicCamera();
+		viewport = new FitViewport(boardW, boardH, camera);
+		viewport.apply();
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+
+		// Using Image Class
+//		background = new Image(texture);
+//		Vector2 pos = Scaling.fit.apply(texture.getWidth(), texture.getHeight(), imageW, imageH);
+//		background.setSize(pos.x, pos.y);
 
 		// Game Functionality
 		mainMenu = true;
@@ -307,8 +321,10 @@ public class BoardGameEngine implements ApplicationListener {
 	}
 
 	private void winningScreen(int lineHeight) {
-		int width = Gdx.graphics.getWidth();
-		int height = Gdx.graphics.getHeight();
+//		int width = Gdx.graphics.getWidth();
+//		int height = Gdx.graphics.getHeight();
+		int width = boardW;
+		int height = boardH;
 		layout.setText(font, "Winner: " + winner.getName(), Color.BLACK, width, Align.center, true);
 		font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 	}
@@ -341,19 +357,40 @@ public class BoardGameEngine implements ApplicationListener {
 		stage.draw();
 	}
 
-	private void gameScreen() {
-		Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
+	private void cameraScreen() {
+		camera.update();
+		Gdx.gl.glClearColor(1,1,1,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.setProjectionMatrix(camera.combined);
+		//batch.begin();
+		//boardWorld.draw(batch);
+		//batch.end();
+	}
+
+	private void gameScreen() {
+		// Camera Version
+		cameraScreen();
+
+
+		// Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
+		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+
+		// Moving camera part over
+		boardWorld.draw(batch);
 
 		// Stage Game Screen Version
 		// setUpGameScreen();
 
 		// Old version
-		int width = Gdx.graphics.getWidth();
-		int height = Gdx.graphics.getHeight();
+//		int width = Gdx.graphics.getWidth();
+//		int height = Gdx.graphics.getHeight();
+//
+//		batch.draw(texture, 0, 0, 800, 480);
 
-		batch.draw(texture, 0, 0, 800, 480);
+		// Temporary variables
+		int width = boardW;
+		int height = boardH;
 
 		layout.setText(font, "Dental Game Board", Color.BLACK, width, Align.center, true);
 		font.draw(batch, layout, 0, height / 2 + layout.height / 2 + 100);
@@ -392,6 +429,8 @@ public class BoardGameEngine implements ApplicationListener {
 			winningScreen(lineHeight);
 		}
 		batch.end();
+
+
 	}
 
 	public void setGameMessage(String message, int num) {
@@ -489,7 +528,8 @@ public class BoardGameEngine implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
-
+		viewport.update(width, height);
+		camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2,0);
 	}
 
 	@Override
