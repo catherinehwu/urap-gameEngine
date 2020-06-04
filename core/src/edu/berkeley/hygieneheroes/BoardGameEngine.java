@@ -103,8 +103,11 @@ public class BoardGameEngine implements ApplicationListener {
 
 	@Override
 	public void render () {
-
+		cameraScreen();
 		if (mainMenu) {
+			// Camera set up
+			// cameraScreen();
+
 			// BUTTON MAIN MENU
 			mainMenuButton();
 
@@ -139,6 +142,9 @@ public class BoardGameEngine implements ApplicationListener {
 	}
 
 	private void setMainMenu() {
+		// Camera Initiate
+		cameraScreen();
+
 		stage = new Stage();
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 
@@ -216,6 +222,7 @@ public class BoardGameEngine implements ApplicationListener {
 		stage.addActor(name);
 		stage.addActor(gameName);
 		stage.addActor(instruction);
+		stage.setViewport(viewport);
 		Gdx.input.setInputProcessor(stage);
 	}
 
@@ -369,7 +376,7 @@ public class BoardGameEngine implements ApplicationListener {
 
 	private void gameScreen() {
 		// Camera Version
-		cameraScreen();
+		// cameraScreen();
 
 
 		// Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
