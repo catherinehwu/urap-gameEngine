@@ -54,9 +54,9 @@ public class Player {
 
     public void draw(BoardGameEngine gameUI) {
         // debugging render texts
-        System.out.println(name);
-        System.out.println(prevRoll);
-        System.out.println(location.getSeqNum());
+//        System.out.println(name);
+//        System.out.println(prevRoll);
+//        System.out.println(location.getSeqNum());
 
         // getting ratios
         float xFraction = ((float) location.getX()) / game.getBoard().getXrange();
