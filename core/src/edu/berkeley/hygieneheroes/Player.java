@@ -63,8 +63,12 @@ public class Player {
         float yFraction = ((float) location.getY()) / game.getBoard().getYrange();
 
         // drawing player piece
-        gameUI.batch.draw(playerTexture,
-                xFraction * Gdx.graphics.getWidth(), yFraction * Gdx.graphics.getHeight(),
+//        gameUI.batch.draw(playerTexture,
+//                xFraction * Gdx.graphics.getWidth(), yFraction * Gdx.graphics.getHeight(),
+//                sizeWidth, sizeHeight);
+
+        // drawing player piece based on board world
+        gameUI.batch.draw(playerTexture, xFraction * gameUI.boardW, yFraction * gameUI.boardH,
                 sizeWidth, sizeHeight);
 
         // outputting data about player's move
