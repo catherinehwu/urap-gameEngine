@@ -3,7 +3,6 @@ package edu.berkeley.hygieneheroes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Scanner;
 
 public class GameEngine {
     // Game Features
@@ -70,62 +69,13 @@ public class GameEngine {
         return playersList.get(curTurnIndex);
     }
 
-    public void activate(BoardGameEngine gameUI) {
-        // Causes game to resume with a next turn or continuation of previous move
-//        turnComplete = false;
-//        Player p = playersList.get(curTurnIndex);
-
+    public void activate() {
         if (!zoomMode) {
             zoomMode = true;
-            return;
         }
-
-        /*
-        // Human controlled zoom
-        if (setZoom) {
-            increment = setZoom(gameUI, p);
-            zoomIn = true;
-            setZoom = false;
-            return;
-        } else {
-            if (zoomIn & (zoomCount > 0)) {
-                zoomIn(gameUI, increment[0], increment[1]);
-                zoomCount -= 1;
-                return;
-            } else if (zoomCount == 0) {
-//                gameUI.camera.position.set(increment[2], increment[3], 0);
-                zoomOut(gameUI, increment[2], increment[3]);
-                zoomIn = false;
-            } else {
-                zoomOut(gameUI, increment[2], increment[3]);
-            }
-        }
-         */
-
-        /*
-        if (p.determiningAction()) {
-            // Dice must be rolled to determine the next action
-            turnComplete = p.completeAction(gameUI);
-        } else {
-            // Completes next turn in the game
-            if (p.guiTurn(gameUI)) {
-                turnComplete = true;
-            }
-        }
-
-        // Only advance turn if turn has completed
-        if (turnComplete) {
-            advanceTurn();
-        }
-        */
-
-        // Reset Zoom
-        // zoomOut(gameUI, increment[2], increment[3]);
-
     }
 
     public void holdProcess() {
-        System.out.println("hold");
         if (bigScreenHold <= 0) {
             destMode = true;
             holdMode = false;
@@ -136,6 +86,7 @@ public class GameEngine {
     }
 
     public void moveProcess(BoardGameEngine gameUI) {
+        // Causes game to resume with a next turn or continuation of previous move
         turnComplete = false;
         Player p = playersList.get(curTurnIndex);
 
@@ -154,7 +105,6 @@ public class GameEngine {
 
         moveMode = false;
         holdMode = true;
-//        destMode = true;
     }
 
     public void zoomProcess(BoardGameEngine gameUI, Player p) {
@@ -169,7 +119,6 @@ public class GameEngine {
                 zoomCount -= 1;
                 return;
             } else if ((zoomCount == 0) && hold > 0) {
-//                zoomOut(gameUI, increment[2], increment[3]);
                 hold -= 1;
                 zoomIn = false;
             } else {
@@ -186,11 +135,9 @@ public class GameEngine {
 
         gameUI.camera.translate(distX / zoomCount, distY / zoomCount, 0);
         gameUI.camera.update();
-        System.out.println("in");
     }
 
     private void zoomOut(BoardGameEngine gameUI, float x, float y) {
-        System.out.println("out");
         if (zoomCount == ZOOM_TIME) {
             setZoom = true;
             zoomMode = false;
@@ -215,34 +162,6 @@ public class GameEngine {
             gameUI.camera.update();
             zoomCount += 1;
         }
-
-        // Quick Zoom Out
-//        gameUI.camera.zoom += (0.015) * 50;
-//        gameUI.camera.position.set(x, y, 0);
-//        zoomCount = 50;
-//        setZoom = true;
-
-        // Mixture
-//        gameUI.camera.position.set(x, y, 0);
-//        while (zoomCount < 50) {
-//            gameUI.camera.zoom += (0.015);
-//            zoomCount += 1;
-//        }
-//        setZoom = true;
-
-        // Slow Quick Zoom Out
-//        while (zoomCount < 50) {
-//            System.out.println("zoomcount " + zoomCount);
-//            gameUI.camera.zoom += 0.015;
-//
-//            float distX = x - gameUI.camera.position.x;
-//            float distY = y - gameUI.camera.position.y;
-//
-//            gameUI.camera.translate(x / (50 - zoomCount), y / (50 - zoomCount) , 0);
-//            gameUI.camera.update();
-//            zoomCount += 1;
-//            setZoom = true;
-//        }
     }
 
     private float[] setZoom(BoardGameEngine gameUI, Player p) {
@@ -252,11 +171,6 @@ public class GameEngine {
         float y = yFraction * gameUI.boardH;
 
         return new float[]{x, y, gameUI.camera.position.x, gameUI.camera.position.y};
-
-//        float distX = gameUI.camera.position.x - x;
-//        float distY = gameUI.camera.position.y - y;
-
-//        return new float[]{distX / 50, distY / 50};
     }
 
     private void advanceTurn() {

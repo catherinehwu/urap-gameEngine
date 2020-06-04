@@ -369,18 +369,9 @@ public class BoardGameEngine implements ApplicationListener {
 		Gdx.gl.glClearColor(1,1,1,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setProjectionMatrix(camera.combined);
-		//batch.begin();
-		//boardWorld.draw(batch);
-		//batch.end();
 	}
 
 	private void gameScreen() {
-		// Camera Version
-		// cameraScreen();
-
-
-		// Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
-		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 
 		// Moving camera part over
@@ -388,12 +379,6 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Stage Game Screen Version
 		// setUpGameScreen();
-
-		// Old version
-//		int width = Gdx.graphics.getWidth();
-//		int height = Gdx.graphics.getHeight();
-//
-//		batch.draw(texture, 0, 0, 800, 480);
 
 		// Temporary variables
 		int width = boardW;
@@ -424,14 +409,18 @@ public class BoardGameEngine implements ApplicationListener {
 			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 
 			if (game.zoomMode || game.destMode) {
+				// Zooming in on a player's piece before movement
+				// Zooming in on a player's piece after movement
 				game.zoomProcess(this, game.currentPlayer());
 			} else if (game.moveMode) {
+				// Moving player's piece and advancing turn
 				game.moveProcess(this);
 			} else if (game.holdMode) {
+				// Holding screen at zoom out mode after piece has moved
 				game.holdProcess();
 			} else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
-				// Making a game move
-				game.activate(this);
+				// Initiate a game move
+				game.activate();
 			}
 
 			// Displays message about the details of the last special move
@@ -442,8 +431,6 @@ public class BoardGameEngine implements ApplicationListener {
 			winningScreen(lineHeight);
 		}
 		batch.end();
-
-
 	}
 
 	public void setGameMessage(String message, int num) {
