@@ -38,8 +38,8 @@ public class BoardGameEngine implements ApplicationListener {
 	private int gameMessNum;
 
 	// Background Image Layout
-	private OrthographicCamera camera;
-	private FitViewport viewport;
+	public OrthographicCamera camera;
+	public FitViewport viewport;
 	private Sprite boardWorld;
 	private Texture texture;
 	private Image background;
@@ -423,7 +423,13 @@ public class BoardGameEngine implements ApplicationListener {
 			layout.setText(font, "Tap or press space to roll.", Color.BLACK, width, Align.center, true);
 			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 
-			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
+			if (game.zoomMode || game.destMode) {
+				game.zoomProcess(this, game.currentPlayer());
+			} else if (game.moveMode) {
+				game.moveProcess(this);
+			} else if (game.holdMode) {
+				game.holdProcess();
+			} else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
 				// Making a game move
 				game.activate(this);
 			}
