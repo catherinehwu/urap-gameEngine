@@ -28,6 +28,9 @@ public class Player {
     private boolean determineAction;
     private String savedAction;
 
+    // Allow for step by step movement
+    private Square destination;
+
     public Player(String playerName, String imageFile, GameEngine curGame, int pNum) {
         name = playerName;
         imageFileName = imageFile;
@@ -92,12 +95,14 @@ public class Player {
         int newLocationSeqNum = safeMove(num, gameBoard);
 
         Square futureLoc = gameBoard.getSquare(newLocationSeqNum);
-        location = futureLoc;
+        destination = futureLoc;
+        // location = futureLoc;
 
         draw(gameUI);
         game.display(); // debugging line
 
         boolean complete = true;
+        /*
         for (String action : location.getActions()) {
             // assuming movement isn't an issue because game logic makes sense
             // (as in don't roll again and move to another square)
@@ -105,6 +110,7 @@ public class Player {
             complete = complete && this.guiAct(action, gameUI);
             draw(gameUI);
         }
+        */
         return complete;
     }
 
@@ -220,6 +226,11 @@ public class Player {
         }
     }
 
+    public void advance() {
+        Board board = game.getBoard();
+        location = board.getSquare(location.getSeqNum() + 1);
+    }
+
     public String getName() {
         return name;
     }
@@ -242,5 +253,13 @@ public class Player {
 
     public boolean determiningAction() {
         return determineAction;
+    }
+
+    public Square getDestination() {
+        return destination;
+    }
+
+    public void resetDestination() {
+        destination = null;
     }
 }

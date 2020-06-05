@@ -17,7 +17,7 @@ public class GameEngine {
     private boolean turnComplete;
     private boolean setZoom = true;
     private float[] increment;
-    private static final int HOLD_COUNT = 75;
+    private static final int HOLD_COUNT = 50;
     private static final int ZOOM_TIME = 50;
     private int bigScreenHold = HOLD_COUNT;
     private int hold = HOLD_COUNT;
@@ -27,6 +27,10 @@ public class GameEngine {
     public boolean moveMode = false;
     public boolean holdMode = false;
     public boolean destMode = false;
+    public boolean stepMode = false;
+    private boolean stepHold = false;
+    private static final int STEP_HOLD = 25;
+    private int stepHoldTime = STEP_HOLD;
 
     public GameEngine(int Xrange, int Yrange, int endPosNum) {
         board = new Board(Xrange, Yrange, endPosNum);
@@ -75,9 +79,40 @@ public class GameEngine {
         }
     }
 
+    public void step() {
+        Player cur = currentPlayer();
+        if (cur.getDestination() == null || cur.getLocation() == cur.getDestination()) {
+            cur.resetDestination();
+            stepMode = false;
+            destMode = true;
+        } else {
+            if (!stepHold) {
+                cur.advance();
+                stepHold = true;
+            } else {
+                stepHold();
+            }
+        }
+    }
+
+    private void stepHold() {
+        if (stepHoldTime <= 0) {
+            stepHoldTime = STEP_HOLD;
+            stepHold = false;
+        } else {
+            stepHoldTime -= 1;
+        }
+    }
+
     public void holdProcess() {
         if (bigScreenHold <= 0) {
-            destMode = true;
+            // destMode = true;
+//            if (currentPlayer().getDestination() == null) {
+//                destMode = true;
+//            } else {
+//                stepMode = true;
+//            }
+            stepMode = true;
             holdMode = false;
             bigScreenHold = HOLD_COUNT;
         } else {
