@@ -424,8 +424,11 @@ public class BoardGameEngine implements ApplicationListener {
 			} else if (game.stepMode) {
 				System.out.println("moving piece to destination");
 				game.step();
+			} else if (game.currentPlayer().isSquareAction()) {
+				game.activate();
 			} else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
 				// Initiate a game move
+				System.out.println("activated");
 				game.activate();
 			}
 

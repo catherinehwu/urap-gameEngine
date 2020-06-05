@@ -128,9 +128,16 @@ public class GameEngine {
         if (p.determiningAction()) {
             // Dice must be rolled to determine the next action
             turnComplete = p.completeAction(gameUI);
+        } else if (p.isSquareAction()) {
+            System.out.println("square action");
+            p.squareAction(gameUI);
+            if (!p.isSquareAction()) {
+                turnComplete = true;
+            }
         } else {
             // Completes next turn in the game
             if (p.guiTurn(gameUI)) {
+                System.out.println("completed turn");
                 turnComplete = true;
             }
         }
