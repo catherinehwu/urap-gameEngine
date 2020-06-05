@@ -411,24 +411,24 @@ public class BoardGameEngine implements ApplicationListener {
 			if (game.zoomMode || game.destMode) {
 				// Zooming in on a player's piece before movement
 				// Zooming in on a player's piece after movement
-				System.out.println("zooming");
+				// System.out.println("zooming");
 				game.zoomProcess(this, game.currentPlayer());
 			} else if (game.moveMode) {
 				// Moving player's piece and advancing turn
-				System.out.println("game movement processing - half");
+				// System.out.println("game movement processing - half");
 				game.moveProcess(this);
 			} else if (game.holdMode) {
 				// Holding screen at zoom out mode after piece has moved
-				System.out.println("holding in outside large screen");
+				// System.out.println("holding in outside large screen");
 				game.holdProcess();
 			} else if (game.stepMode) {
-				System.out.println("moving piece to destination");
+				// System.out.println("moving piece to destination");
 				game.step();
 			} else if (game.currentPlayer().isSquareAction()) {
 				game.activate();
 			} else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
 				// Initiate a game move
-				System.out.println("activated");
+				// System.out.println("activated");
 				game.activate();
 			}
 

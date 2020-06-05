@@ -60,11 +60,15 @@ public class GameEngine {
 
     public String currentTurnStr() {
         Player current = playersList.get(curTurnIndex);
+
+        // Skip Turn Processing in Advance
+        /*
         while (current.getSkipTurn()) {
             current.turnSkipped();
             advanceTurn();
             current = playersList.get(curTurnIndex);
         }
+        */
 
         return "Current turn: " + current.getName();
     }
@@ -106,12 +110,6 @@ public class GameEngine {
 
     public void holdProcess() {
         if (bigScreenHold <= 0) {
-            // destMode = true;
-//            if (currentPlayer().getDestination() == null) {
-//                destMode = true;
-//            } else {
-//                stepMode = true;
-//            }
             stepMode = true;
             holdMode = false;
             bigScreenHold = HOLD_COUNT;
@@ -132,6 +130,7 @@ public class GameEngine {
             System.out.println("square action");
             p.squareAction(gameUI);
             if (!p.isSquareAction()) {
+                System.out.println("no more square action");
                 turnComplete = true;
             }
         } else {
@@ -192,6 +191,7 @@ public class GameEngine {
 
                 // Only advance turn if turn has completed
                 if (turnComplete) {
+                    System.out.println("turn advancing");
                     advanceTurn();
                 }
             }
@@ -217,6 +217,24 @@ public class GameEngine {
 
     private void advanceTurn() {
         curTurnIndex += (1 * direction);
+        while (curTurnIndex < 0) {
+            curTurnIndex += numOfPlayers;
+        }
+        while (curTurnIndex >= numOfPlayers) {
+            curTurnIndex -= numOfPlayers;
+        }
+
+        while (currentPlayer().getSkipTurn()) {
+            currentPlayer().turnSkipped();
+            curTurnIndex += (1 * direction);
+            while (curTurnIndex < 0) {
+                curTurnIndex += numOfPlayers;
+            }
+            while (curTurnIndex >= numOfPlayers) {
+                curTurnIndex -= numOfPlayers;
+            }
+        }
+
         while (curTurnIndex < 0) {
             curTurnIndex += numOfPlayers;
         }

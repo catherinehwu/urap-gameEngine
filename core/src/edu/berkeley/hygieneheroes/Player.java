@@ -102,7 +102,7 @@ public class Player {
         draw(gameUI);
         game.display(); // debugging line
 
-        boolean complete = destination.getActions().isEmpty();
+        boolean complete = true;
 //        boolean complete = destination.getActions().isEmpty();
 //        if (!complete) {
 //            squareAction = true;
@@ -256,17 +256,19 @@ public class Player {
             case 'e':
             case 'E':
                 // skip this player's next turn
+                skipTurn = true;
                 System.out.println("Next turn skipped!");
                 gameUI.setGameMessage(name + " Next turn skipped!", playerNum);
                 squareAction = false;
-                break;
+                return true;
             case 'f':
             case 'F':
                 // cycle reversed
+                game.reverse();
                 System.out.println("Turn order reversed!");
                 gameUI.setGameMessage(name + " caused a turn order to reverse!", playerNum);
                 squareAction = false;
-                break;
+                return true;
             case 'g':
             case 'G':
                 // if roll certain number
