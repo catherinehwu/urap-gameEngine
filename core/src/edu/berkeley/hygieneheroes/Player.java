@@ -72,7 +72,11 @@ public class Player {
 //                sizeWidth, sizeHeight);
 
         // drawing player piece based on board world
-        gameUI.batch.draw(playerTexture, xFraction * gameUI.boardW, yFraction * gameUI.boardH,
+        // gameUI.batch.draw(playerTexture, xFraction * gameUI.boardW, yFraction * gameUI.boardH,
+        //         sizeWidth, sizeHeight);
+
+        // Real Game Color Board (FIXME - CHANGE MADE)
+        gameUI.batch.draw(playerTexture, location.getX(), location.getY(),
                 sizeWidth, sizeHeight);
 
         // outputting data about player's move

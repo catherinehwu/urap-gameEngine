@@ -43,11 +43,17 @@ public class BoardGameEngine implements ApplicationListener {
 	private Sprite boardWorld;
 	private Texture texture;
 	private Image background;
-	private int windWidth = 800;
-	private int windHeight = 480;
-	private int newWindW = 920;
-	public int boardW = 800;
-	public int boardH = 480;
+	// private int windWidth = 800;
+	// private int windHeight = 480;
+	// private int newWindW = 920;
+	// public int boardW = 800;
+	// public int boardH = 480;
+
+	// Real Game Color Board (FIXME - CHANGE MADE)
+	public int boardW;
+	public int boardH;
+	public int windWidth;
+	public int windHeight;
 
 	// Main Menu with Stage & Buttons
 	private Stage stage;
@@ -73,7 +79,15 @@ public class BoardGameEngine implements ApplicationListener {
 		layout = new GlyphLayout();
 
 		// Background board image
-		texture = new Texture(Gdx.files.internal("rectangularBoard.png"));
+		// texture = new Texture(Gdx.files.internal("rectangularBoard.png"));
+		// Real Game Color Board (FIXME - CHANGE MADE)
+		try {
+			initialize();
+		} catch (Exception e){
+			System.out.println("error");
+		}
+
+		texture = new Texture(Gdx.files.internal("dentalColor.png"));
 		boardWorld = new Sprite(texture);
 		boardWorld.setPosition(0,0);
 		boardWorld.setSize(boardW, boardH);
@@ -467,7 +481,8 @@ public class BoardGameEngine implements ApplicationListener {
 		numOfPlayers = num;
 		mainMenu = false;
 		try {
-			initialize();
+			// Real Game Color Board (FIXME - CHANGE MADE)
+			// initialize();
 			game.setNumOfPlayers(num);
 			stage.clear();
 		} catch (Exception e) {
@@ -477,7 +492,10 @@ public class BoardGameEngine implements ApplicationListener {
 
 	private void initialize() throws FileNotFoundException {
 		// Currently Reading Config File for Dental Game
-		FileHandle configText = Gdx.files.internal("dental.txt");
+		// FileHandle configText = Gdx.files.internal("dental.txt");
+
+		// Real Game Color Board (FIXME - CHANGE MADE)
+		FileHandle configText = Gdx.files.internal("dentalColor.txt");
 
 		// Regex approach
 		String config = configText.readString();
@@ -489,6 +507,10 @@ public class BoardGameEngine implements ApplicationListener {
 		int colNum = Integer.valueOf(setUpSettings[1]);
 		int endPosNum = Integer.valueOf(setUpSettings[2]);
 		game = new GameEngine(rowNum, colNum, endPosNum);
+
+		// Real Game Color Board (FIXME - CHANGE MADE)
+		boardW = windWidth = rowNum;
+		boardH = windHeight = colNum;
 
 		for (int i = 1; i < lines.length; i += 1) {
 			setUpSquare(lines[i]);
