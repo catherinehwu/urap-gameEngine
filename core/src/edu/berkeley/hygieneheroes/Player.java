@@ -1,9 +1,11 @@
 package edu.berkeley.hygieneheroes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,6 +82,7 @@ public class Player {
                 sizeWidth, sizeHeight);
 
         // outputting data about player's move
+        gameUI.font.setColor(Color.RED);
         gameUI.font.draw(gameUI.batch, name + " previous roll: " + prevRoll, 0, 440 - 20 * playerNum);
         gameUI.font.draw(gameUI.batch, name + " previous position: " + prevLocation.getSeqNum(), 0, 350 - 20 * playerNum);
         gameUI.font.draw(gameUI.batch, name + " current position: " + location.getSeqNum(), 0, 250 - 20 * playerNum);
@@ -104,7 +107,7 @@ public class Player {
         // location = futureLoc;
 
         draw(gameUI);
-        game.display(); // debugging line
+//        game.display(); // debugging line
 
         boolean complete = true;
 //        boolean complete = destination.getActions().isEmpty();
