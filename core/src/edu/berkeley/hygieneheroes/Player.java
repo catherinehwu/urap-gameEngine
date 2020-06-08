@@ -76,9 +76,9 @@ public class Player {
                 sizeWidth, sizeHeight);
 
         // outputting data about player's move
-        gameUI.font.draw(gameUI.batch, name + " previous moving roll: " + prevRoll, 0, 440 - 20 * playerNum);
-        gameUI.font.draw(gameUI.batch, name + " previous position: " + prevLocation.getSeqNum(), 0, 380 - 20 * playerNum);
-        gameUI.font.draw(gameUI.batch, name + " current position: " + location.getSeqNum(), 0, 300 - 20 * playerNum);
+        gameUI.font.draw(gameUI.batch, name + " previous roll: " + prevRoll, 0, 440 - 20 * playerNum);
+        gameUI.font.draw(gameUI.batch, name + " previous position: " + prevLocation.getSeqNum(), 0, 350 - 20 * playerNum);
+        gameUI.font.draw(gameUI.batch, name + " current position: " + location.getSeqNum(), 0, 250 - 20 * playerNum);
 
     }
 
