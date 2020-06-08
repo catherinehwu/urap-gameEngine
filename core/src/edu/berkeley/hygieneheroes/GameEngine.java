@@ -17,10 +17,12 @@ public class GameEngine {
     private boolean turnComplete;
     private boolean setZoom = true;
     private float[] increment;
-    private static final int HOLD_COUNT = 50;
+    private static final double ZOOM_INTERVAL = 0.0135;
+    private static final int ZOOM_HOLD_COUNT = 100;
     private static final int ZOOM_TIME = 50;
+    private static final int HOLD_COUNT = 50;
     private int bigScreenHold = HOLD_COUNT;
-    private int hold = HOLD_COUNT;
+    private int hold = ZOOM_HOLD_COUNT;
     private int zoomCount = ZOOM_TIME;
     private boolean zoomIn;
     public boolean zoomMode = false;
@@ -169,7 +171,7 @@ public class GameEngine {
     }
 
     private void zoomIn(BoardGameEngine gameUI, float x, float y) {
-        gameUI.camera.zoom -= 0.015;
+        gameUI.camera.zoom -= ZOOM_INTERVAL;
 
         float distX = x - gameUI.camera.position.x;
         float distY = y - gameUI.camera.position.y;
@@ -182,7 +184,7 @@ public class GameEngine {
         if (zoomCount == ZOOM_TIME) {
             setZoom = true;
             zoomMode = false;
-            hold = HOLD_COUNT;
+            hold = ZOOM_HOLD_COUNT;
             if (!destMode) {
                 moveMode = true;
             } else {
@@ -199,7 +201,7 @@ public class GameEngine {
             float distX = x - gameUI.camera.position.x;
             float distY = y - gameUI.camera.position.y;
 
-            gameUI.camera.zoom += (0.015);
+            gameUI.camera.zoom += (ZOOM_INTERVAL);
             gameUI.camera.translate(distX / (ZOOM_TIME - zoomCount), distY / (ZOOM_TIME - zoomCount) , 0);
             gameUI.camera.update();
             zoomCount += 1;
