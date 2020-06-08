@@ -390,15 +390,16 @@ public class BoardGameEngine implements ApplicationListener {
 		layout.setText(font, "Players: " + numOfPlayers, Color.BLACK, width, Align.center, true);
 		font.draw(batch, layout, 0, height / 2 + layout.height / 2 + 50);
 
-		int lineHeight = 0;
+		int lineHeight = -25;
 		if (game != null) {
 			for (Player p : game.getPlayersList()) {
 				layout.setText(font, p.getName(), Color.BLACK, width, Align.center, true);
 				font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 				p.draw(this);
-				lineHeight += 50;
+				lineHeight += 25;
 			}
 		}
+		lineHeight += 25;
 
 		if (gameNotOver) {
 			layout.setText(font, game.currentTurnStr(), Color.BLACK, width, Align.center, true);
@@ -448,7 +449,7 @@ public class BoardGameEngine implements ApplicationListener {
 		gameMessNum = num;
 	}
 	private void displayGameMessage() {
-		font.draw(batch, gameMessage, 0, 100 - 20 * gameMessNum);
+		font.draw(batch, gameMessage, 0, 150 - 20 * gameMessNum);
 	}
 
 	private void setGame(int num) {
