@@ -1,5 +1,8 @@
 package edu.berkeley.hygieneheroes;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -155,6 +158,11 @@ public class GameEngine {
             increment = setZoom(gameUI, p);
             zoomIn = true;
             setZoom = false;
+            if (destMode && p.getLocation().getSquareSound() != null) {
+                String file = p.getLocation().getSquareSound();
+                Sound sqSound = Gdx.audio.newSound(Gdx.files.internal(file));
+                sqSound.play();
+            }
             return;
         } else {
             if (zoomIn & (zoomCount > 0)) {

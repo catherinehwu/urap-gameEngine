@@ -41,4 +41,8 @@ public class Square {
         return actions;
     }
 
+    public String getSquareSound() {
+        return squareSound;
+    }
+
 }
