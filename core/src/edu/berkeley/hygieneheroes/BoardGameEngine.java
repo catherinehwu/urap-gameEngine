@@ -164,9 +164,12 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Single Player Button
 		singlePlay = new TextButton("1 Player", skin);
-		singlePlay.setWidth(150);
-		singlePlay.setHeight(100);
-		singlePlay.setPosition(windWidth / 8, 150, Align.center);
+//		singlePlay.setWidth(150);
+		singlePlay.setWidth(windWidth / 5);
+//		singlePlay.setHeight(100);
+		singlePlay.setHeight(windHeight / 5);
+//		singlePlay.setPosition(windWidth / 8, 150, Align.center);
+		singlePlay.setPosition(windWidth / 8, windHeight / 3, Align.center);
 		singlePlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -176,9 +179,12 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Two Player Button
 		doublePlay = new TextButton("2 Player", skin);
-		doublePlay.setWidth(150);
-		doublePlay.setHeight(100);
-		doublePlay.setPosition(3 * windWidth / 8, 150, Align.center);
+//		doublePlay.setWidth(150);
+		doublePlay.setWidth(windWidth / 5);
+//		doublePlay.setHeight(100);
+		doublePlay.setHeight(windHeight / 5);
+//		doublePlay.setPosition(3 * windWidth / 8, 150, Align.center);
+		doublePlay.setPosition(3 * windWidth / 8, windHeight / 3, Align.center);
 		doublePlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -188,9 +194,12 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Three Player Button
 		triplePlay = new TextButton("3 Player", skin);
-		triplePlay.setWidth(150);
-		triplePlay.setHeight(100);
-		triplePlay.setPosition(5 * windWidth / 8, 150, Align.center);
+//		triplePlay.setWidth(150);
+		triplePlay.setWidth(windWidth / 5);
+//		triplePlay.setHeight(100);
+		triplePlay.setHeight(windHeight / 5);
+//		triplePlay.setPosition(5 * windWidth / 8, 150, Align.center);
+		triplePlay.setPosition(5 * windWidth / 8, windHeight / 3, Align.center);
 		triplePlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -200,9 +209,12 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Four Player Button
 		quadPlay = new TextButton("4 Player", skin);
-		quadPlay.setWidth(150);
-		quadPlay.setHeight(100);
-		quadPlay.setPosition(7 * windWidth / 8, 150, Align.center);
+//		quadPlay.setWidth(150);
+		quadPlay.setWidth(windWidth / 5);
+//		quadPlay.setHeight(100);
+		quadPlay.setHeight(windHeight / 5);
+//		quadPlay.setPosition(7 * windWidth / 8, 150, Align.center);
+		quadPlay.setPosition(7 * windWidth / 8, windHeight / 3, Align.center);
 		quadPlay.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -253,34 +265,42 @@ public class BoardGameEngine implements ApplicationListener {
 		switch(num) {
 			case 4:
 				player4 = new TextField("Player 4", skin);
-				player4.setPosition(windWidth / 2, (windHeight - 90)- 4 * windHeight / 6, Align.center);
+//				player4.setPosition(windWidth / 2, (windHeight - 90)- 4 * windHeight / 6, Align.center);
+				player4.setPosition(windWidth / 2, (windHeight - (windHeight / 5))- 4 * windHeight / 6, Align.center);
 				Label player4Des = new Label("Type in Player 4's Name", skin);
 				player4Des.setColor(Color.BLUE);
-				player4Des.setPosition(windWidth / 2, (windHeight - 60)- 4 * windHeight / 6, Align.center);
+//				player4Des.setPosition(windWidth / 2, (windHeight - 60)- 4 * windHeight / 6, Align.center);
+				player4Des.setPosition(windWidth / 2, (windHeight - (windHeight / 8))- 4 * windHeight / 6, Align.center);
 				stage.addActor(player4);
 				stage.addActor(player4Des);
 			case 3:
 				player3 = new TextField("Player 3", skin);
-				player3.setPosition(windWidth / 2, (windHeight - 90)- 3 * windHeight / 6, Align.center);
+//				player3.setPosition(windWidth / 2, (windHeight - 90)- 3 * windHeight / 6, Align.center);
+				player3.setPosition(windWidth / 2, (windHeight - (windHeight / 5))- 3 * windHeight / 6, Align.center);
 				Label player3Des = new Label("Type in Player 3's Name", skin);
 				player3Des.setColor(Color.BLUE);
-				player3Des.setPosition(windWidth / 2, (windHeight - 60)- 3 * windHeight / 6, Align.center);
+//				player3Des.setPosition(windWidth / 2, (windHeight - 60)- 3 * windHeight / 6, Align.center);
+				player3Des.setPosition(windWidth / 2, (windHeight - (windHeight / 8))- 3 * windHeight / 6, Align.center);
 				stage.addActor(player3);
 				stage.addActor(player3Des);
 			case 2:
 				player2 = new TextField("Player 2", skin);
-				player2.setPosition(windWidth / 2, (windHeight - 90)-  2 * windHeight / 6, Align.center);
+//				player2.setPosition(windWidth / 2, (windHeight - 90)-  2 * windHeight / 6, Align.center);
+				player2.setPosition(windWidth / 2, (windHeight - (windHeight / 5))- 2 * windHeight / 6, Align.center);
 				Label player2Des = new Label("Type in Player 2's Name", skin);
 				player2Des.setColor(Color.BLUE);
-				player2Des.setPosition(windWidth / 2, (windHeight - 60)- 2 * windHeight / 6, Align.center);
+//				player2Des.setPosition(windWidth / 2, (windHeight - 60)- 2 * windHeight / 6, Align.center);
+				player2Des.setPosition(windWidth / 2, (windHeight - (windHeight / 8))- 2 * windHeight / 6, Align.center);
 				stage.addActor(player2);
 				stage.addActor(player2Des);
 			case 1:
 				player1 = new TextField("Player 1", skin);
-				player1.setPosition(windWidth / 2, (windHeight - 90)- windHeight / 6, Align.center);
+//				player1.setPosition(windWidth / 2, (windHeight - 90)- windHeight / 6, Align.center);
+				player1.setPosition(windWidth / 2, (windHeight - (windHeight / 5))- windHeight / 6, Align.center);
 				Label player1Des = new Label("Type in Player 1's Name", skin);
 				player1Des.setColor(Color.BLUE);
-				player1Des.setPosition(windWidth / 2, (windHeight - 60)- windHeight / 6, Align.center);
+//				player1Des.setPosition(windWidth / 2, (windHeight - 60)- windHeight / 6, Align.center);
+				player1Des.setPosition(windWidth / 2, (windHeight - (windHeight / 8))- windHeight / 6, Align.center);
 				stage.addActor(player1);
 				stage.addActor(player1Des);
 				break;
