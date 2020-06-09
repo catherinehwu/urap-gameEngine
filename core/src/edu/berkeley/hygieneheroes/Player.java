@@ -72,17 +72,12 @@ public class Player {
         float xFraction = ((float) location.getX()) / game.getBoard().getXrange();
         float yFraction = ((float) location.getY()) / game.getBoard().getYrange();
 
-        // drawing player piece
-//        gameUI.batch.draw(playerTexture,
-//                xFraction * Gdx.graphics.getWidth(), yFraction * Gdx.graphics.getHeight(),
-//                sizeWidth, sizeHeight);
-
         // drawing player piece based on board world
         // Old Grid Board (FIXME - OLD VERSION)
 //        gameUI.batch.draw(playerTexture, xFraction * gameUI.boardW, yFraction * gameUI.boardH,
 //                sizeWidth, sizeHeight);
 
-        // Real Game Color Board (FIXME - CHANGE MADE)
+        // Real Game Color Board (FIXME - PRECISE XY)
         gameUI.batch.draw(playerTexture, location.getX(), location.getY(),
                 sizeWidth, sizeHeight);
 
@@ -92,7 +87,7 @@ public class Player {
         gameUI.font.draw(gameUI.batch, name + " previous position: " + prevLocation.getSeqNum(), 0, 350 - 20 * playerNum);
         gameUI.font.draw(gameUI.batch, name + " current position: " + location.getSeqNum(), 0, 250 - 20 * playerNum);
 
-        // DIALOG display BOX (FIXME)
+        // DIALOG display BOX (FIXME - MESSAGE BAR)
         gameUI.layout.setText(gameUI.font, name + "'s roll: " + prevRoll, Color.BLACK, gameUI.messageAvgLen + gameUI.messagePad, Align.left, true);
         gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.boardW - gameUI.messageAvgLen - gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - playerNum * 2 * gameUI.layout.height);
         gameUI.layout.setText(gameUI.font, name + ":" + message, Color.BLACK, gameUI.boardW, Align.left, true);

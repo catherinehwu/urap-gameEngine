@@ -51,11 +51,13 @@ public class BoardGameEngine implements ApplicationListener {
 //	public int boardW = 800;
 //	public int boardH = 480;
 
-	// Real Game Color Board (FIXME - CHANGE MADE)
+	// Real Game Color Board (FIXME - PRECISE XY)
 	public int boardW;
 	public int boardH;
 	public int windWidth;
 	public int windHeight;
+
+	// Message Bar (FIXME - MESSAGE BAR)
 	public int messageHeight = 150;
 	public int messageAvgLen = 100;
 	public int messagePad = 20;
@@ -83,29 +85,27 @@ public class BoardGameEngine implements ApplicationListener {
 		font.setColor(Color.BLACK);
 		layout = new GlyphLayout();
 
-		// Background board image
-		// Real Game Color Board (FIXME - CHANGE MADE)
+		// Set up Game
 		try {
 			initialize();
 		} catch (Exception e){
 			System.out.println("error");
 		}
 
+		// Real Game Color Board (FIXME - PRECISE XY)
 		texture = new Texture(Gdx.files.internal("dentalColor.png"));
-//		texture = new Texture(Gdx.files.internal("rectangularBoard.png")); // Old Grid Board (FIXME - OLD VERSION)
+
+		// Old Grid Board (FIXME - OLD VERSION)
+//		texture = new Texture(Gdx.files.internal("rectangularBoard.png"));
+
+		// Set up Game Board, Camera, Viewport
 		boardWorld = new Sprite(texture);
 		boardWorld.setPosition(0,0);
 		boardWorld.setSize(boardW, boardH);
-		float ratio = (float)Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth();
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(boardW, boardH + messageHeight, camera);
 		viewport.apply();
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-
-		// Using Image Class
-//		background = new Image(texture);
-//		Vector2 pos = Scaling.fit.apply(texture.getWidth(), texture.getHeight(), imageW, imageH);
-//		background.setSize(pos.x, pos.y);
 
 		// Game Functionality
 		mainMenu = true;
@@ -117,15 +117,12 @@ public class BoardGameEngine implements ApplicationListener {
 		// Main Menu Screen with Stage & Buttons
 		setMainMenu();
 
-//		this.setScreen(new MainMenuScreen(this));
 	}
 
 	@Override
 	public void render () {
 		cameraScreen();
 		if (mainMenu) {
-			// Camera set up
-			// cameraScreen();
 
 			// BUTTON MAIN MENU
 			mainMenuButton();
@@ -423,8 +420,7 @@ public class BoardGameEngine implements ApplicationListener {
 		int width = boardW;
 		int height = boardH;
 
-		// Moving some text up
-		//UPPER DIALOG BOX (FIXME)
+		// Message Bar (FIXME - MESSAGE BAR)
 		layout.setText(font, "Game Messages", Color.BLACK, width, Align.center, true);
 		font.draw(batch, layout, 0, boardH + messageHeight - messagePad);
 
@@ -435,7 +431,7 @@ public class BoardGameEngine implements ApplicationListener {
 		layout.setText(font, "Player Square Action Messages:", Color.BLACK, width, Align.left, true);
 		font.draw(batch, layout, messagePad, boardH + messageHeight - messagePad);
 
-		//UPPER DIALOG BOX (FIXME)
+		// Message Bar (FIXME - MESSAGE BAR)
 		layout.setText(font, "Players: " + numOfPlayers, Color.BLACK, width, Align.left, true);
 		font.draw(batch, layout, boardW - messageAvgLen - messagePad, boardH + messageHeight - messagePad);
 
@@ -443,32 +439,26 @@ public class BoardGameEngine implements ApplicationListener {
 		font.draw(batch, layout, 0, height / 2 + layout.height / 2 + 50);
 
 		int lineHeight = -25;
-		int line = 1;
 		if (game != null) {
 			for (Player p : game.getPlayersList()) {
-				//UPPER DIALOG BOX (FIXME)
-				//layout.setText(font, p.getName(), Color.BLACK, width, Align.left, true);
-				//font.draw(batch, layout, boardW - messageAvgLen - messagePad, boardH + messageHeight - line * 2 * layout.height);
-
 				layout.setText(font, p.getName(), Color.BLACK, width, Align.center, true);
 				font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 				p.draw(this);
 				lineHeight += 25;
-				line += 1;
 			}
 		}
 		lineHeight += 25;
 
 		if (gameNotOver) {
-			layout.setText(font, game.currentTurnStr(), Color.BLACK, width, Align.center, true);
+			layout.setText(font, game.currentTurnStr(), Color.RED, width, Align.center, true);
 			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 			lineHeight += 50;
-			//UPPER DIALOG BOX (FIXME)
+			// Message Bar (FIXME - MESSAGE BAR)
 			font.draw(batch, layout, 0, boardH + messageHeight - 4 * layout.height - messagePad);
 
 			layout.setText(font, "Tap or press space to roll.", Color.BLACK, width, Align.center, true);
 			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
-			//UPPER DIALOG BOX (FIXME)
+			// Message Bar (FIXME - MESSAGE BAR)
 			font.draw(batch, layout, 0, boardH + messageHeight - 6 * layout.height - messagePad);
 
 
@@ -544,7 +534,7 @@ public class BoardGameEngine implements ApplicationListener {
 		// Old Grid Board (FIXME - OLD VERSION)
 //		FileHandle configText = Gdx.files.internal("dental.txt");
 
-		// Real Game Color Board (FIXME - CHANGE MADE)
+		// Real Game Color Board (FIXME - PRECISE XY)
 		FileHandle configText = Gdx.files.internal("dentalColor.txt");
 
 		// Regex approach
@@ -558,7 +548,7 @@ public class BoardGameEngine implements ApplicationListener {
 		int endPosNum = Integer.valueOf(setUpSettings[2]);
 		game = new GameEngine(rowNum, colNum, endPosNum);
 
-		// Real Game Color Board (FIXME - CHANGE MADE)
+		// Real Game Color Board (FIXME - PRECISE XY)
 		boardW = windWidth = rowNum;
 		boardH = windHeight = colNum;
 
