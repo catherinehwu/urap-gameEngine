@@ -56,6 +56,9 @@ public class BoardGameEngine implements ApplicationListener {
 	public int boardH;
 	public int windWidth;
 	public int windHeight;
+	public int messageHeight = 150;
+	public int messageAvgLen = 100;
+	public int messagePad = 20;
 
 	// Main Menu with Stage & Buttons
 	private Stage stage;
@@ -95,7 +98,7 @@ public class BoardGameEngine implements ApplicationListener {
 		boardWorld.setSize(boardW, boardH);
 		float ratio = (float)Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth();
 		camera = new OrthographicCamera();
-		viewport = new FitViewport(boardW, boardH, camera);
+		viewport = new FitViewport(boardW, boardH + messageHeight, camera);
 		viewport.apply();
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 
@@ -420,19 +423,38 @@ public class BoardGameEngine implements ApplicationListener {
 		int width = boardW;
 		int height = boardH;
 
+		// Moving some text up
+		//UPPER DIALOG BOX (FIXME)
+		layout.setText(font, "Game Messages", Color.BLACK, width, Align.center, true);
+		font.draw(batch, layout, 0, boardH + messageHeight - messagePad);
+
 		layout.setText(font, "Dental Game Board", Color.BLACK, width, Align.center, true);
+		font.draw(batch, layout, 0, boardH + messageHeight - 2 * layout.height - messagePad);
 		font.draw(batch, layout, 0, height / 2 + layout.height / 2 + 100);
+
+		layout.setText(font, "Player Square Action Messages:", Color.BLACK, width, Align.left, true);
+		font.draw(batch, layout, messagePad, boardH + messageHeight - messagePad);
+
+		//UPPER DIALOG BOX (FIXME)
+		layout.setText(font, "Players: " + numOfPlayers, Color.BLACK, width, Align.left, true);
+		font.draw(batch, layout, boardW - messageAvgLen - messagePad, boardH + messageHeight - messagePad);
 
 		layout.setText(font, "Players: " + numOfPlayers, Color.BLACK, width, Align.center, true);
 		font.draw(batch, layout, 0, height / 2 + layout.height / 2 + 50);
 
 		int lineHeight = -25;
+		int line = 1;
 		if (game != null) {
 			for (Player p : game.getPlayersList()) {
+				//UPPER DIALOG BOX (FIXME)
+				//layout.setText(font, p.getName(), Color.BLACK, width, Align.left, true);
+				//font.draw(batch, layout, boardW - messageAvgLen - messagePad, boardH + messageHeight - line * 2 * layout.height);
+
 				layout.setText(font, p.getName(), Color.BLACK, width, Align.center, true);
 				font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 				p.draw(this);
 				lineHeight += 25;
+				line += 1;
 			}
 		}
 		lineHeight += 25;
@@ -441,9 +463,14 @@ public class BoardGameEngine implements ApplicationListener {
 			layout.setText(font, game.currentTurnStr(), Color.BLACK, width, Align.center, true);
 			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 			lineHeight += 50;
+			//UPPER DIALOG BOX (FIXME)
+			font.draw(batch, layout, 0, boardH + messageHeight - 4 * layout.height - messagePad);
 
 			layout.setText(font, "Tap or press space to roll.", Color.BLACK, width, Align.center, true);
 			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
+			//UPPER DIALOG BOX (FIXME)
+			font.draw(batch, layout, 0, boardH + messageHeight - 6 * layout.height - messagePad);
+
 
 			if (game.zoomMode || game.destMode) {
 				// Zooming in on a player's piece before movement

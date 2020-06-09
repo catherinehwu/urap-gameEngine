@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Align;
 
 import java.awt.*;
 import java.util.regex.Matcher;
@@ -25,6 +26,7 @@ public class Player {
     private int prevRoll = 0;
     private int playerNum;
     private Square prevLocation;
+    private String message;
 
     // Player turn continuation tracker
     private boolean determineAction;
@@ -45,12 +47,14 @@ public class Player {
         prevLocation = game.getBoard().getStart();
         determineAction = false;
         savedAction = "";
+        message = "";
 
         playerTexture = new Texture(Gdx.files.internal(imageFileName));
         playerSprite = new Sprite(playerTexture);
     }
 
     public boolean guiTurn(BoardGameEngine gameUI) {
+        message = "";
         Square curLoc = location;
         int stepVal = guiRoll(true);
         boolean complete = guiMove(stepVal, gameUI);
@@ -88,6 +92,11 @@ public class Player {
         gameUI.font.draw(gameUI.batch, name + " previous position: " + prevLocation.getSeqNum(), 0, 350 - 20 * playerNum);
         gameUI.font.draw(gameUI.batch, name + " current position: " + location.getSeqNum(), 0, 250 - 20 * playerNum);
 
+        // DIALOG display BOX (FIXME)
+        gameUI.layout.setText(gameUI.font, name + "'s roll: " + prevRoll, Color.BLACK, gameUI.messageAvgLen + gameUI.messagePad, Align.left, true);
+        gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.boardW - gameUI.messageAvgLen - gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - playerNum * 2 * gameUI.layout.height);
+        gameUI.layout.setText(gameUI.font, name + ":" + message, Color.BLACK, gameUI.boardW, Align.left, true);
+        gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - playerNum * 2 * gameUI.layout.height);
     }
 
     private int guiRoll(boolean set) {
@@ -233,6 +242,7 @@ public class Player {
                 // roll again
                 System.out.println("Roll again!");
                 gameUI.setGameMessage(name + " roll again!", playerNum);
+                message = " Roll again!";
                 squareAction = false;
                 break;
             case 'b':
@@ -242,6 +252,7 @@ public class Player {
                 int steps = Integer.valueOf(key.substring(1));
                 System.out.println("Moving " + steps + " forward!");
                 gameUI.setGameMessage(name + " moving " + steps + " forward!", playerNum);
+                message = " Moving " + steps + " forward!";
                 squareAction = true;
                 break;
             case 'c':
@@ -251,6 +262,7 @@ public class Player {
                 int backSteps = Integer.valueOf(key.substring(1));
                 System.out.println("Moving " + backSteps + " backwards!");
                 gameUI.setGameMessage(name + " moving " + backSteps + " backwards!", playerNum);
+                message = " Moving " + backSteps + " backwards!";
                 squareAction = true;
                 break;
             case 'd':
@@ -259,6 +271,7 @@ public class Player {
                 int sqNum = Integer.valueOf(key.substring(1));
                 System.out.println("Moving to square #" + sqNum + "!");
                 gameUI.setGameMessage(name + " Moving to square #" + sqNum + "!", playerNum);
+                message = " Moving to square #" + sqNum + "!";
                 squareAction = true;
                 break;
             case 'e':
@@ -267,6 +280,7 @@ public class Player {
                 skipTurn = true;
                 System.out.println("Next turn skipped!");
                 gameUI.setGameMessage(name + " Next turn skipped!", playerNum);
+                message = " Next turn skipped!";
                 squareAction = false;
                 return true;
             case 'f':
@@ -275,6 +289,7 @@ public class Player {
                 game.reverse();
                 System.out.println("Turn order reversed!");
                 gameUI.setGameMessage(name + " caused a turn order to reverse!", playerNum);
+                message = " Caused a turn order to reverse!";
                 squareAction = false;
                 return true;
             case 'g':
@@ -283,6 +298,7 @@ public class Player {
                 // do the following action
                 System.out.println("Roll again to determine action!");
                 gameUI.setGameMessage(name + " Roll again to determine action!", playerNum);
+                message = " Roll again to determine action!";
                 determineAction = true;
                 savedAction = key;
                 squareAction = false;
