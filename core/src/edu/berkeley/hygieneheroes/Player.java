@@ -68,24 +68,20 @@ public class Player {
 //        System.out.println(prevRoll);
 //        System.out.println(location.getSeqNum());
 
-        // getting ratios
-        float xFraction = ((float) location.getX()) / game.getBoard().getXrange();
-        float yFraction = ((float) location.getY()) / game.getBoard().getYrange();
-
-        // drawing player piece based on board world
         // Old Grid Board (FIXME - OLD VERSION)
-//        gameUI.batch.draw(playerTexture, xFraction * gameUI.boardW, yFraction * gameUI.boardH,
-//                sizeWidth, sizeHeight);
+//        float xFraction = ((float) location.getX()) / game.getBoard().getXrange();
+//        float yFraction = ((float) location.getY()) / game.getBoard().getYrange();
+//        gameUI.batch.draw(playerTexture, xFraction * gameUI.boardW, yFraction * gameUI.boardH, sizeWidth, sizeHeight);
 
         // Real Game Color Board (FIXME - PRECISE XY)
         gameUI.batch.draw(playerTexture, location.getX(), location.getY(),
                 sizeWidth, sizeHeight);
 
         // outputting data about player's move
-        gameUI.font.setColor(Color.RED);
-        gameUI.font.draw(gameUI.batch, name + " previous roll: " + prevRoll, 0, 440 - 20 * playerNum);
-        gameUI.font.draw(gameUI.batch, name + " previous position: " + prevLocation.getSeqNum(), 0, 350 - 20 * playerNum);
-        gameUI.font.draw(gameUI.batch, name + " current position: " + location.getSeqNum(), 0, 250 - 20 * playerNum);
+//        gameUI.font.setColor(Color.RED);
+//        gameUI.font.draw(gameUI.batch, name + " previous roll: " + prevRoll, 0, 440 - 20 * playerNum);
+//        gameUI.font.draw(gameUI.batch, name + " previous position: " + prevLocation.getSeqNum(), 0, 350 - 20 * playerNum);
+//        gameUI.font.draw(gameUI.batch, name + " current position: " + location.getSeqNum(), 0, 250 - 20 * playerNum);
 
         // DIALOG display BOX (FIXME - MESSAGE BAR)
         gameUI.layout.setText(gameUI.font, name + "'s roll: " + prevRoll, Color.BLACK, gameUI.messageAvgLen + gameUI.messagePad, Align.left, true);

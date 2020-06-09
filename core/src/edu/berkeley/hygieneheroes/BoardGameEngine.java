@@ -123,27 +123,8 @@ public class BoardGameEngine implements ApplicationListener {
 	public void render () {
 		cameraScreen();
 		if (mainMenu) {
-
 			// BUTTON MAIN MENU
 			mainMenuButton();
-
-			// ORIGINAL MAIN MENU
-//			mainMenu();
-
-			// Switch from Main to Game for ORIGINAL MAIN MENU
-			if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)
-					|| Gdx.input.isKeyPressed(Input.Keys.NUMPAD_1)) {
-				setGame(1);
-			} else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)
-					|| Gdx.input.isKeyPressed(Input.Keys.NUMPAD_2)) {
-				setGame(2);
-			} else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)
-					|| Gdx.input.isKeyPressed(Input.Keys.NUMPAD_3)) {
-				setGame(3);
-			} else if (Gdx.input.isKeyPressed(Input.Keys.NUM_4)
-					|| Gdx.input.isKeyPressed(Input.Keys.NUMPAD_4)) {
-				setGame(4);
-			}
 
 		} else {
 			// GAME SCREEN
@@ -166,11 +147,8 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Single Player Button
 		singlePlay = new TextButton("1 Player", skin);
-//		singlePlay.setWidth(150);
 		singlePlay.setWidth(windWidth / 5);
-//		singlePlay.setHeight(100);
 		singlePlay.setHeight(windHeight / 5);
-//		singlePlay.setPosition(windWidth / 8, 150, Align.center);
 		singlePlay.setPosition(windWidth / 8, windHeight / 3, Align.center);
 		singlePlay.addListener(new ClickListener() {
 			@Override
@@ -181,11 +159,8 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Two Player Button
 		doublePlay = new TextButton("2 Player", skin);
-//		doublePlay.setWidth(150);
 		doublePlay.setWidth(windWidth / 5);
-//		doublePlay.setHeight(100);
 		doublePlay.setHeight(windHeight / 5);
-//		doublePlay.setPosition(3 * windWidth / 8, 150, Align.center);
 		doublePlay.setPosition(3 * windWidth / 8, windHeight / 3, Align.center);
 		doublePlay.addListener(new ClickListener() {
 			@Override
@@ -196,11 +171,8 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Three Player Button
 		triplePlay = new TextButton("3 Player", skin);
-//		triplePlay.setWidth(150);
 		triplePlay.setWidth(windWidth / 5);
-//		triplePlay.setHeight(100);
 		triplePlay.setHeight(windHeight / 5);
-//		triplePlay.setPosition(5 * windWidth / 8, 150, Align.center);
 		triplePlay.setPosition(5 * windWidth / 8, windHeight / 3, Align.center);
 		triplePlay.addListener(new ClickListener() {
 			@Override
@@ -211,11 +183,8 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Four Player Button
 		quadPlay = new TextButton("4 Player", skin);
-//		quadPlay.setWidth(150);
 		quadPlay.setWidth(windWidth / 5);
-//		quadPlay.setHeight(100);
 		quadPlay.setHeight(windHeight / 5);
-//		quadPlay.setPosition(7 * windWidth / 8, 150, Align.center);
 		quadPlay.setPosition(7 * windWidth / 8, windHeight / 3, Align.center);
 		quadPlay.addListener(new ClickListener() {
 			@Override
@@ -267,41 +236,33 @@ public class BoardGameEngine implements ApplicationListener {
 		switch(num) {
 			case 4:
 				player4 = new TextField("Player 4", skin);
-//				player4.setPosition(windWidth / 2, (windHeight - 90)- 4 * windHeight / 6, Align.center);
 				player4.setPosition(windWidth / 2, (windHeight - (windHeight / 5))- 4 * windHeight / 6, Align.center);
 				Label player4Des = new Label("Type in Player 4's Name", skin);
 				player4Des.setColor(Color.BLUE);
-//				player4Des.setPosition(windWidth / 2, (windHeight - 60)- 4 * windHeight / 6, Align.center);
 				player4Des.setPosition(windWidth / 2, (windHeight - (windHeight / 8))- 4 * windHeight / 6, Align.center);
 				stage.addActor(player4);
 				stage.addActor(player4Des);
 			case 3:
 				player3 = new TextField("Player 3", skin);
-//				player3.setPosition(windWidth / 2, (windHeight - 90)- 3 * windHeight / 6, Align.center);
 				player3.setPosition(windWidth / 2, (windHeight - (windHeight / 5))- 3 * windHeight / 6, Align.center);
 				Label player3Des = new Label("Type in Player 3's Name", skin);
 				player3Des.setColor(Color.BLUE);
-//				player3Des.setPosition(windWidth / 2, (windHeight - 60)- 3 * windHeight / 6, Align.center);
 				player3Des.setPosition(windWidth / 2, (windHeight - (windHeight / 8))- 3 * windHeight / 6, Align.center);
 				stage.addActor(player3);
 				stage.addActor(player3Des);
 			case 2:
 				player2 = new TextField("Player 2", skin);
-//				player2.setPosition(windWidth / 2, (windHeight - 90)-  2 * windHeight / 6, Align.center);
 				player2.setPosition(windWidth / 2, (windHeight - (windHeight / 5))- 2 * windHeight / 6, Align.center);
 				Label player2Des = new Label("Type in Player 2's Name", skin);
 				player2Des.setColor(Color.BLUE);
-//				player2Des.setPosition(windWidth / 2, (windHeight - 60)- 2 * windHeight / 6, Align.center);
 				player2Des.setPosition(windWidth / 2, (windHeight - (windHeight / 8))- 2 * windHeight / 6, Align.center);
 				stage.addActor(player2);
 				stage.addActor(player2Des);
 			case 1:
 				player1 = new TextField("Player 1", skin);
-//				player1.setPosition(windWidth / 2, (windHeight - 90)- windHeight / 6, Align.center);
 				player1.setPosition(windWidth / 2, (windHeight - (windHeight / 5))- windHeight / 6, Align.center);
 				Label player1Des = new Label("Type in Player 1's Name", skin);
 				player1Des.setColor(Color.BLUE);
-//				player1Des.setPosition(windWidth / 2, (windHeight - 60)- windHeight / 6, Align.center);
 				player1Des.setPosition(windWidth / 2, (windHeight - (windHeight / 8))- windHeight / 6, Align.center);
 				stage.addActor(player1);
 				stage.addActor(player1Des);
@@ -344,60 +305,9 @@ public class BoardGameEngine implements ApplicationListener {
 		batch.end();
 	}
 
-	private void mainMenu() {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-
-		int width = Gdx.graphics.getWidth();
-		int height = Gdx.graphics.getHeight();
-		layout.setText(font, "Hygiene Heroes", Color.BLACK, width, Align.center, true);
-		font.draw(batch, layout, 0,  height / 2 + layout.height / 2 + 100);
-
-		layout.setText(font, "Dental Hygiene Game", Color.BLACK, width, Align.center, true);
-		font.draw(batch, layout, 0, height / 2 + layout.height / 2);
-
-		layout.setText(font, "Enter number of players (1 ~ 4) to start game!", Color.BLACK, width, Align.center, true);
-		font.draw(batch, layout, 0, height / 2 + layout.height / 2 - 100);
-
-		batch.end();
-	}
-
-	private void winningScreen(int lineHeight) {
-//		int width = Gdx.graphics.getWidth();
-//		int height = Gdx.graphics.getHeight();
-		int width = boardW;
-		int height = boardH;
-		layout.setText(font, "Winner: " + winner.getName(), Color.BLACK, width, Align.center, true);
-		font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
-	}
-
-	private void setUpGameScreen() {
-		// Stage Game Screen Version
-		stage.clear();
-		background.setPosition(0,0);
-//		WidgetGroup backgroundImage = new WidgetGroup(background);
-//		backgroundImage.setPosition(0,0);
-		stage.addActor(background);
-
-		Label name = new Label("Dental Game Board", skin);
-		name.setColor(Color.BLACK);
-//		name.setAlignment(Align.left, Align.center);
-//		name.setPosition(background.getImageWidth(), 0);
-//		WidgetGroup labelling = new WidgetGroup(name);
-//		labelling.setPosition(backgroundImage.getX(), 0);
-//		SplitPane split = new SplitPane(backgroundImage, labelling, false, skin);
-//		stage.addActor(split);
-		stage.addActor(name);
-
-		Table table = new Table(skin);
-		table.add("Testing Board");
-		table.row();
-		table.add(name);
-		table.setColor(Color.WHITE);
-		table.setPosition(background.getImageWidth(), 200);
-		stage.addActor(table);
-		stage.draw();
+	private void winningScreen() {
+		layout.setText(font, "Winner: " + winner.getName(), Color.BLACK, boardW, Align.center, true);
+		font.draw(batch, layout, 0, boardH + messageHeight - 8 * layout.height - messagePad);
 	}
 
 	private void cameraScreen() {
@@ -413,52 +323,34 @@ public class BoardGameEngine implements ApplicationListener {
 		// Moving camera part over
 		boardWorld.draw(batch);
 
-		// Stage Game Screen Version
-		// setUpGameScreen();
-
 		// Temporary variables
-		int width = boardW;
-		int height = boardH;
+		//int width = boardW;
+		//int height = boardH;
 
 		// Message Bar (FIXME - MESSAGE BAR)
-		layout.setText(font, "Game Messages", Color.BLACK, width, Align.center, true);
+		layout.setText(font, "Game Messages", Color.BLACK, boardW, Align.center, true);
 		font.draw(batch, layout, 0, boardH + messageHeight - messagePad);
 
-		layout.setText(font, "Dental Game Board", Color.BLACK, width, Align.center, true);
+		layout.setText(font, "Dental Game Board", Color.BLACK, boardW, Align.center, true);
 		font.draw(batch, layout, 0, boardH + messageHeight - 2 * layout.height - messagePad);
-		font.draw(batch, layout, 0, height / 2 + layout.height / 2 + 100);
 
-		layout.setText(font, "Player Square Action Messages:", Color.BLACK, width, Align.left, true);
+		layout.setText(font, "Player Square Action Messages:", Color.BLACK, boardW, Align.left, true);
 		font.draw(batch, layout, messagePad, boardH + messageHeight - messagePad);
 
-		// Message Bar (FIXME - MESSAGE BAR)
-		layout.setText(font, "Players: " + numOfPlayers, Color.BLACK, width, Align.left, true);
+		layout.setText(font, "Players: " + numOfPlayers, Color.BLACK, boardW, Align.left, true);
 		font.draw(batch, layout, boardW - messageAvgLen - messagePad, boardH + messageHeight - messagePad);
 
-		layout.setText(font, "Players: " + numOfPlayers, Color.BLACK, width, Align.center, true);
-		font.draw(batch, layout, 0, height / 2 + layout.height / 2 + 50);
-
-		int lineHeight = -25;
 		if (game != null) {
 			for (Player p : game.getPlayersList()) {
-				layout.setText(font, p.getName(), Color.BLACK, width, Align.center, true);
-				font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
 				p.draw(this);
-				lineHeight += 25;
 			}
 		}
-		lineHeight += 25;
 
 		if (gameNotOver) {
-			layout.setText(font, game.currentTurnStr(), Color.RED, width, Align.center, true);
-			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
-			lineHeight += 50;
-			// Message Bar (FIXME - MESSAGE BAR)
+			layout.setText(font, game.currentTurnStr(), Color.RED, boardW, Align.center, true);
 			font.draw(batch, layout, 0, boardH + messageHeight - 4 * layout.height - messagePad);
 
-			layout.setText(font, "Tap or press space to roll.", Color.BLACK, width, Align.center, true);
-			font.draw(batch, layout, 0, height / 2 + layout.height / 2 - lineHeight);
-			// Message Bar (FIXME - MESSAGE BAR)
+			layout.setText(font, "Tap or press space to roll.", Color.BLACK, boardW, Align.center, true);
 			font.draw(batch, layout, 0, boardH + messageHeight - 6 * layout.height - messagePad);
 
 
@@ -487,11 +379,11 @@ public class BoardGameEngine implements ApplicationListener {
 			}
 
 			// Displays message about the details of the last special move
-			displayGameMessage();
+			// displayGameMessage();
 
 		} else {
 			// Displays Winning Screen Message if Game Over
-			winningScreen(lineHeight);
+			winningScreen();
 		}
 		batch.end();
 	}
