@@ -1,6 +1,7 @@
 package edu.berkeley.hygieneheroes;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -27,6 +28,7 @@ public class BoardGameEngine implements ApplicationListener {
 	public SpriteBatch batch;
 	public BitmapFont font;
 	public GlyphLayout layout;
+	private Music victory;
 
 	// Game Functionality Parameters
 	private boolean mainMenu;
@@ -149,6 +151,8 @@ public class BoardGameEngine implements ApplicationListener {
 			if (gameNotOver && game.gameOver()) {
 				gameNotOver = false;
 				winner = game.winner();
+				victory = Gdx.audio.newMusic(Gdx.files.internal("victory.mp3"));
+				victory.play();
 			}
 		}
 	}
@@ -540,5 +544,6 @@ public class BoardGameEngine implements ApplicationListener {
 		texture.dispose();
 		stage.dispose();
 		skin.dispose();
+		victory.dispose();
 	}
 }
