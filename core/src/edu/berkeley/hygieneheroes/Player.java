@@ -333,6 +333,9 @@ public class Player {
             draw(gameUI);
         }
         squareAction = !complete;
+        if (destination != null && destination.getActions() != null) {
+            squareAction = true;
+        }
     }
 
     public void advance() {
