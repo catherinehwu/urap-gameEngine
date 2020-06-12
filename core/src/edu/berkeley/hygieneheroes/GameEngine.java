@@ -2,6 +2,7 @@ package edu.berkeley.hygieneheroes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +16,19 @@ public class GameEngine {
     private int curTurnIndex;
     private int direction;
     private int numOfPlayers;
+
+    // GUI Dice Images
+    private ArrayList<Texture> die;
+    public Texture diceFace;
+    public boolean rollMode = false;
+    private int ROLL_REPEAT = 24;
+    private int count = 0;
+    private int pauseCount = 0;
+    private int DICE_PAUSE_TIME = 5;
+    public float diceW;
+    public float diceH;
+    public float diceX;
+    public float diceY;
 
     // Interacting with GUI and User
     private boolean turnComplete;
@@ -45,6 +59,20 @@ public class GameEngine {
 
         //standard dice with 1~6
         dice = new Dice(6);
+        die = new ArrayList<Texture>();
+        Texture die1 = new Texture(Gdx.files.internal("die1.png"));
+        Texture die2 = new Texture(Gdx.files.internal("die2.png"));
+        Texture die3 = new Texture(Gdx.files.internal("die3.png"));
+        Texture die4 = new Texture(Gdx.files.internal("die4.png"));
+        Texture die5 = new Texture(Gdx.files.internal("die5.png"));
+        Texture die6 = new Texture(Gdx.files.internal("die6.png"));
+        die.add(die1);
+        die.add(die2);
+        die.add(die3);
+        die.add(die4);
+        die.add(die5);
+        die.add(die6);
+
     }
 
     public void addSquare(int num, int sqX, int sqY,
@@ -126,11 +154,13 @@ public class GameEngine {
     public void moveProcess(BoardGameEngine gameUI) {
         // Causes game to resume with a next turn or continuation of previous move
         turnComplete = false;
+        boolean rolled = false;
         Player p = playersList.get(curTurnIndex);
 
         if (p.determiningAction()) {
             // Dice must be rolled to determine the next action
             turnComplete = p.completeAction(gameUI);
+            rolled = true;
         } else if (p.isSquareAction()) {
             System.out.println("square action");
             p.squareAction(gameUI);
@@ -144,12 +174,16 @@ public class GameEngine {
                 System.out.println("completed turn");
                 turnComplete = true;
             }
+            rolled = true;
         }
 
         // Only advance turn if turn has completed --> Moved to Zoom Out Part
         // (to keep player tracker correct)
 
         moveMode = false;
+        if (rolled) {
+            rollMode = true;
+        }
         holdMode = true;
     }
 
@@ -250,6 +284,26 @@ public class GameEngine {
         }
         while (curTurnIndex >= numOfPlayers) {
             curTurnIndex -= numOfPlayers;
+        }
+    }
+
+    public void rollGui(BoardGameEngine gameUI) {
+        Player current = currentPlayer();
+        diceX = gameUI.boardW - 3 * gameUI.messageAvgLen - gameUI.messagePad;
+        diceY = gameUI.boardH;
+        diceW = gameUI.messageHeight;
+        diceH = gameUI.messageHeight;
+        if (current.getPrevRoll() != 0) {
+            if (pauseCount > 0) {
+                pauseCount -= 1;
+            } else if (count < ROLL_REPEAT + current.getPrevRoll()) {
+                diceFace = die.get(count % 6);
+                count += 1;
+                pauseCount = DICE_PAUSE_TIME;
+            } else if (count == ROLL_REPEAT + current.getPrevRoll()) {
+                rollMode = false;
+                count = 0;
+            }
         }
     }
 

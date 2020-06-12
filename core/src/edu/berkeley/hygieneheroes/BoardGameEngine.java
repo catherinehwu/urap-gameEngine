@@ -90,6 +90,7 @@ public class BoardGameEngine implements ApplicationListener {
 			initialize();
 		} catch (Exception e){
 			System.out.println("error");
+			System.out.println(e.getMessage());
 		}
 
 		// Real Game Color Board (FIXME - PRECISE XY)
@@ -377,6 +378,9 @@ public class BoardGameEngine implements ApplicationListener {
 				// Moving player's piece and advancing turn
 				// System.out.println("game movement processing - half");
 				game.moveProcess(this);
+			} else if (game.rollMode) {
+				// Showing an image of the rolling dice
+				game.rollGui(this);
 			} else if (game.holdMode) {
 				// Holding screen at zoom out mode after piece has moved
 				// System.out.println("holding in outside large screen");
@@ -392,6 +396,9 @@ public class BoardGameEngine implements ApplicationListener {
 				game.activate();
 			}
 
+			// Show Dice
+			showDice();
+
 			// Displays message about the details of the last special move
 			// displayGameMessage();
 
@@ -400,6 +407,12 @@ public class BoardGameEngine implements ApplicationListener {
 			winningScreen();
 		}
 		batch.end();
+	}
+
+	private void showDice() {
+		if (game.diceFace != null) {
+			batch.draw(game.diceFace, game.diceX, game.diceY, game.diceW, game.diceH);
+		}
 	}
 
 	public void setGameMessage(String message, int num) {
@@ -435,7 +448,7 @@ public class BoardGameEngine implements ApplicationListener {
 		}
 	}
 
-	private void initialize() throws FileNotFoundException {
+	private void initialize() {
 		// Currently Reading Config File for Dental Game
 		// Old Grid Board (FIXME - OLD VERSION)
 //		FileHandle configText = Gdx.files.internal("dental.txt");
