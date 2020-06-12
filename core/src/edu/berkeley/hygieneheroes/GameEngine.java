@@ -1,6 +1,7 @@
 package edu.berkeley.hygieneheroes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -51,6 +52,11 @@ public class GameEngine {
     private static final int STEP_HOLD = 25;
     private int stepHoldTime = STEP_HOLD;
 
+    // Sound Effects
+    private Sound stepTap;
+    private Music flySound;
+    private boolean stepSound;
+
     public GameEngine(int Xrange, int Yrange, int endPosNum) {
         board = new Board(Xrange, Yrange, endPosNum);
         playersList = new ArrayList<>();
@@ -73,6 +79,9 @@ public class GameEngine {
         die.add(die5);
         die.add(die6);
 
+        // sound
+        stepTap = Gdx.audio.newSound(Gdx.files.internal("step.wav"));
+        flySound = Gdx.audio.newMusic(Gdx.files.internal("whee.wav"));
     }
 
     public void addSquare(int num, int sqX, int sqY,
@@ -120,11 +129,20 @@ public class GameEngine {
         Player cur = currentPlayer();
         if (cur.getDestination() == null || cur.getLocation() == cur.getDestination()) {
             cur.resetDestination();
+            if (flySound.isPlaying()) {
+                flySound.stop();
+            }
             stepMode = false;
             destMode = true;
         } else {
             if (!stepHold) {
                 cur.advance();
+                if (stepSound) {
+                    stepTap.play();
+                } else if (!flySound.isPlaying()) {
+                    flySound.play();
+                    flySound.setLooping(true);
+                }
                 stepHold = true;
             } else {
                 stepHold();
@@ -154,6 +172,7 @@ public class GameEngine {
     public void moveProcess(BoardGameEngine gameUI) {
         // Causes game to resume with a next turn or continuation of previous move
         turnComplete = false;
+        stepSound = true;
         boolean rolled = false;
         Player p = playersList.get(curTurnIndex);
 
@@ -168,6 +187,7 @@ public class GameEngine {
                 System.out.println("no more square action");
                 turnComplete = true;
             }
+            stepSound = false;
         } else {
             // Completes next turn in the game
             if (p.guiTurn(gameUI)) {

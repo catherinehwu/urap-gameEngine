@@ -151,8 +151,9 @@ public class BoardGameEngine implements ApplicationListener {
 			if (gameNotOver && game.gameOver()) {
 				gameNotOver = false;
 				winner = game.winner();
-				victory = Gdx.audio.newMusic(Gdx.files.internal("victory.mp3"));
+				victory = Gdx.audio.newMusic(Gdx.files.internal("victory.wav"));
 				victory.play();
+				victory.setLooping(true);
 			}
 		}
 	}

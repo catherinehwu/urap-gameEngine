@@ -333,7 +333,7 @@ public class Player {
             draw(gameUI);
         }
         squareAction = !complete;
-        if (destination != null && destination.getActions() != null) {
+        if (destination != null && !destination.getActions().isEmpty()) {
             squareAction = true;
         }
     }
