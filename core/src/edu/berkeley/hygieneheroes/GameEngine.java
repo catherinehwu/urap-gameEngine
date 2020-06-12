@@ -21,7 +21,7 @@ public class GameEngine {
     private ArrayList<Texture> die;
     public Texture diceFace;
     public boolean rollMode = false;
-    private int ROLL_REPEAT = 24;
+    private int ROLL_REPEAT = 12;
     private int count = 0;
     private int pauseCount = 0;
     private int DICE_PAUSE_TIME = 5;
