@@ -19,7 +19,6 @@ public class Player {
     private boolean skipTurn;
 
     // Player GUI details
-    private Sprite playerSprite;
     private Texture playerTexture;
     private int sizeWidth = 32;
     private int sizeHeight = 32;
@@ -50,7 +49,6 @@ public class Player {
         message = "";
 
         playerTexture = new Texture(Gdx.files.internal(imageFileName));
-        playerSprite = new Sprite(playerTexture);
     }
 
     public boolean guiTurn(BoardGameEngine gameUI) {
