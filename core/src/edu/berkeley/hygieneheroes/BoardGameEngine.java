@@ -98,11 +98,25 @@ public class BoardGameEngine implements ApplicationListener {
 		// Old Grid Board (FIXME - OLD VERSION)
 //		texture = new Texture(Gdx.files.internal("rectangularBoard.png"));
 
+		// Experimentation with Ratios and Rescaling
+		// If I rescale the window size, then I need to rescale each XY coordinate as well.
+//		boardH = (int) (800 * boardH / (float) boardW);
+//		windHeight = boardH;
+//		boardW = 800;
+//		windWidth = 800;
+//		System.out.println(boardW);
+//		System.out.println(boardH);
+//		System.out.println(windWidth);
+//		System.out.println(windHeight);
+
+
 		// Set up Game Board, Camera, Viewport
 		boardWorld = new Sprite(texture);
 		boardWorld.setPosition(0,0);
 		boardWorld.setSize(boardW, boardH);
+//		boardWorld.setSize(800, 800 * boardH / boardW);
 		camera = new OrthographicCamera();
+//		viewport = new FitViewport(800,(800 * boardH / boardW) + messageHeight, camera);
 		viewport = new FitViewport(boardW, boardH + messageHeight, camera);
 		viewport.apply();
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
