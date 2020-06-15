@@ -103,17 +103,7 @@ public class GameEngine {
 
     public String currentTurnStr() {
         Player current = playersList.get(curTurnIndex);
-
-        // Skip Turn Processing in Advance
-        /*
-        while (current.getSkipTurn()) {
-            current.turnSkipped();
-            advanceTurn();
-            current = playersList.get(curTurnIndex);
-        }
-        */
-
-        return "Current turn: " + current.getName();
+        return current.getName();
     }
 
     public Player currentPlayer() {
@@ -356,24 +346,10 @@ public class GameEngine {
         return dice;
     }
 
-    // processing input from System.in
-//    public String readLine() {
-//
-//        // promptHuman();
-//        promptApproval();
-//
-//        if (input.hasNextLine()) {
-//            return input.nextLine().trim();
-//        } else {
-//            return null;
-//        }
-//    }
-
     // output for troubleshooting
     public void display() {
         System.out.println();
         System.out.print("==========");
-        board.display();
         for (Player p : playersList) {
             System.out.println(p.getName() + " is at " + p.getLocation().getSeqNum());
         }

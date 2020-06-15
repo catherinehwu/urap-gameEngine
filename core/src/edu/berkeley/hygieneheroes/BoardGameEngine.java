@@ -348,7 +348,7 @@ public class BoardGameEngine implements ApplicationListener {
 		}
 
 		if (gameNotOver) {
-			layout.setText(font, game.currentTurnStr(), Color.RED, boardW, Align.center, true);
+			layout.setText(font, "Current turn: " + game.currentTurnStr(), Color.RED, boardW, Align.center, true);
 			font.draw(batch, layout, 0, boardH + messageHeight - 4 * layout.height - messagePad);
 
 			layout.setText(font, "Tap or press space to roll.", Color.BLACK, boardW, Align.center, true);
