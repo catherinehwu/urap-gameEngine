@@ -25,7 +25,7 @@ public class Board {
                           String picture, String text, String sound,
                           ArrayList<String> listOfActions) {
         Square sq = new Square(num, sqX, sqY, picture, text, sound, listOfActions);
-        grid[(int)sqX][(int)sqY] = sq; //Casting sqX and sqY temporarily
+//        grid[(int)sqX][(int)sqY] = sq; //Casting sqX and sqY temporarily
         ordering[num] = sq;
 
         if (num == 0) {
