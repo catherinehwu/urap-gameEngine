@@ -52,25 +52,12 @@ public class BoardGameEngine implements ApplicationListener {
 	private Texture texture;
 	private Image background;
 
-	// Old Grid Board (FIXME - OLD VERSION)
-//	private int windWidth = 800;
-//	private int windHeight = 480;
-//	private int newWindW = 920;
-//	public int boardW = 800;
-//	public int boardH = 480;
-
-	// Real Game Color Board (FIXME - PRECISE XY)
-//	public int boardW;
-//	public int boardH;
-//	public int windWidth;
-//	public int windHeight;
-
 	// Scaling Game Board
 	public float boardW;
 	public float boardH;
 	public float windWidth;
 	public float windHeight;
-	private int constantW = 960;
+	private final int CONSTANTW = 960;
 	private float ratio;
 
 	// Message Bar (FIXME - MESSAGE BAR)
@@ -113,25 +100,11 @@ public class BoardGameEngine implements ApplicationListener {
 		// General Game Board
 		texture = new Texture(Gdx.files.internal(configImage));
 
-		// Experimentation with Ratios and Rescaling
-		// If I rescale the window size, then I need to rescale each XY coordinate as well.
-//		boardH = boardH * ratio;
-//		windHeight = boardH;
-//		boardW = boardW * ratio;
-//		windWidth = constantW;
-//		System.out.println(boardW);
-//		System.out.println(boardH);
-//		System.out.println(windWidth);
-//		System.out.println(windHeight);
-
-
 		// Set up Game Board, Camera, Viewport
 		boardWorld = new Sprite(texture);
 		boardWorld.setPosition(0,0);
 		boardWorld.setSize(boardW, boardH);
-//		boardWorld.setSize(800, 800 * boardH / boardW);
 		camera = new OrthographicCamera();
-//		viewport = new FitViewport(800,(800 * boardH / boardW) + messageHeight, camera);
 		viewport = new FitViewport(boardW, boardH + messageHeight, camera);
 		viewport.apply();
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
@@ -355,10 +328,6 @@ public class BoardGameEngine implements ApplicationListener {
 		// Moving camera part over
 		boardWorld.draw(batch);
 
-		// Temporary variables
-		//int width = boardW;
-		//int height = boardH;
-
 		// Message Bar (FIXME - MESSAGE BAR)
 		layout.setText(font, "Game Messages", Color.BLACK, boardW, Align.center, true);
 		font.draw(batch, layout, 0, boardH + messageHeight - messagePad);
@@ -384,7 +353,6 @@ public class BoardGameEngine implements ApplicationListener {
 
 			layout.setText(font, "Tap or press space to roll.", Color.BLACK, boardW, Align.center, true);
 			font.draw(batch, layout, 0, boardH + messageHeight - 6 * layout.height - messagePad);
-
 
 			if (game.zoomMode || game.destMode) {
 				// Zooming in on a player's piece before movement
@@ -416,9 +384,6 @@ public class BoardGameEngine implements ApplicationListener {
 			// Show Dice
 			showDice();
 
-			// Displays message about the details of the last special move
-			// displayGameMessage();
-
 		} else {
 			// Displays Winning Screen Message if Game Over
 			winningScreen();
@@ -432,37 +397,17 @@ public class BoardGameEngine implements ApplicationListener {
 		}
 	}
 
-	public void setGameMessage(String message, int num) {
-		// Setting the game message (moved to sq #) for a specific player NUM
-		gameMessage = message;
-		gameMessNum = num;
-	}
-	private void displayGameMessage() {
-		font.draw(batch, gameMessage, 0, 150 - 20 * gameMessNum);
-	}
-
-	private void setGame(int num) {
-		numOfPlayers = num;
-		mainMenu = false;
-		try {
-			initialize();
-			setPlayers();
-		} catch (Exception e) {
-			// do something - File Reading Errors
-		}
-	}
+//	public void setGameMessage(String message, int num) {
+//		// Setting the game message (moved to sq #) for a specific player NUM
+//		gameMessage = message;
+//		gameMessNum = num;
+//	}
 
 	private void buttonSetGame(int num) {
 		numOfPlayers = num;
 		mainMenu = false;
-		try {
-			// Real Game Color Board (FIXME - CHANGE MADE)
-			// initialize();
-			game.setNumOfPlayers(num);
-			stage.clear();
-		} catch (Exception e) {
-			// do something - File Reading Errors
-		}
+		game.setNumOfPlayers(num);
+		stage.clear();
 	}
 
 	private void initialize() {
@@ -480,11 +425,12 @@ public class BoardGameEngine implements ApplicationListener {
 		int endPosNum = Integer.valueOf(setUpSettings[2]);
 
 		// Scaling Changes
-		ratio = constantW / rowNum;
-		// Real Game Color Board (FIXME - PRECISE XY)
+		ratio = CONSTANTW / rowNum;
 		boardW = windWidth = rowNum * ratio;
 		boardH = windHeight = colNum * ratio;
-		System.out.println(constantW + " " + boardW);
+
+		// FIXME - DEBUGGING LINES
+		System.out.println(CONSTANTW + " " + boardW);
 		System.out.println(ratio);
 		System.out.println(boardW);
 		System.out.println(boardH);
@@ -500,8 +446,6 @@ public class BoardGameEngine implements ApplicationListener {
 	private void setUpSquare(String settings) {
 		String[] line = settings.split(" ");
 		int seqNum = Integer.valueOf(line[0]);
-//		float xVal = Float.valueOf(line[1]);
-//		float yVal = Float.valueOf(line[2]);
 		float xVal = Float.valueOf(line[1]) * ratio;
 		float yVal = Float.valueOf(line[2]) * ratio;
 
@@ -521,16 +465,6 @@ public class BoardGameEngine implements ApplicationListener {
 		game.addSquare(seqNum, xVal, yVal,
 				attributes[0], attributes[1], attributes[2], listOfActions);
 
-	}
-
-	// Setting up players for default input (with keyboard)
-	private void setPlayers() {
-		for (int i = 1; i <= numOfPlayers; i += 1) {
-			String name = "Player " + i;
-			String image = "player" + i + ".png";
-			game.addPlayer(name, image, i);
-		}
-		game.setNumOfPlayers(numOfPlayers);
 	}
 
 	// Setting an individual player with default image
