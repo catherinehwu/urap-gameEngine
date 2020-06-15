@@ -24,6 +24,12 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class BoardGameEngine implements ApplicationListener {
+	// Game Specific Config Input
+	private String configFileName = "dentalColor.txt";
+	private String configImage = "dentalColor.png";
+//	private String configFileName = "dental.txt";
+//	private String configImage = "rectangularBoard.png";
+
 	// Overall GUI
 	public SpriteBatch batch;
 	public BitmapFont font;
@@ -64,7 +70,7 @@ public class BoardGameEngine implements ApplicationListener {
 	public float boardH;
 	public float windWidth;
 	public float windHeight;
-	private int constantW = 800;
+	private int constantW = 960;
 	private float ratio;
 
 	// Message Bar (FIXME - MESSAGE BAR)
@@ -104,11 +110,8 @@ public class BoardGameEngine implements ApplicationListener {
 			System.out.println(e.getMessage());
 		}
 
-		// Real Game Color Board (FIXME - PRECISE XY)
-		texture = new Texture(Gdx.files.internal("dentalColor.png"));
-
-		// Old Grid Board (FIXME - OLD VERSION)
-//		texture = new Texture(Gdx.files.internal("rectangularBoard.png"));
+		// General Game Board
+		texture = new Texture(Gdx.files.internal(configImage));
 
 		// Experimentation with Ratios and Rescaling
 		// If I rescale the window size, then I need to rescale each XY coordinate as well.
@@ -463,12 +466,8 @@ public class BoardGameEngine implements ApplicationListener {
 	}
 
 	private void initialize() {
-		// Currently Reading Config File for Dental Game
-		// Old Grid Board (FIXME - OLD VERSION)
-//		FileHandle configText = Gdx.files.internal("dental.txt");
-
-		// Real Game Color Board (FIXME - PRECISE XY)
-		FileHandle configText = Gdx.files.internal("dentalColor.txt");
+		// General Config File
+		FileHandle configText = Gdx.files.internal(configFileName);
 
 		// Regex approach
 		String config = configText.readString();
