@@ -397,12 +397,6 @@ public class BoardGameEngine implements ApplicationListener {
 		}
 	}
 
-//	public void setGameMessage(String message, int num) {
-//		// Setting the game message (moved to sq #) for a specific player NUM
-//		gameMessage = message;
-//		gameMessNum = num;
-//	}
-
 	private void buttonSetGame(int num) {
 		numOfPlayers = num;
 		mainMenu = false;

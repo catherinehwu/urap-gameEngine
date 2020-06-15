@@ -272,14 +272,8 @@ public class GameEngine {
     }
 
     private float[] setZoom(BoardGameEngine gameUI, Player p) {
-//        float xFraction = ((float) p.getLocation().getX()) / board.getXrange();
-//        float yFraction = ((float) p.getLocation().getY()) / board.getYrange();
-//        float x = xFraction * gameUI.boardW;
-//        float y = yFraction * gameUI.boardH;
-
         float x = p.getLocation().getX();
         float y = p.getLocation().getY();
-
         return new float[]{x, y, gameUI.camera.position.x, gameUI.camera.position.y};
     }
 
