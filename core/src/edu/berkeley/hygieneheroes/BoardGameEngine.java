@@ -65,6 +65,7 @@ public class BoardGameEngine implements ApplicationListener {
 	public float windWidth;
 	public float windHeight;
 	private int constantW = 800;
+	private float ratio;
 
 	// Message Bar (FIXME - MESSAGE BAR)
 	public int messageHeight = 150;
@@ -97,6 +98,7 @@ public class BoardGameEngine implements ApplicationListener {
 		// Set up Game
 		try {
 			initialize();
+			System.out.println("done init");
 		} catch (Exception e){
 			System.out.println("error");
 			System.out.println(e.getMessage());
@@ -110,9 +112,9 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Experimentation with Ratios and Rescaling
 		// If I rescale the window size, then I need to rescale each XY coordinate as well.
-//		boardH = (int) (constantW * boardH / (float) boardW);
+//		boardH = boardH * ratio;
 //		windHeight = boardH;
-//		boardW = constantW;
+//		boardW = boardW * ratio;
 //		windWidth = constantW;
 //		System.out.println(boardW);
 //		System.out.println(boardH);
@@ -477,11 +479,18 @@ public class BoardGameEngine implements ApplicationListener {
 		float rowNum = Float.valueOf(setUpSettings[0]);
 		float colNum = Integer.valueOf(setUpSettings[1]);
 		int endPosNum = Integer.valueOf(setUpSettings[2]);
-		game = new GameEngine(rowNum, colNum, endPosNum);
 
+		// Scaling Changes
+		ratio = constantW / rowNum;
 		// Real Game Color Board (FIXME - PRECISE XY)
-		boardW = windWidth = rowNum;
-		boardH = windHeight = colNum;
+		boardW = windWidth = rowNum * ratio;
+		boardH = windHeight = colNum * ratio;
+		System.out.println(constantW + " " + boardW);
+		System.out.println(ratio);
+		System.out.println(boardW);
+		System.out.println(boardH);
+
+		game = new GameEngine(rowNum, colNum, endPosNum);
 
 		for (int i = 1; i < lines.length; i += 1) {
 			setUpSquare(lines[i]);
@@ -492,8 +501,10 @@ public class BoardGameEngine implements ApplicationListener {
 	private void setUpSquare(String settings) {
 		String[] line = settings.split(" ");
 		int seqNum = Integer.valueOf(line[0]);
-		float xVal = Float.valueOf(line[1]);
-		float yVal = Float.valueOf(line[2]);
+//		float xVal = Float.valueOf(line[1]);
+//		float yVal = Float.valueOf(line[2]);
+		float xVal = Float.valueOf(line[1]) * ratio;
+		float yVal = Float.valueOf(line[2]) * ratio;
 
 		String[] attributes = new String[3];
 		for (int i = 0; i < 3; i += 1) {
