@@ -364,4 +364,8 @@ public class GameEngine {
     public void setNumOfPlayers(int num) {
         numOfPlayers = num;
     }
+
+    public int getNumOfPlayers() {
+        return numOfPlayers;
+    }
 }
