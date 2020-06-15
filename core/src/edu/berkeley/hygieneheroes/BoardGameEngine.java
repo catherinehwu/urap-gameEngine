@@ -54,10 +54,17 @@ public class BoardGameEngine implements ApplicationListener {
 //	public int boardH = 480;
 
 	// Real Game Color Board (FIXME - PRECISE XY)
-	public int boardW;
-	public int boardH;
-	public int windWidth;
-	public int windHeight;
+//	public int boardW;
+//	public int boardH;
+//	public int windWidth;
+//	public int windHeight;
+
+	// Scaling Game Board
+	public float boardW;
+	public float boardH;
+	public float windWidth;
+	public float windHeight;
+	private int constantW = 800;
 
 	// Message Bar (FIXME - MESSAGE BAR)
 	public int messageHeight = 150;
@@ -103,10 +110,10 @@ public class BoardGameEngine implements ApplicationListener {
 
 		// Experimentation with Ratios and Rescaling
 		// If I rescale the window size, then I need to rescale each XY coordinate as well.
-//		boardH = (int) (800 * boardH / (float) boardW);
+//		boardH = (int) (constantW * boardH / (float) boardW);
 //		windHeight = boardH;
-//		boardW = 800;
-//		windWidth = 800;
+//		boardW = constantW;
+//		windWidth = constantW;
 //		System.out.println(boardW);
 //		System.out.println(boardH);
 //		System.out.println(windWidth);
@@ -467,8 +474,8 @@ public class BoardGameEngine implements ApplicationListener {
 		String setUp = lines[0];
 		String[] setUpSettings = setUp.split(" ");
 
-		int rowNum = Integer.valueOf(setUpSettings[0]);
-		int colNum = Integer.valueOf(setUpSettings[1]);
+		float rowNum = Float.valueOf(setUpSettings[0]);
+		float colNum = Integer.valueOf(setUpSettings[1]);
 		int endPosNum = Integer.valueOf(setUpSettings[2]);
 		game = new GameEngine(rowNum, colNum, endPosNum);
 
@@ -485,8 +492,8 @@ public class BoardGameEngine implements ApplicationListener {
 	private void setUpSquare(String settings) {
 		String[] line = settings.split(" ");
 		int seqNum = Integer.valueOf(line[0]);
-		int xVal = Integer.valueOf(line[1]);
-		int yVal = Integer.valueOf(line[2]);
+		float xVal = Float.valueOf(line[1]);
+		float yVal = Float.valueOf(line[2]);
 
 		String[] attributes = new String[3];
 		for (int i = 0; i < 3; i += 1) {

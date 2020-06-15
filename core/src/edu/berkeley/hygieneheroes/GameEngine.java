@@ -57,7 +57,8 @@ public class GameEngine {
     private Music flySound;
     private boolean stepSound;
 
-    public GameEngine(int Xrange, int Yrange, int endPosNum) {
+    // Changing constructor to take in floats
+    public GameEngine(float Xrange, float Yrange, int endPosNum) {
         board = new Board(Xrange, Yrange, endPosNum);
         playersList = new ArrayList<>();
         curTurnIndex = 0;
@@ -84,7 +85,7 @@ public class GameEngine {
         flySound = Gdx.audio.newMusic(Gdx.files.internal("whee.wav"));
     }
 
-    public void addSquare(int num, int sqX, int sqY,
+    public void addSquare(int num, float sqX, float sqY,
                           String picture, String text, String sound,
                           ArrayList<String> listOfActions) {
         board.setSquare(num, sqX, sqY, picture, text, sound, listOfActions);
