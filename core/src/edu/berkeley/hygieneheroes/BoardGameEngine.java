@@ -23,10 +23,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class BoardGameEngine implements ApplicationListener {
+// implements ApplicationListener
+
+public class BoardGameEngine extends Game {
 	// Game Specific Config Input
-	private String configFileName = "dentalColor.txt";
-	private String configImage = "dentalColor.png";
+	public String victory = "victory.wav";
+	public String configFileName = "dentalColor.txt";
+	public String configImage = "dentalColor.png";
 //	private String configFileName = "dental.txt";
 //	private String configImage = "rectangularBoard.png";
 
@@ -34,23 +37,20 @@ public class BoardGameEngine implements ApplicationListener {
 	public SpriteBatch batch;
 	public BitmapFont font;
 	public GlyphLayout layout;
-	private Music victory;
+	//public Music victory;
 
 	// Game Functionality Parameters
-	private boolean mainMenu;
-	private boolean gameNotOver;
-	private Player winner;
-	private int numOfPlayers;
+//	private boolean mainMenu;
+//	private boolean gameNotOver;
+//	private Player winner;
+//	public int numOfPlayers;
 	private GameEngine game;
-	private String gameMessage;
-	private int gameMessNum;
 
 	// Background Image Layout
 	public OrthographicCamera camera;
 	public FitViewport viewport;
 	private Sprite boardWorld;
-	private Texture texture;
-	private Image background;
+//	private Texture texture;
 
 	// Scaling Game Board
 	public float boardW;
@@ -66,19 +66,19 @@ public class BoardGameEngine implements ApplicationListener {
 	public int messagePad = 20;
 
 	// Main Menu with Stage & Buttons
-	private Stage stage;
-	private Skin skin;
-	private TextButton singlePlay;
-	private TextButton doublePlay;
-	private TextButton triplePlay;
-	private TextButton quadPlay;
-	private Label name;
-	private Label gameName;
-	private Label instruction;
-	private TextField player4;
-	private TextField player3;
-	private TextField player2;
-	private TextField player1;
+//	private Stage stage;
+//	private Skin skin;
+//	private TextButton singlePlay;
+//	private TextButton doublePlay;
+//	private TextButton triplePlay;
+//	private TextButton quadPlay;
+//	private Label name;
+//	private Label gameName;
+//	private Label instruction;
+//	private TextField player4;
+//	private TextField player3;
+//	private TextField player2;
+//	private TextField player1;
 
 	@Override
 	public void create () {
@@ -98,31 +98,31 @@ public class BoardGameEngine implements ApplicationListener {
 		}
 
 		// General Game Board
-		texture = new Texture(Gdx.files.internal(configImage));
+//		texture = new Texture(Gdx.files.internal(configImage));
 
 		// Set up Game Board, Camera, Viewport
-		boardWorld = new Sprite(texture);
-		boardWorld.setPosition(0,0);
-		boardWorld.setSize(boardW, boardH);
+//		boardWorld = new Sprite(texture);
+//		boardWorld.setPosition(0,0);
+//		boardWorld.setSize(boardW, boardH);
 		camera = new OrthographicCamera();
 		viewport = new FitViewport(boardW, boardH + messageHeight, camera);
 		viewport.apply();
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 
 		// Game Functionality
-		mainMenu = true;
-		gameNotOver = true;
-		winner = null;
-		gameMessage = "";
-		gameMessNum = 0;
+//		mainMenu = true;
+//		gameNotOver = true;
+//		winner = null;
 
 		// Main Menu Screen with Stage & Buttons
-		setMainMenu();
-
+		// setMainMenu();
+		this.setScreen(new MainMenuScreen(this));
 	}
 
 	@Override
 	public void render () {
+		super.render();
+		/*
 		cameraScreen();
 		if (mainMenu) {
 			// BUTTON MAIN MENU
@@ -140,9 +140,10 @@ public class BoardGameEngine implements ApplicationListener {
 				victory.play();
 				victory.setLooping(true);
 			}
-		}
+		}*/
 	}
 
+	/*
 	private void setMainMenu() {
 		// Camera Initiate
 		cameraScreen();
@@ -313,15 +314,16 @@ public class BoardGameEngine implements ApplicationListener {
 	private void winningScreen() {
 		layout.setText(font, "Winner: " + winner.getName(), Color.BLACK, boardW, Align.center, true);
 		font.draw(batch, layout, 0, boardH + messageHeight - 8 * layout.height - messagePad);
-	}
+	}*/
 
-	private void cameraScreen() {
+	public void cameraScreen() {
 		camera.update();
 		Gdx.gl.glClearColor(1,1,1,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setProjectionMatrix(camera.combined);
 	}
 
+	/*
 	private void gameScreen() {
 		batch.begin();
 
@@ -395,13 +397,22 @@ public class BoardGameEngine implements ApplicationListener {
 		if (game.diceFace != null) {
 			batch.draw(game.diceFace, game.diceX, game.diceY, game.diceW, game.diceH);
 		}
-	}
+	}*/
 
+	/*
 	private void buttonSetGame(int num) {
 		numOfPlayers = num;
 		mainMenu = false;
 		game.setNumOfPlayers(num);
 		stage.clear();
+	}
+	*/
+
+	public void buttonSetGame(int num) {
+//		numOfPlayers = num;
+		game.setNumOfPlayers(num);
+//		mainMenu = false;
+		this.setScreen(new GameScreen(this, this.game));
 	}
 
 	private void initialize() {
@@ -462,7 +473,7 @@ public class BoardGameEngine implements ApplicationListener {
 	}
 
 	// Setting an individual player with default image
-	private void setPlayer(String name, int num) {
+	public void setPlayer(String name, int num) {
 		String image = "player" + num + ".png";
 		game.addPlayer(name, image, num);
 	}
@@ -487,9 +498,8 @@ public class BoardGameEngine implements ApplicationListener {
 	public void dispose () {
 		batch.dispose();
 		font.dispose();
-		texture.dispose();
-		stage.dispose();
-		skin.dispose();
-		victory.dispose();
+//		texture.dispose();
+//		stage.dispose();
+//		skin.dispose();
 	}
 }
