@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
     public SpriteBatch batch;
@@ -52,7 +50,7 @@ public class GameScreen implements Screen {
         // General Game Board
         texture = new Texture(Gdx.files.internal(gameUI.configImage));
 
-        // Set up Game Board, Camera, Viewport
+        // Set up Game Board
         boardWorld = new Sprite(texture);
         boardWorld.setPosition(0,0);
         boardWorld.setSize(boardW, boardH);
