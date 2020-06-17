@@ -58,8 +58,8 @@ public class GameEngine {
     private boolean stepSound;
 
     // Changing constructor to take in floats
-    public GameEngine(float Xrange, float Yrange, int endPosNum) {
-        board = new Board(Xrange, Yrange, endPosNum);
+    public GameEngine(float Xrange, float Yrange, int squareTotal) {
+        board = new Board(Xrange, Yrange, squareTotal);
         playersList = new ArrayList<>();
         curTurnIndex = 0;
         direction = 1;
