@@ -67,7 +67,8 @@ public class Player {
 //        System.out.println(location.getSeqNum());
 
         // Real Game Board
-        gameUI.batch.draw(playerTexture, location.getX(), location.getY(),
+        gameUI.batch.draw(playerTexture,
+                location.getX() + (playerNum - 1) * gameUI.distBetwPlayers, location.getY(),
                 sizeWidth, sizeHeight);
 
         // DIALOG display BOX (FIXME - MESSAGE BAR)

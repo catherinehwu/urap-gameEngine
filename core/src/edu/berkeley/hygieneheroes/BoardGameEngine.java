@@ -50,6 +50,7 @@ public class BoardGameEngine extends Game {
 	public float windHeight;
 	private final int CONSTANTW = 960;
 	private float ratio;
+	public float distBetwPlayers = 10;
 
 	// Message Bar (FIXME - MESSAGE BAR)
 	public int messageHeight = 150;
