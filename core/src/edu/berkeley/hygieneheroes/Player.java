@@ -265,8 +265,14 @@ public class Player {
         // Doesn't record rolls in output
         // int number = guiRoll(false);
 
-        String format = "[gG]([\\d]+)(.*)";
+        String format = "[gG]([\\d]+)(.*)-";
+//        String other = "G6D0";
+        System.out.println("saved action - " + savedAction);
+        System.out.println("char0: " + savedAction.charAt(0) + "char1: " + savedAction.charAt(1));
+//        System.out.println("G6D0.");
+//        Matcher match2 = Pattern.compile(format).matcher(other);
         Matcher match = Pattern.compile(format).matcher(savedAction);
+//        System.out.println(match.group(1));
         int target = -1;
         if (match.matches()) {
             target = Integer.valueOf(match.group(1));
