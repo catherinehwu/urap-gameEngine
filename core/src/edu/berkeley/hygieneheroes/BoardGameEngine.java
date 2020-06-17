@@ -17,7 +17,8 @@ public class BoardGameEngine extends Game {
 	// Game Specific Config Input
 	private GameEngine game;
 	public String victory = "victory.wav";
-	public String configFileName = "dentalTestDet.csv";
+	public String configFileName = "dentalMultipleDet.csv";
+//	public String configFileName = "dentalTestDet.csv";
 //	public String configFileName = "dentalWithDetermine.csv";
 //	public String configFileName = "dentalColor.txt";
 //	public String configFileName = "dentalColorG6.txt";
@@ -318,11 +319,9 @@ public class BoardGameEngine extends Game {
 					row += Integer.valueOf(actionKeys[1]); // Increments row if needed
 				}
 			}
-			System.out.println(numbers);
-			System.out.println(nextAction);
 			result.append(numbers.trim());
 			result.append(nextAction.trim());
-			result.append("-");
+			result.append(".");
 
 			// Advacing to next row
 			rowTracker += 1;

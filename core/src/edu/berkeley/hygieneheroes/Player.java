@@ -265,26 +265,36 @@ public class Player {
         // Doesn't record rolls in output
         // int number = guiRoll(false);
 
-        String format = "[gG]([\\d]+)(.*)-";
-//        String other = "G6D0";
+        String[] groups = savedAction.substring(1).split("\\.");
+        String format = "([\\d]+)(.*)";
         System.out.println("saved action - " + savedAction);
-        System.out.println("char0: " + savedAction.charAt(0) + "char1: " + savedAction.charAt(1));
-//        System.out.println("G6D0.");
-//        Matcher match2 = Pattern.compile(format).matcher(other);
-        Matcher match = Pattern.compile(format).matcher(savedAction);
-//        System.out.println(match.group(1));
-        int target = -1;
-        if (match.matches()) {
-            target = Integer.valueOf(match.group(1));
+
+        for (String opt : groups) {
+            Matcher partMatch = Pattern.compile(format).matcher(opt);
+            int target = -1;
+            if (partMatch.matches()) {
+                target = Integer.valueOf(partMatch.group(1));
+            }
+            if (number == target) {
+                message = " Rolled a " + target + "! Action continuing.";
+                return guiAct(partMatch.group(2), gameUI);
+            }
         }
-        if (number == target) {
-            message = " Rolled a " + target + "! Action continuing.";
-            return guiAct(match.group(2), gameUI);
-        } else {
-            System.out.println("No action occurred!");
-            message = " Did not roll a " + target + "! No additional action.";
-            return true;
-        }
+        message = "No additional action!";
+        return true;
+//        Matcher match = Pattern.compile(format).matcher(savedAction);
+//        int target = -1;
+//        if (match.matches()) {
+//            target = Integer.valueOf(match.group(1));
+//        }
+//        if (number == target) {
+//            message = " Rolled a " + target + "! Action continuing.";
+//            return guiAct(match.group(2), gameUI);
+//        } else {
+//            System.out.println("No action occurred!");
+//            message = " Did not roll a " + target + "! No additional action.";
+//            return true;
+//        }
     }
 
     public void squareAction(BoardGameEngine gameUI) {
