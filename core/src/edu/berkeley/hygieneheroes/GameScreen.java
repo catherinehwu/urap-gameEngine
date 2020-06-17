@@ -59,18 +59,13 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         gameUI.cameraScreen();
-        if (gameNotOver) {
-            gameScreen();
-
-            if (gameNotOver && game.gameOver()) {
-                gameNotOver = false;
-                winner = game.winner();
-                victory = Gdx.audio.newMusic(Gdx.files.internal(gameUI.victory));
-                victory.play();
-                victory.setLooping(true);
-            }
-        } else {
-            winningScreen();
+        gameScreen();
+        if (gameNotOver && game.gameOver() && !game.stepMode && !game.destMode) {
+            gameNotOver = false;
+            winner = game.winner();
+            victory = Gdx.audio.newMusic(Gdx.files.internal(gameUI.victory));
+            victory.play();
+            victory.setLooping(true);
         }
     }
 
