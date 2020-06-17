@@ -17,14 +17,17 @@ public class BoardGameEngine extends Game {
 	// Game Specific Config Input
 	private GameEngine game;
 	public String victory = "victory.wav";
-	public String configFileName = "dentalMultipleDet.csv";
+	public String configFileName = "dentalActualGame.csv";
+	//	public String configFileName = "dentalMultipleDet.csv";
 //	public String configFileName = "dentalTestDet.csv";
 //	public String configFileName = "dentalWithDetermine.csv";
 //	public String configFileName = "dentalColor.txt";
 //	public String configFileName = "dentalColorG6.txt";
-//	public String configImage = "dentalColor.png";
+//	public String configFileName = "dentalWin.txt";
+	public String configImage = "dentalColor.png";
+
 //	public String configFileName = "dental.txt";
-	public String configImage = "rectangularBoard.png";
+//	public String configImage = "rectangularBoard.png";
 
 	// CSV File Reading Settings
 	private static String[] headerSetup =
@@ -127,7 +130,7 @@ public class BoardGameEngine extends Game {
 		// FIXME - DEBUGGING LINES
 		System.out.println(CONSTANTW + " " + boardW);
 		System.out.println(ratio);
-		System.out.println(boardW);
+		System.out.println(board W);
 		System.out.println(boardH);
 
 		game = new GameEngine(rowNum, colNum, endPosNum);
@@ -135,8 +138,7 @@ public class BoardGameEngine extends Game {
 		for (int i = 1; i < lines.length; i += 1) {
 			setUpSquare(lines[i]);
 		}
-
-	 */
+	*/
 
 	}
 
