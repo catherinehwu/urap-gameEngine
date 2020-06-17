@@ -170,6 +170,7 @@ public class GameEngine {
         if (p.determiningAction()) {
             // Dice must be rolled to determine the next action
             turnComplete = p.completeAction(gameUI);
+            stepSound = false;
             rolled = true;
         } else if (p.isSquareAction()) {
             System.out.println("square action");

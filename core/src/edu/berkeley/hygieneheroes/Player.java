@@ -107,10 +107,10 @@ public class Player {
         return complete;
     }
 
-    private void guiMoveTo(int sqNum, BoardGameEngine gameUI) {
+    private boolean guiMoveTo(int sqNum, BoardGameEngine gameUI) {
         int curNum = location.getSeqNum();
         int difference = sqNum - curNum;
-        guiMove(difference, gameUI);
+        return guiMove(difference, gameUI);
     }
 
     private int safeMove(int num, Board gameBoard) {
@@ -145,23 +145,23 @@ public class Player {
                 // positive is move forward
                 int steps = Integer.valueOf(key.substring(1));
                 System.out.println("Moving " + steps + " forward!");
-                guiMove(steps, gameUI);
-                return true;
+                return guiMove(steps, gameUI);
+                // return true;
             case 'c':
             case 'C':
                 // change square by certain number
                 // negative is move backward
                 int backSteps = Integer.valueOf(key.substring(1));
                 System.out.println("Moving " + backSteps + " backwards!");
-                guiMove(backSteps * -1, gameUI);
-                return true;
+                return guiMove(backSteps * -1, gameUI);
+                // return true;
             case 'd':
             case 'D':
                 // go to a certain square
                 int sqNum = Integer.valueOf(key.substring(1));
                 System.out.println("Moving to square #" + sqNum + "!");
-                guiMoveTo(sqNum, gameUI);
-                return true;
+                return guiMoveTo(sqNum, gameUI);
+                // return true;
             case 'e':
             case 'E':
                 // skip this player's next turn
@@ -277,24 +277,13 @@ public class Player {
             }
             if (number == target) {
                 message = " Rolled a " + target + "! Action continuing.";
+                System.out.println(message);
                 return guiAct(partMatch.group(2), gameUI);
             }
         }
         message = "No additional action!";
+        System.out.println(message);
         return true;
-//        Matcher match = Pattern.compile(format).matcher(savedAction);
-//        int target = -1;
-//        if (match.matches()) {
-//            target = Integer.valueOf(match.group(1));
-//        }
-//        if (number == target) {
-//            message = " Rolled a " + target + "! Action continuing.";
-//            return guiAct(match.group(2), gameUI);
-//        } else {
-//            System.out.println("No action occurred!");
-//            message = " Did not roll a " + target + "! No additional action.";
-//            return true;
-//        }
     }
 
     public void squareAction(BoardGameEngine gameUI) {
