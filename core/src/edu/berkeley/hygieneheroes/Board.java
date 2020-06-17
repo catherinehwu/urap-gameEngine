@@ -10,11 +10,11 @@ public class Board {
     private Square start;
     private Square end;
 
-    public Board(float XRange, float YRange, int endPosNum) {
+    public Board(float XRange, float YRange, int squareTotal) {
         Xrange = XRange;
         Yrange = YRange;
-        totalSqNum = endPosNum;
-        ordering = new Square[endPosNum + 1];
+        totalSqNum = squareTotal;
+        ordering = new Square[squareTotal];
     }
 
     public void setSquare(int num, float sqX, float sqY,
