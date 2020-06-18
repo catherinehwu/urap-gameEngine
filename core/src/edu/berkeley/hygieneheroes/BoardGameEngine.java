@@ -17,8 +17,10 @@ public class BoardGameEngine extends Game {
 	// Game Specific Config Input
 	private GameEngine game;
 	public String victory = "victory.wav";
-	public String configFileName = "dentalActualGame.csv";
-	//	public String configFileName = "dentalMultipleDet.csv";
+	public String winningPage = "congrats.jpg";
+//	public String configFileName = "dentalActualGame.csv";
+	public String configFileName = "dentalQuickWin.csv";
+//	public String configFileName = "dentalMultipleDet.csv";
 //	public String configFileName = "dentalTestDet.csv";
 //	public String configFileName = "dentalWithDetermine.csv";
 //	public String configFileName = "dentalColor.txt";
@@ -35,6 +37,9 @@ public class BoardGameEngine extends Game {
 					"roll again", "move by", "move to", "skip",
 					"roll to determine action", "conditions"};
 	private static int headersNum = 2;
+
+	// Player Token Settings
+	private static String[] tokenFiles = {"player1.png", "player2.png", "player3.png", "player4.png"};
 
 	// Overall GUI
 	public SpriteBatch batch;
@@ -342,7 +347,7 @@ public class BoardGameEngine extends Game {
 
 	// Setting an individual player with default image
 	public void setPlayer(String name, int num) {
-		String image = "player" + num + ".png";
+		String image = tokenFiles[num - 1];
 		game.addPlayer(name, image, num);
 	}
 

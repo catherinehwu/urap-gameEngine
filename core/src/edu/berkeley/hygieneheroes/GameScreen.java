@@ -26,6 +26,7 @@ public class GameScreen implements Screen {
     private float boardH;
     private boolean gameNotOver;
     private Player winner;
+    private Texture congrats;
 
     // Message Bar (FIXME - MESSAGE BAR)
     private int messageHeight;
@@ -66,6 +67,11 @@ public class GameScreen implements Screen {
             victory = Gdx.audio.newMusic(Gdx.files.internal(gameUI.victory));
             victory.play();
             victory.setLooping(true);
+
+            congrats = new Texture(Gdx.files.internal(gameUI.winningPage));
+            boardWorld = new Sprite(congrats);
+            boardWorld.setPosition(boardW / 2 - boardH / 2, 0);
+            boardWorld.setSize(boardH, boardH);
         }
     }
 
@@ -88,13 +94,19 @@ public class GameScreen implements Screen {
         layout.setText(font, "Players: " + game.getNumOfPlayers(), Color.BLACK, boardW, Align.left, true);
         font.draw(batch, layout, boardW - messageAvgLen - messagePad, boardH + messageHeight - messagePad);
 
-        if (game != null) {
-            for (Player p : game.getPlayersList()) {
-                p.draw(gameUI);
-            }
-        }
+//        if (game != null) {
+//            for (Player p : game.getPlayersList()) {
+//                p.draw(gameUI);
+//            }
+//        }
 
         if (gameNotOver) {
+            if (game != null) {
+                for (Player p : game.getPlayersList()) {
+                    p.draw(gameUI);
+                }
+            }
+
             layout.setText(font, "Current turn: " + game.currentTurnStr(), Color.RED, boardW, Align.center, true);
             font.draw(batch, layout, 0, boardH + messageHeight - 4 * layout.height - messagePad);
 
@@ -145,7 +157,7 @@ public class GameScreen implements Screen {
     }
 
     private void winningScreen() {
-        layout.setText(font, "Winner: " + winner.getName(), Color.BLACK, boardW, Align.center, true);
+        layout.setText(font, "Winner: " + winner.getName(), Color.RED, boardW, Align.center, true);
         font.draw(batch, layout, 0, boardH + messageHeight - 8 * layout.height - messagePad);
     }
 
