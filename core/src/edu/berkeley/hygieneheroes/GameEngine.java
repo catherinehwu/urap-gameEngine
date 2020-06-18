@@ -97,6 +97,13 @@ public class GameEngine {
         sortPlayers();
     }
 
+    // FIXME AI Implementation
+    public void addAI(String name, String imageFile, int num) {
+        Player computer = new ComputerPlayer(name, imageFile, this, num);
+        playersList.add(computer);
+        sortPlayers();
+    }
+
     public void reverse() {
         direction *= -1;
     }
@@ -249,6 +256,8 @@ public class GameEngine {
                 if (turnComplete) {
                     System.out.println("turn advancing");
                     advanceTurn();
+                } else if (currentPlayer().isComputerPlayer()) {
+                    this.activate();
                 }
             }
         } else {
@@ -294,11 +303,17 @@ public class GameEngine {
         while (curTurnIndex >= numOfPlayers) {
             curTurnIndex -= numOfPlayers;
         }
+
+        // FIXME AI Implementation
+        if(currentPlayer().isComputerPlayer()) {
+            System.out.println("true");
+            this.activate();
+        }
     }
 
     public void rollGui(BoardGameEngine gameUI) {
         Player current = currentPlayer();
-        diceX = gameUI.boardW - 3 * gameUI.messageAvgLen - gameUI.messagePad;
+        diceX = gameUI.boardW - gameUI.messageAvgLen - gameUI.messagePad - gameUI.messageHeight;
         diceY = gameUI.boardH;
         diceW = gameUI.messageHeight;
         diceH = gameUI.messageHeight;

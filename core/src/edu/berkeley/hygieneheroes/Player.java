@@ -348,4 +348,8 @@ public class Player {
     public boolean isSquareAction() {
         return squareAction;
     }
+
+    public boolean isComputerPlayer() {
+        return false;
+    }
 }

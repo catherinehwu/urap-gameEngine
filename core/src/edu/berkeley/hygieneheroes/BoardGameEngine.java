@@ -18,8 +18,8 @@ public class BoardGameEngine extends Game {
 	private GameEngine game;
 	public String victory = "victory.wav";
 	public String winningPage = "congrats.jpg";
-//	public String configFileName = "dentalActualGame.csv";
-	public String configFileName = "dentalQuickWin.csv";
+	public String configFileName = "dentalActualGame.csv";
+//	public String configFileName = "dentalQuickWin.csv";
 //	public String configFileName = "dentalMultipleDet.csv";
 //	public String configFileName = "dentalTestDet.csv";
 //	public String configFileName = "dentalWithDetermine.csv";
@@ -59,7 +59,7 @@ public class BoardGameEngine extends Game {
 
 	// Message Bar (FIXME - MESSAGE BAR)
 	public int messageHeight = 150;
-	public int messageAvgLen = 100;
+	public int messageAvgLen = 150;
 	public int messagePad = 20;
 
 	@Override
@@ -349,6 +349,12 @@ public class BoardGameEngine extends Game {
 	public void setPlayer(String name, int num) {
 		String image = tokenFiles[num - 1];
 		game.addPlayer(name, image, num);
+	}
+
+	// FIXME AI Implementation
+	public void setAI(String name, int num) {
+		String image = tokenFiles[num - 1];
+		game.addAI(name, image, num);
 	}
 
 	@Override

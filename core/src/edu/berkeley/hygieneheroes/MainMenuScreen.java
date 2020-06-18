@@ -175,7 +175,7 @@ public class MainMenuScreen implements Screen {
         submit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameUI.buttonSetGame(num);
+//                gameUI.buttonSetGame(num);
                 stage.clear();
                 switch(num){
                     case 4:
@@ -191,6 +191,14 @@ public class MainMenuScreen implements Screen {
                         String p1Name = player1.getText();
                         gameUI.setPlayer(p1Name, 1);
                         break;
+                }
+
+                // FIXME Adding AI Implementation
+                if (num == 1) {
+                    gameUI.setAI("Computer Player", 2);
+                    gameUI.buttonSetGame(num + 1);
+                } else {
+                    gameUI.buttonSetGame(num);
                 }
             }
         });
