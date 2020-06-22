@@ -15,6 +15,7 @@ public class Player {
     private Square location;
     private GameEngine game;
     private PlayerGroup playerGroup;
+    private int tokenNum; //off by 1
 //    private boolean skipTurn;
 
     // Player GUI details
@@ -34,11 +35,12 @@ public class Player {
     private Square destination;
     private boolean squareAction;
 
-    public Player(String playerName, String imageFile, GameEngine curGame, int pNum) {
+    public Player(String playerName, String imageFile, GameEngine curGame, int pNum, int tokenN) {
         name = playerName;
         imageFileName = imageFile;
         game = curGame;
         location = game.getBoard().getStart();
+        tokenNum = tokenN;
 //        skipTurn = false;
 
         playerNum = pNum;
@@ -71,10 +73,15 @@ public class Player {
                 sizeWidth, sizeHeight);
 
         // DIALOG display BOX (FIXME - MESSAGE BAR)
+        int padding = 10;
         gameUI.layout.setText(gameUI.font, name + "'s roll: " + prevRoll, Color.BLACK, gameUI.messageAvgLen + gameUI.messagePad, Align.left, true);
-        gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.boardW - gameUI.messageAvgLen - gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - playerNum * 2 * gameUI.layout.height);
+        gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.boardW - gameUI.messageAvgLen - gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - (playerNum * 2 * gameUI.layout.height) - (game.tokensPerPlayer - 1) * 2 * gameUI.layout.height * (playerNum - 1) - tokenNum * 2 * gameUI.layout.height);
+
+//        gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.boardW - gameUI.messageAvgLen - gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - playerNum * 2 * gameUI.layout.height);
         gameUI.layout.setText(gameUI.font, name + ":" + message, Color.BLACK, gameUI.boardW, Align.left, true);
-        gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - playerNum * 2 * gameUI.layout.height);
+        gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - playerNum * 2 * gameUI.layout.height - (game.tokensPerPlayer - 1) * 2 * gameUI.layout.height * (playerNum - 1) - tokenNum * 2 * gameUI.layout.height);
+
+//        gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - playerNum * 2 * gameUI.layout.height);
     }
 
     private int guiRoll(boolean set) {

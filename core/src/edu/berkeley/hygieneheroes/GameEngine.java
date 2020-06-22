@@ -18,7 +18,7 @@ public class GameEngine {
     private int curTurnIndex;
     private int direction;
     private int numOfPlayers;
-    private int tokensPerPlayer;
+    public int tokensPerPlayer;
     private Random rand;
 
     // GUI Dice Images
@@ -104,7 +104,7 @@ public class GameEngine {
     public void addPlayer(String name, String imageFile, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
-            tokens.add(new Player(name, imageFile, this, num)); // PRINTING WILL BE UGLY
+            tokens.add(new Player(name, imageFile, this, num, i)); // PRINTING WILL BE UGLY
         }
         PlayerGroup newPlayer = new PlayerGroup(tokens, name, board);
         playersList.add(newPlayer);
@@ -118,7 +118,7 @@ public class GameEngine {
     public void addAI(String name, String imageFile, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
-            tokens.add(new ComputerPlayer(name, imageFile, this, num)); // PRINTING WILL BE UGLY
+            tokens.add(new ComputerPlayer(name, imageFile, this, num, i)); // PRINTING WILL BE UGLY
         }
         PlayerGroup computer = new PlayerGroup(tokens, name, board,true);
         playersList.add(computer);
