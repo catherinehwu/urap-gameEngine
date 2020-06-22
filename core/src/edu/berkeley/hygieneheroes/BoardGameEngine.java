@@ -190,8 +190,10 @@ public class BoardGameEngine extends Game {
 		ratio = CONSTANTW / rowNum;
 		boardW = windWidth = rowNum * ratio;
 		boardH = windHeight = colNum * ratio;
+		int tokensPerPlayer = Integer.valueOf(boardData[3]);
 
-		game = new GameEngine(rowNum, colNum, squareTotal);
+		game = new GameEngine(rowNum, colNum, squareTotal, tokensPerPlayer);
+
 
 		for (int i = headersNum + 1; i < config.length; ) {
 			i = setUpSquareCSV(config[i], i, config);

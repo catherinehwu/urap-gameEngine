@@ -13,10 +13,11 @@ public class GameEngine {
     // Game Features
     private Dice dice;
     private Board board;
-    private ArrayList<Player> playersList;
+    private ArrayList<PlayerGroup> playersList;
     private int curTurnIndex;
     private int direction;
     private int numOfPlayers;
+    private int tokensPerPlayer;
 
     // GUI Dice Images
     private ArrayList<Texture> die;
@@ -63,6 +64,7 @@ public class GameEngine {
         playersList = new ArrayList<>();
         curTurnIndex = 0;
         direction = 1;
+        tokensPerPlayer = 1;
 
         //standard dice with 1~6
         dice = new Dice(6);
@@ -85,6 +87,11 @@ public class GameEngine {
         flySound = Gdx.audio.newMusic(Gdx.files.internal("whee.wav"));
     }
 
+    public GameEngine(float Xrange, float Yrange, int squareTotal, int tokens) {
+        this(Xrange, Yrange, squareTotal);
+        tokensPerPlayer = tokens;
+    }
+
     public void addSquare(int num, float sqX, float sqY,
                           String picture, String text, String sound,
                           ArrayList<String> listOfActions) {
@@ -92,15 +99,29 @@ public class GameEngine {
     }
 
     public void addPlayer(String name, String imageFile, int num) {
-        Player newPerson = new Player(name, imageFile, this, num);
-        playersList.add(newPerson);
+        ArrayList<Player> tokens = new ArrayList<Player>();
+        for (int i = 0; i < tokensPerPlayer; i += 1) {
+            tokens.add(new Player(name, imageFile, this, num)); // PRINTING WILL BE UGLY
+        }
+        PlayerGroup newPlayer = new PlayerGroup(tokens, name);
+        playersList.add(newPlayer);
+
+//        Player newPerson = new Player(name, imageFile, this, num);
+//        playersList.add(newPerson);
         sortPlayers();
     }
 
     // FIXME AI Implementation
     public void addAI(String name, String imageFile, int num) {
-        Player computer = new ComputerPlayer(name, imageFile, this, num);
+        ArrayList<Player> tokens = new ArrayList<Player>();
+        for (int i = 0; i < tokensPerPlayer; i += 1) {
+            tokens.add(new ComputerPlayer(name, imageFile, this, num)); // PRINTING WILL BE UGLY
+        }
+        PlayerGroup computer = new PlayerGroup(tokens, name);
         playersList.add(computer);
+
+//        Player computer = new ComputerPlayer(name, imageFile, this, num);
+//        playersList.add(computer);
         sortPlayers();
     }
 
@@ -109,11 +130,14 @@ public class GameEngine {
     }
 
     public String currentTurnStr() {
-        Player current = playersList.get(curTurnIndex);
+        PlayerGroup current = playersList.get(curTurnIndex);
+
+//        Player current = playersList.get(curTurnIndex);
         return current.getName();
     }
 
-    public Player currentPlayer() {
+    // FIXME changed to player group
+    public PlayerGroup currentPlayer() {
         return playersList.get(curTurnIndex);
     }
 
@@ -123,6 +147,7 @@ public class GameEngine {
         }
     }
 
+    // FIXME changed to player group
     public void step() {
         Player cur = currentPlayer();
         if (cur.getDestination() == null || cur.getLocation() == cur.getDestination()) {
@@ -350,7 +375,7 @@ public class GameEngine {
     }
 
     private void sortPlayers() {
-        Comparator<Player> comp = new AlphabetComparator();
+        Comparator<PlayerGroup> comp = new AlphabetComparator();
         Collections.sort(playersList, comp);
     }
 

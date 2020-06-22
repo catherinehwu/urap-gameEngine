@@ -2,8 +2,8 @@ package edu.berkeley.hygieneheroes;
 
 import java.util.Comparator;
 
-public class AlphabetComparator implements Comparator<Player> {
-    public int compare(Player p1, Player p2) {
+public class AlphabetComparator implements Comparator<PlayerGroup> {
+    public int compare(PlayerGroup p1, PlayerGroup p2) {
         String p1Name = p1.getName().toLowerCase();
         String p2Name = p2.getName().toLowerCase();
         if (p1Name.compareTo(p2Name) > 0) {
