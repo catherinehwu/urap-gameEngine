@@ -181,6 +181,9 @@ public class GameEngine {
             } else {
                 int range = currentPlayer().getTokens().size();
                 int index = rand.nextInt(range) + 1;
+                while (currentPlayer().getTokenNumber(index).getLocation().getSeqNum() == board.getEnd().getSeqNum()) {
+                    index = rand.nextInt(range) + 1;
+                }
                 currentPlayer().setCurrentToken(index);
             }
         }
