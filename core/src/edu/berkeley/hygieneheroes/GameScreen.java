@@ -1,6 +1,7 @@
 package edu.berkeley.hygieneheroes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -124,21 +125,21 @@ public class GameScreen implements Screen {
             if (game.zoomMode || game.destMode) {
                 // Zooming in on a player's piece before movement
                 // Zooming in on a player's piece after movement
-                // System.out.println("zooming");
+//                 System.out.println("zooming");
                 game.zoomProcess(gameUI, game.currentPlayer().getCurrentToken());
             } else if (game.moveMode) {
                 // Moving player's piece and advancing turn
-                // System.out.println("game movement processing - half");
+//                 System.out.println("game movement processing - half");
                 game.moveProcess(gameUI);
             } else if (game.rollMode) {
                 // Showing an image of the rolling dice
                 game.rollGui(gameUI);
             } else if (game.holdMode) {
                 // Holding screen at zoom out mode after piece has moved
-                // System.out.println("holding in outside large screen");
+//                 System.out.println("holding in outside large screen");
                 game.holdProcess();
             } else if (game.stepMode) {
-                // System.out.println("moving piece to destination");
+//                 System.out.println("moving piece to destination");
                 game.step();
             } else if (game.currentPlayer().getCurrentToken() != null && game.currentPlayer().getCurrentToken().isSquareAction()) {
                 game.activate();
@@ -167,7 +168,8 @@ public class GameScreen implements Screen {
 //                System.out.println(temp.x + " " + temp.y);
 //                game.activate(touchPos.x, touchPos.y);
                 float x = touchPos.x - gameUI.viewport.getScreenX();
-                float y = gameUI.viewport.getScreenHeight() - touchPos.y;
+                float y = Gdx.graphics.getHeight() - touchPos.y - gameUI.viewport.getScreenY();
+//                float y = gameUI.viewport.getScreenHeight() - touchPos.y - gameUI.viewport.getScreenY();
                 float xRatio = x / gameUI.viewport.getScreenWidth();
                 float yRatio = y / gameUI.viewport.getScreenHeight();
                 System.out.println( (xRatio * boardW) + " " + (yRatio * (boardH + messageHeight)));
