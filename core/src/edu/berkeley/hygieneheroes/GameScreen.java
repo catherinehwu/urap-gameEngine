@@ -151,11 +151,30 @@ public class GameScreen implements Screen {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 //                gameUI.camera.unproject(touchPos);
 //                gameUI.camera.unproject(touchPos);
-                gameUI.camera.unproject(touchPos, gameUI.viewport.getScreenX(), gameUI.viewport.getScreenY(), gameUI.viewport.getWorldWidth(), gameUI.boardH);
+                System.out.println(touchPos.x + " " + touchPos.y);
+                System.out.println(gameUI.viewport.getScreenX());
+                System.out.println(gameUI.viewport.getScreenY());
+                System.out.println(gameUI.viewport.getScreenWidth());
+                System.out.println(gameUI.viewport.getScreenHeight());
+                System.out.println(boardW + " " + boardH);
+//                System.out.println(gameUI.viewport.getWorldWidth() + " " + (gameUI.viewport.getWorldHeight() - gameUI.messageHeight));
+//                gameUI.camera.unproject(touchPos, 0, 0, gameUI.boardW, gameUI.boardH);
+
+//                gameUI.camera.unproject(touchPos, gameUI.viewport.getScreenX(), gameUI.viewport.getScreenY(), gameUI.boardW, gameUI.boardH);
+
+
+//                gameUI.camera.unproject(touchPos, gameUI.viewport.getScreenX(), gameUI.viewport.getScreenY(), gameUI.boardW, gameUI.boardH);
 //                System.out.println(temp.x + " " + temp.y);
 //                game.activate(touchPos.x, touchPos.y);
-                System.out.println(touchPos.x + " " + touchPos.y);
-                game.activate(touchPos.x, touchPos.y);
+                float x = touchPos.x - gameUI.viewport.getScreenX();
+                float y = gameUI.viewport.getScreenHeight() - touchPos.y;
+                float xRatio = x / gameUI.viewport.getScreenWidth();
+                float yRatio = y / gameUI.viewport.getScreenHeight();
+                System.out.println( (xRatio * boardW) + " " + (yRatio * (boardH + messageHeight)));
+                game.activate((xRatio * boardW), (yRatio * (boardH + messageHeight)));
+
+//                System.out.println((touchPos.x - gameUI.viewport.getScreenX()) + " " + (boardH + messageHeight - touchPos.y));
+//                game.activate((touchPos.x - gameUI.viewport.getScreenX()), (boardH + messageHeight - touchPos.y));
 //                game.activate();
             }
 

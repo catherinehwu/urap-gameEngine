@@ -151,6 +151,7 @@ public class GameEngine {
             } else {
                 int buffer = 32;
                 for (int i = 1; i <= currentPlayer().getTokens().size(); i += 1) {
+                    System.out.println(currentPlayer().getTokens().size());
                     Player token = currentPlayer().getTokenNumber(i);
                     float locX = token.getLocation().getX();
                     float locY = token.getLocation().getY();
@@ -179,7 +180,7 @@ public class GameEngine {
                 currentPlayer().setCurrentToken(1);
             } else {
                 int range = currentPlayer().getTokens().size();
-                int index = rand.nextInt(range);
+                int index = rand.nextInt(range) + 1;
                 currentPlayer().setCurrentToken(index);
             }
         }
