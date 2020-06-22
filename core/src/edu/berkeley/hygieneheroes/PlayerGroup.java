@@ -80,7 +80,9 @@ public class PlayerGroup {
 
     public void turnSkipped() {
         skipTurn = false;
-        currentToken.setMessage("");
+        for (Player token : tokens) {
+            token.setMessage("");
+        }
     }
 
     public boolean getSkipTurn() {
