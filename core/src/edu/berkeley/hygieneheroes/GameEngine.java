@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 
 public class GameEngine {
     // Game Features
@@ -18,6 +19,7 @@ public class GameEngine {
     private int direction;
     private int numOfPlayers;
     private int tokensPerPlayer;
+    private Random rand;
 
     // GUI Dice Images
     private ArrayList<Texture> die;
@@ -65,6 +67,7 @@ public class GameEngine {
         curTurnIndex = 0;
         direction = 1;
         tokensPerPlayer = 1;
+        rand = new Random();
 
         //standard dice with 1~6
         dice = new Dice(6);
@@ -103,7 +106,7 @@ public class GameEngine {
         for (int i = 0; i < tokensPerPlayer; i += 1) {
             tokens.add(new Player(name, imageFile, this, num)); // PRINTING WILL BE UGLY
         }
-        PlayerGroup newPlayer = new PlayerGroup(tokens, name);
+        PlayerGroup newPlayer = new PlayerGroup(tokens, name, board);
         playersList.add(newPlayer);
 
 //        Player newPerson = new Player(name, imageFile, this, num);
@@ -117,7 +120,7 @@ public class GameEngine {
         for (int i = 0; i < tokensPerPlayer; i += 1) {
             tokens.add(new ComputerPlayer(name, imageFile, this, num)); // PRINTING WILL BE UGLY
         }
-        PlayerGroup computer = new PlayerGroup(tokens, name);
+        PlayerGroup computer = new PlayerGroup(tokens, name, board,true);
         playersList.add(computer);
 
 //        Player computer = new ComputerPlayer(name, imageFile, this, num);
@@ -141,15 +144,57 @@ public class GameEngine {
         return playersList.get(curTurnIndex);
     }
 
+    public void activate(float x, float y) {
+        if (currentPlayer().getCurrentToken() == null) {
+            if (tokensPerPlayer == 1) {
+                currentPlayer().setCurrentToken(1);
+            } else {
+                int buffer = 32;
+                for (int i = 1; i <= currentPlayer().getTokens().size(); i += 1) {
+                    Player token = currentPlayer().getTokenNumber(i);
+                    float locX = token.getLocation().getX();
+                    float locY = token.getLocation().getY();
+                    System.out.println("touch: " + x + " " + y);
+                    System.out.println("token: " + locX + " " + locY);
+                    System.out.println(locX <= x && locX + buffer >= x);
+                    System.out.println(locY <= y && locY + buffer >= y);
+                    if (locX <= x && locX + buffer >= x &&
+                        locY <= y && locY + buffer >= y) {
+                        currentPlayer().setCurrentToken(i);
+                        break;
+                    }
+                }
+                if (currentPlayer().getCurrentToken() == null) {
+                    currentPlayer().getTokenNumber(1).setMessage("Click token to move!");
+                    return;
+                }
+            }
+        }
+        activate();
+    }
+
+    public void activateAI() {
+        if (currentPlayer().getCurrentToken() == null) {
+            if (tokensPerPlayer == 1) {
+                currentPlayer().setCurrentToken(1);
+            } else {
+                int range = currentPlayer().getTokens().size();
+                int index = rand.nextInt(range);
+                currentPlayer().setCurrentToken(index);
+            }
+        }
+        activate();
+    }
+
     public void activate() {
         if (!zoomMode) {
             zoomMode = true;
         }
     }
 
-    // FIXME changed to player group
+    // FIXME changed to current token
     public void step() {
-        Player cur = currentPlayer();
+        Player cur = currentPlayer().getCurrentToken();
         if (cur.getDestination() == null || cur.getLocation() == cur.getDestination()) {
             cur.resetDestination();
             if (flySound.isPlaying()) {
@@ -192,12 +237,13 @@ public class GameEngine {
         }
     }
 
+    // FIXME changed to get current token
     public void moveProcess(BoardGameEngine gameUI) {
         // Causes game to resume with a next turn or continuation of previous move
         turnComplete = false;
         stepSound = true;
         boolean rolled = false;
-        Player p = playersList.get(curTurnIndex);
+        Player p = playersList.get(curTurnIndex).getCurrentToken();
 
         if (p.determiningAction()) {
             // Dice must be rolled to determine the next action
@@ -280,9 +326,10 @@ public class GameEngine {
                 // Only advance turn if turn has completed
                 if (turnComplete) {
                     System.out.println("turn advancing");
+                    currentPlayer().resetCurrentToken();
                     advanceTurn();
                 } else if (currentPlayer().isComputerPlayer()) {
-                    this.activate();
+                    this.activateAI();
                 }
             }
         } else {
@@ -302,6 +349,7 @@ public class GameEngine {
         return new float[]{x, y, gameUI.camera.position.x, gameUI.camera.position.y};
     }
 
+    // FIXME changed to get current token
     private void advanceTurn() {
         curTurnIndex += (1 * direction);
         while (curTurnIndex < 0) {
@@ -332,12 +380,13 @@ public class GameEngine {
         // FIXME AI Implementation
         if(currentPlayer().isComputerPlayer()) {
             System.out.println("true");
-            this.activate();
+            this.activateAI();
         }
     }
 
+    // FIXME changed to get current token
     public void rollGui(BoardGameEngine gameUI) {
-        Player current = currentPlayer();
+        Player current = currentPlayer().getCurrentToken();
         diceX = gameUI.boardW - gameUI.messageAvgLen - gameUI.messagePad - gameUI.messageHeight;
         diceY = gameUI.boardH;
         diceW = gameUI.messageHeight;
@@ -357,21 +406,35 @@ public class GameEngine {
     }
 
     public boolean gameOver() {
-        for (Player p : playersList) {
-            if (p.getLocation().equals(board.getEnd())) {
+        for (PlayerGroup player : playersList) {
+            if (player.finished()) {
                 return true;
             }
         }
         return false;
+//        for (Player p : playersList) {
+//            if (p.getLocation().equals(board.getEnd())) {
+//                return true;
+//            }
+//        }
+//        return false;
     }
 
-    public Player winner() {
-        for (Player p : playersList) {
-            if (p.getLocation().equals(board.getEnd())) {
-                return p;
+    // FIXME changed to player group
+    public PlayerGroup winner() {
+        for (PlayerGroup player : playersList) {
+            if (player.finished()) {
+                return player;
             }
         }
         return null;
+
+//        for (Player p : playersList) {
+//            if (p.getLocation().equals(board.getEnd())) {
+//                return p;
+//            }
+//        }
+//        return null;
     }
 
     private void sortPlayers() {
@@ -388,17 +451,22 @@ public class GameEngine {
     }
 
     // output for troubleshooting
+    // FIXME player group
     public void display() {
         System.out.println();
         System.out.print("==========");
-        for (Player p : playersList) {
-            System.out.println(p.getName() + " is at " + p.getLocation().getSeqNum());
+        for (PlayerGroup p : playersList) {
+            System.out.println(p.getName() + " is at :");
+            for (Player token : p.getTokens()) {
+                System.out.println(token.getLocation().getSeqNum());
+            }
+//            System.out.println(p.getName() + " is at " + p.getLocation().getSeqNum());
         }
         System.out.println("==========");
     }
 
     // accessor methods
-    public ArrayList<Player> getPlayersList() {
+    public ArrayList<PlayerGroup> getPlayersList() {
         return playersList;
     }
 

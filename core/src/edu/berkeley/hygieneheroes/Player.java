@@ -14,7 +14,8 @@ public class Player {
     private String imageFileName;
     private Square location;
     private GameEngine game;
-    private boolean skipTurn;
+    private PlayerGroup playerGroup;
+//    private boolean skipTurn;
 
     // Player GUI details
     private Texture playerTexture;
@@ -38,7 +39,7 @@ public class Player {
         imageFileName = imageFile;
         game = curGame;
         location = game.getBoard().getStart();
-        skipTurn = false;
+//        skipTurn = false;
 
         playerNum = pNum;
         prevLocation = game.getBoard().getStart();
@@ -164,7 +165,7 @@ public class Player {
             case 'e':
             case 'E':
                 // skip this player's next turn
-                skipTurn = true;
+                playerGroup.skipTurn();
                 System.out.println("Next turn skipped!");
                 return true;
             case 'f':
@@ -227,7 +228,7 @@ public class Player {
             case 'e':
             case 'E':
                 // skip this player's next turn
-                skipTurn = true;
+                playerGroup.skipTurn();
                 System.out.println("Next turn skipped!");
                 message = " Next turn skipped!";
                 squareAction = false;
@@ -318,13 +319,21 @@ public class Player {
         return location;
     }
 
-    public boolean getSkipTurn() {
-        return skipTurn;
+//    public boolean getSkipTurn() {
+//        return skipTurn;
+//    }
+
+//    public void turnSkipped() {
+//        skipTurn = false;
+//        message = "";
+//    }
+
+    public void setMessage(String s) {
+        message = s;
     }
 
-    public void turnSkipped() {
-        skipTurn = false;
-        message = "";
+    public void setPlayerGroup(PlayerGroup player) {
+        playerGroup = player;
     }
 
     public int getPrevRoll() {

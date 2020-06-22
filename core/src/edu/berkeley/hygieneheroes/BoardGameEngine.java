@@ -227,9 +227,11 @@ public class BoardGameEngine extends Game {
 					break;
 				case "x":
 					xVal = Float.valueOf(sqData[i]) * ratio;
+					System.out.println(xVal);
 					break;
 				case "y":
 					yVal = Float.valueOf(sqData[i]) * ratio;
+					System.out.println(yVal);
 					break;
 				case "image":
 					if (sqData[i] != null && !sqData[i].isEmpty()) {

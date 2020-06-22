@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 
 public class GameScreen implements Screen {
@@ -21,11 +22,12 @@ public class GameScreen implements Screen {
     private BitmapFont font;
     private GameEngine game;
     private Music victory;
+    private Vector3 touchPos;
 
     private float boardW;
     private float boardH;
     private boolean gameNotOver;
-    private Player winner;
+    private PlayerGroup winner;
     private Texture congrats;
 
     // Message Bar (FIXME - MESSAGE BAR)
@@ -55,6 +57,9 @@ public class GameScreen implements Screen {
         boardWorld = new Sprite(texture);
         boardWorld.setPosition(0,0);
         boardWorld.setSize(boardW, boardH);
+
+        touchPos = new Vector3();
+
     }
 
     @Override
@@ -102,8 +107,11 @@ public class GameScreen implements Screen {
 
         if (gameNotOver) {
             if (game != null) {
-                for (Player p : game.getPlayersList()) {
-                    p.draw(gameUI);
+                // FIXME change to player group
+                for (PlayerGroup p : game.getPlayersList()) {
+                    for (Player token : p.getTokens()) {
+                        token.draw(gameUI);
+                    }
                 }
             }
 
@@ -117,7 +125,7 @@ public class GameScreen implements Screen {
                 // Zooming in on a player's piece before movement
                 // Zooming in on a player's piece after movement
                 // System.out.println("zooming");
-                game.zoomProcess(gameUI, game.currentPlayer());
+                game.zoomProcess(gameUI, game.currentPlayer().getCurrentToken());
             } else if (game.moveMode) {
                 // Moving player's piece and advancing turn
                 // System.out.println("game movement processing - half");
@@ -132,12 +140,23 @@ public class GameScreen implements Screen {
             } else if (game.stepMode) {
                 // System.out.println("moving piece to destination");
                 game.step();
-            } else if (game.currentPlayer().isSquareAction()) {
+            } else if (game.currentPlayer().getCurrentToken() != null && game.currentPlayer().getCurrentToken().isSquareAction()) {
                 game.activate();
-            } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isTouched()) {
+            } else if (game.currentPlayer().isComputerPlayer() && game.currentPlayer().getCurrentToken() == null) {
+                game.activateAI();
+            } else if (Gdx.input.isTouched()) {
+                // REMOVE SPACE BAR OPTION - Gdx.input.isKeyJustPressed(Input.Keys.SPACE) ||
                 // Initiate a game move
-                // System.out.println("activated");
-                game.activate();
+                System.out.println("activated");
+                touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+//                gameUI.camera.unproject(touchPos);
+//                gameUI.camera.unproject(touchPos);
+                gameUI.camera.unproject(touchPos, gameUI.viewport.getScreenX(), gameUI.viewport.getScreenY(), gameUI.viewport.getWorldWidth(), gameUI.boardH);
+//                System.out.println(temp.x + " " + temp.y);
+//                game.activate(touchPos.x, touchPos.y);
+                System.out.println(touchPos.x + " " + touchPos.y);
+                game.activate(touchPos.x, touchPos.y);
+//                game.activate();
             }
 
             // Show Dice
