@@ -11,8 +11,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * BoardGameEngine is where the game configuration starts. An instance of this
+ * class is created by the various launching classes - Desktop, Web, Android, etc.
+ * Many of the user game specific parameters can be altered here:
+ * the config file name, the board game image, name of the token images,
+ * the order in which the csv columns are set. This class is in charge of
+ * creating various screens to display and parsing the configuration
+ * csv file.
+ */
 public class BoardGameEngine extends Game {
 	// Game Specific Config Input
 	private GameEngine game;
@@ -31,14 +39,14 @@ public class BoardGameEngine extends Game {
 //	public String configFileName = "dental.txt";
 //	public String configImage = "rectangularBoard.png";
 
-	// CSV File Reading Settings
+	// CSV File Reading Settings - specifies the order of the various columns
 	private static String[] headerSetup =
 			{"seqNum", "x", "y", "image", "sound", "text",
 					"roll again", "move by", "move to", "skip",
 					"roll to determine action", "conditions"};
 	private static int headersNum = 2;
 
-	// Player Token Settings
+	// Player Token Images Settings
 	private static String[] tokenFiles = {"player1.png", "player2.png", "player3.png", "player4.png"};
 
 	// Overall GUI
@@ -70,7 +78,7 @@ public class BoardGameEngine extends Game {
 		font.setColor(Color.BLACK);
 		layout = new GlyphLayout();
 
-		// Set up Game
+		// Set up Game By Parsing CSV File
 		try {
 			initialize();
 			System.out.println("done init");
@@ -85,7 +93,7 @@ public class BoardGameEngine extends Game {
 		viewport.apply();
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 
-		// Main Menu Screen with Stage & Buttons
+		// Sets the Main Menu Screen with Stage & Buttons
 		this.setScreen(new MainMenuScreen(this));
 	}
 
@@ -94,6 +102,10 @@ public class BoardGameEngine extends Game {
 		super.render();
 	}
 
+	/**
+	 * Updates the camera based on the project matrix of board world to
+	 * actual screen units. Called before any rendering or drawing occurs.
+	 */
 	public void cameraScreen() {
 		camera.update();
 		Gdx.gl.glClearColor(1,1,1,1);
@@ -101,16 +113,25 @@ public class BoardGameEngine extends Game {
 		batch.setProjectionMatrix(camera.combined);
 	}
 
+	/**
+	 * Sets the number of players of current game to parameter NUM.
+	 * Switches from the main menu screen to the game screen.
+	 * @param num - number of players
+	 */
 	public void buttonSetGame(int num) {
 		game.setNumOfPlayers(num);
 		this.setScreen(new GameScreen(this, this.game));
 	}
 
+	/**
+	 * Initializes the game by parsing and reading the configuration file.
+	 * Uses helper methods specific for file type (CSV or txt).
+	 */
 	private void initialize() {
 		// General Config File
 		FileHandle configText = Gdx.files.internal(configFileName);
 
-		// Regex approach
+		// Regex approach - splits the file by each line
 		String config = configText.readString();
 		String[] lines = config.split("\n");
 		for (String line: lines) {
@@ -120,35 +141,48 @@ public class BoardGameEngine extends Game {
 		// CSV File Approach
 		initializeCSV(lines);
 
-	/*
-		String setUp = lines[0];
-		String[] setUpSettings = setUp.split(" ");
-
-		float rowNum = Float.valueOf(setUpSettings[0]);
-		float colNum = Integer.valueOf(setUpSettings[1]);
-		int endPosNum = Integer.valueOf(setUpSettings[2]);
-
-		// Scaling Changes
-		ratio = CONSTANTW / rowNum;
-		boardW = windWidth = rowNum * ratio;
-		boardH = windHeight = colNum * ratio;
-
-		// FIXME - DEBUGGING LINES
-		System.out.println(CONSTANTW + " " + boardW);
-		System.out.println(ratio);
-		System.out.println(board W);
-		System.out.println(boardH);
-
-		game = new GameEngine(rowNum, colNum, endPosNum);
-
-		for (int i = 1; i < lines.length; i += 1) {
-			setUpSquare(lines[i]);
-		}
-	*/
+		// Txt File Approach
+		// initializeText(lines);
 
 	}
 
-	private void setUpSquare(String settings) {
+	/**
+	 * Takes in an array of strings, each element being one line
+	 * of the original configuration txt file. Sets up a Game
+	 * object according to the xRange, yRange, and number of squares
+	 * in the board game. Then, sets up all the special squares of the game.
+	 * @param lines - array of Strings, each element is one line of txt file
+	 */
+	private void initializeText(String[] lines) {
+		String setUp = lines[0];
+		String[] setUpSettings = setUp.split(" ");
+
+		float xNum = Float.valueOf(setUpSettings[0]);
+		float yNum = Integer.valueOf(setUpSettings[1]);
+		int endPosNum = Integer.valueOf(setUpSettings[2]);
+
+		// Scaling Changes
+		ratio = CONSTANTW / xNum;
+		boardW = windWidth = xNum * ratio;
+		boardH = windHeight = yNum * ratio;
+
+		// Creating a Game Instance
+		game = new GameEngine(xNum, yNum, endPosNum);
+
+		// Setting up all the squares in this Game
+		for (int i = 1; i < lines.length; i += 1) {
+			setUpSquareText(lines[i]);
+		}
+	}
+
+	/**
+	 * Sets up a square of the Game, assuming that
+	 * settings is the string for the Square's settings
+	 * from a txt File. Format should be:
+	 * seqNum xCoord yCoord pictureFile textFile soundFile seriesOfActions
+	 * @param settings
+	 */
+	private void setUpSquareText(String settings) {
 		String[] line = settings.split(" ");
 		int seqNum = Integer.valueOf(line[0]);
 		float xVal = Float.valueOf(line[1]) * ratio;
@@ -172,27 +206,39 @@ public class BoardGameEngine extends Game {
 
 	}
 
+	/**
+	 * Takes in an array of strings, each element being one line
+	 * of the original configuration CSV file. Sets up a Game
+	 * object according to the xRange, yRange, and number of squares
+	 * in the board game. Then, sets up all the special squares of the game.
+	 *
+	 * Starts reading contents of the CSV file at row HEADERSNUM + 1 because
+	 * the first HEADERSNUM rows are not related to actual game configuration.
+	 *
+	 * Each row after the first board representation row is set up for a square.
+	 *
+	 * @param config - array of String - each element is one row of the CSV file
+	 */
 	private void initializeCSV(String[] config) {
 		// Ignore the header rows (row 1 - 2)
 		// Row 3 will be # of squares, x position range, y position range
 		// Row 4 onward are square IDs
 		// For each square, index 0-2 set for sqNum, x coord, ycoord
 
-		//List<String> config is a list or array of strings separated by \n char
 		String boardRep = config[headersNum];
 		String[] boardData = boardRep.trim().split(",");
 
-		float rowNum = Float.valueOf(boardData[1]);
-		float colNum = Integer.valueOf(boardData[2]);
+		float xNum = Float.valueOf(boardData[1]);
+		float yNum = Integer.valueOf(boardData[2]);
 		int squareTotal = Integer.valueOf(boardData[0]);
 
 		// Scaling Changes
-		ratio = CONSTANTW / rowNum;
-		boardW = windWidth = rowNum * ratio;
-		boardH = windHeight = colNum * ratio;
+		ratio = CONSTANTW / xNum;
+		boardW = windWidth = xNum * ratio;
+		boardH = windHeight = yNum * ratio;
 		int tokensPerPlayer = Integer.valueOf(boardData[3]);
 
-		game = new GameEngine(rowNum, colNum, squareTotal, tokensPerPlayer);
+		game = new GameEngine(xNum, yNum, squareTotal, tokensPerPlayer);
 
 
 		for (int i = headersNum + 1; i < config.length; ) {
@@ -200,16 +246,36 @@ public class BoardGameEngine extends Game {
 		}
 	}
 
+	/**
+	 * Sets up a square of the Game, assuming that
+	 * settings is the row for the Square's settings
+	 * from a CSV File. Format should be based on the headers array,
+	 * which specifies what each index means (xcoord, ycoord, etc.).
+	 *
+	 * Some squares read more than one row of the config csv file
+	 * because their attributes are like: roll again to determine action
+	 * where a different number corresponds to a different action.
+	 *
+	 * @param settings - the Square settings row
+	 * @param row - which row number is being processed
+	 * @param config - array of the entire configuration CSV file split by line
+	 * @return the integer for the index of the next UNREAD / UNPROCESSED square row
+	 */
 	private int setUpSquareCSV(String settings, int row, String[] config) {
 		// Assume sqData has same number of columns as headerSetup
 		String[] sqData = settings.trim().split(",");
+
+		// Count keeps track of the current row number and increments
+		// to properly account for which row should be processed next
+		int count = row;
+
+		// DEBUGGING PRINT STATEMENTS
 		for (String col : sqData) {
 			System.out.print(col + " ");
 		}
 		System.out.println(sqData.length);
-		int count = row;
 
-		// Defining Variables
+		// Defining Default Square Attribute Variables
 		int seqNum = 0;
 		float xVal = 0;
 		float yVal = 0;
@@ -218,6 +284,9 @@ public class BoardGameEngine extends Game {
 		String text = null;
 		ArrayList<String> listOfActions = new ArrayList<>();
 
+		// For each column in this row (which is now the sqData array),
+		// check to see which column type it belongs to and modify
+		// the corresponding attribute if given value is valid (not null or empty string).
 		for (int i = 0; i < sqData.length; i += 1) {
 			String columnH = headerSetup[i];
 			System.out.println(columnH);
@@ -271,6 +340,21 @@ public class BoardGameEngine extends Game {
 		return count;
 	}
 
+	/**
+	 * Takes in the VALUE of a box in a CSV file and matches it with the corresponding
+	 * column heading to determine which type of action corresponds to the square
+	 * being created. Properly formats a string based on the action type and the action amount
+	 * (i.e - amount being 10 if action is move forward 10).
+	 *
+	 * @param value - the value in the CSV grid box at row, column
+	 * @param column - Column number of this grid box
+	 * @param row - Row that is currently being processed (row corresponding to the square that is being set up)
+	 * @param config - array of the configuration CSV file separated by line
+	 * @return a 2-element String array
+	 * 	element at index 0: String representation for the action corresponding to the square
+	 * 	element at index 1: String representation of the number of ADDITIONAL rows processed
+	 * 	when trying to determine this square's action details
+	 */
 	private String[] actionDetails(String value, int column, int row, String[] config) {
 		String colType = headerSetup[column];
 		String action;
@@ -310,6 +394,33 @@ public class BoardGameEngine extends Game {
 		return new String[]{action, additional};
 	}
 
+	/**
+	 * Only called for the grid attribute that corresponds to this action:
+	 * roll again to determine action.
+	 *
+	 * Square must read more rows to determine what action is associated with
+	 * rolling a 1, 2, 3, 4, 5, or 6 on the following roll.
+	 *
+	 * Keeps reading rows until it reaches the next square row (which has
+	 * a square id in the first column). For each row after the original ROW,
+	 * it keeps tracks of the numbers and associated action. (i.e rolling a 1 means move 1 forward)
+	 *   numbers: 1
+	 *   action: move 1 forward
+	 *
+	 * Moves through the extra set up row. The CONDITIONS header determines this row is a
+	 * condition for when user rolls the specific number. If it isn't in a CONDITIONS header,
+	 * method uses actionDetails to determine the specific action string.
+	 *
+	 * Adding to the result string, which may look like G1A.2B10.
+	 * Different conditions separated by a "." and the first "G" signifies it is is a
+	 * roll to determine action type of square.
+	 *
+	 * @param row - Current Row Number of the Square being processed
+	 * @param config - array representation of config CSV file separated by line
+	 * @return a 2-element String array
+	 *  element at index 0: action details in a String
+	 *  element at index 1: number of additional rows used
+	 */
 	private String[] determine(int row, String[] config) {
 		StringBuilder result = new StringBuilder();
 		result.append("G");
@@ -328,14 +439,14 @@ public class BoardGameEngine extends Game {
 				} else if (!parsedOptions[i].isEmpty()) {
 					String[] actionKeys = actionDetails(parsedOptions[i], i, rowTracker, config);
 					nextAction = actionKeys[0];
-					row += Integer.valueOf(actionKeys[1]); // Increments row if needed
+					rowTracker += Integer.valueOf(actionKeys[1]); //increments row if needed
 				}
 			}
 			result.append(numbers.trim());
 			result.append(nextAction.trim());
 			result.append(".");
 
-			// Advacing to next row
+			// Advancing to next row
 			rowTracker += 1;
 			if (rowTracker == config.length) {
 				break;
@@ -345,17 +456,27 @@ public class BoardGameEngine extends Game {
 		}
 		System.out.println("Determined - ");
 		System.out.println(result.charAt(0));
-//		result = "G6D0-";
 		return new String[] {result.toString(), "" + (rowTracker - row - 1)};
 	}
 
-	// Setting an individual player with default image
+	/**
+	 * Adds a player with the name NAME to the game.
+	 * Assigns the player to the number NUM and selects corresponding
+	 * image for player's tokens - currently uses default.
+	 * @param name - name of player
+	 * @param num - player number (i.e player 1, player 2, etc).
+	 */
 	public void setPlayer(String name, int num) {
 		String image = tokenFiles[num - 1];
 		game.addPlayer(name, image, num);
 	}
-
-	// FIXME AI Implementation
+	
+	/**
+	 * Sets up an AI player with the name NAME and
+	 * player number NUM. Currently uses default images.
+	 * @param name - name of AI
+	 * @param num - player number
+	 */
 	public void setAI(String name, int num) {
 		String image = tokenFiles[num - 1];
 		game.addAI(name, image, num);
