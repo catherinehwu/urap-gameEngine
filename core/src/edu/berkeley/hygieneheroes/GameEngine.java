@@ -10,6 +10,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
+/**
+ * GameEngine represents the underlying model for
+ * the game. It keeps tracks of the board, the squares,
+ * the players, the dice, etc. It also keeps track of the
+ * current player.
+ */
 public class GameEngine {
     // Game Features
     private Dice dice;
@@ -110,11 +116,10 @@ public class GameEngine {
         for (int i = 0; i < tokensPerPlayer; i += 1) {
             tokens.add(new Player(name, imageFile, this, num, i)); // PRINTING WILL BE UGLY
         }
+
+        // Creating a PlayerGroup for Human Player
         PlayerGroup newPlayer = new PlayerGroup(tokens, name, board);
         playersList.add(newPlayer);
-
-//        Player newPerson = new Player(name, imageFile, this, num);
-//        playersList.add(newPerson);
         sortPlayers();
     }
 
@@ -124,11 +129,10 @@ public class GameEngine {
         for (int i = 0; i < tokensPerPlayer; i += 1) {
             tokens.add(new ComputerPlayer(name, imageFile, this, num, i)); // PRINTING WILL BE UGLY
         }
+
+        // Creating an AI Computer PlayerGroup
         PlayerGroup computer = new PlayerGroup(tokens, name, board,true);
         playersList.add(computer);
-
-//        Player computer = new ComputerPlayer(name, imageFile, this, num);
-//        playersList.add(computer);
         sortPlayers();
     }
 
@@ -138,12 +142,9 @@ public class GameEngine {
 
     public String currentTurnStr() {
         PlayerGroup current = playersList.get(curTurnIndex);
-
-//        Player current = playersList.get(curTurnIndex);
         return current.getName();
     }
 
-    // FIXME changed to player group
     public PlayerGroup currentPlayer() {
         return playersList.get(curTurnIndex);
     }
@@ -210,7 +211,6 @@ public class GameEngine {
         }
     }
 
-    // FIXME changed to current token
     public void step() {
         Player cur = currentPlayer().getCurrentToken();
         if (cur.getDestination() == null || cur.getLocation() == cur.getDestination()) {
@@ -255,7 +255,6 @@ public class GameEngine {
         }
     }
 
-    // FIXME changed to get current token
     public void moveProcess(BoardGameEngine gameUI) {
         // Causes game to resume with a next turn or continuation of previous move
         turnComplete = false;
@@ -423,6 +422,11 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Checks to see if any player has won. A player wins
+     * when all of his/her tokens have made it to the end square.
+     * @return true if the game is over - a player has won
+     */
     public boolean gameOver() {
         for (PlayerGroup player : playersList) {
             if (player.finished()) {
@@ -430,15 +434,15 @@ public class GameEngine {
             }
         }
         return false;
-//        for (Player p : playersList) {
-//            if (p.getLocation().equals(board.getEnd())) {
-//                return true;
-//            }
-//        }
-//        return false;
     }
 
-    // FIXME changed to player group
+    /**
+     * Assumes the game is over and there is a winner.
+     * Finds the winner and returns the winner as a
+     * PlayerGroup object
+     * @return the player (PlayerGroup object) that won the game.
+     * If there is no winner, returns null.
+     */
     public PlayerGroup winner() {
         for (PlayerGroup player : playersList) {
             if (player.finished()) {
@@ -446,13 +450,6 @@ public class GameEngine {
             }
         }
         return null;
-
-//        for (Player p : playersList) {
-//            if (p.getLocation().equals(board.getEnd())) {
-//                return p;
-//            }
-//        }
-//        return null;
     }
 
     private void sortPlayers() {
@@ -468,22 +465,7 @@ public class GameEngine {
         return dice;
     }
 
-    // output for troubleshooting
-    // FIXME player group
-    public void display() {
-        System.out.println();
-        System.out.print("==========");
-        for (PlayerGroup p : playersList) {
-            System.out.println(p.getName() + " is at :");
-            for (Player token : p.getTokens()) {
-                System.out.println(token.getLocation().getSeqNum());
-            }
-//            System.out.println(p.getName() + " is at " + p.getLocation().getSeqNum());
-        }
-        System.out.println("==========");
-    }
-
-    // accessor methods
+    // accessor (set/get) methods
     public ArrayList<PlayerGroup> getPlayersList() {
         return playersList;
     }
@@ -496,7 +478,27 @@ public class GameEngine {
         return numOfPlayers;
     }
 
+    /**
+     * Sets the clickToken attribute to COND.
+     * clickToken should be true if designer wants the feature
+     * of having to click on a token before rolling to specify
+     * which token will be moved.
+     * @param cond condition to set clickToken to
+     */
     public void setClickToken(boolean cond) {
         clickToken = cond;
+    }
+
+    // output for troubleshooting
+    public void display() {
+        System.out.println();
+        System.out.print("==========");
+        for (PlayerGroup p : playersList) {
+            System.out.println(p.getName() + " is at :");
+            for (Player token : p.getTokens()) {
+                System.out.println(token.getLocation().getSeqNum());
+            }
+        }
+        System.out.println("==========");
     }
 }
