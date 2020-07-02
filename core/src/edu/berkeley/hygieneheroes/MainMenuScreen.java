@@ -13,12 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+/**
+ * MainMenuScreen implements the Screen interface
+ * and is a type of screen the BoardGameEngine game
+ * can display.
+ */
 public class MainMenuScreen implements Screen {
     private BoardGameEngine gameUI;
     private Stage stage;
     private String uiFile = "uiskin.json";
 
-    // From Before
+    // For Buttons and Player Name Input
     private Skin skin;
     private TextButton singlePlay;
     private TextButton doublePlay;
@@ -122,6 +127,11 @@ public class MainMenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
+    /**
+     * Removes the buttons on the main menu screen
+     * and switches to a screen where players can input their names.
+     * @param num - number of players selected for current game
+     */
     private void getPlayerDetails(final int num) {
         singlePlay.remove();
         doublePlay.remove();
@@ -175,7 +185,6 @@ public class MainMenuScreen implements Screen {
         submit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                gameUI.buttonSetGame(num);
                 stage.clear();
                 switch(num){
                     case 4:
@@ -193,7 +202,7 @@ public class MainMenuScreen implements Screen {
                         break;
                 }
 
-                // FIXME Adding AI Implementation
+                // If single player, sets the game up as a Two Player game with AI
                 if (num == 1) {
                     gameUI.setAI("Computer Player", 2);
                     gameUI.buttonSetGame(num + 1);
