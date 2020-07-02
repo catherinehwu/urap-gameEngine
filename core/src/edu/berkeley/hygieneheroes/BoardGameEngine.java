@@ -470,7 +470,7 @@ public class BoardGameEngine extends Game {
 		String image = tokenFiles[num - 1];
 		game.addPlayer(name, image, num);
 	}
-	
+
 	/**
 	 * Sets up an AI player with the name NAME and
 	 * player number NUM. Currently uses default images.
