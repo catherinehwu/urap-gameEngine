@@ -1,8 +1,6 @@
 package edu.berkeley.hygieneheroes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
@@ -13,6 +11,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 
+/**
+ * GameScreen implements the Screen interface
+ * and is one of the possible screens displayed by the
+ * BoardGameEngine game. Displayed when the game
+ * is in play.
+ */
 public class GameScreen implements Screen {
     public SpriteBatch batch;
 
@@ -31,11 +35,17 @@ public class GameScreen implements Screen {
     private PlayerGroup winner;
     private Texture congrats;
 
-    // Message Bar (FIXME - MESSAGE BAR)
+    // Message Bar Above the Board Game Image
     private int messageHeight;
     private int messageAvgLen;
     private int messagePad;
 
+    /**
+     * Constructor for a GameScreen. Sets up variables in this screen
+     * to store the same values and references as those in the
+     * BoardGameEngine object that is passed in. Creates the necessary
+     * sprites and textures for GUI.
+     */
     public GameScreen(BoardGameEngine GameUI, GameEngine curGame) {
         gameUI = GameUI;
         gameNotOver = true;
@@ -67,6 +77,10 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         gameUI.cameraScreen();
         gameScreen();
+
+        // Initializes the Winning Screen Settings if and only if game just finished
+        // (and all animations - zooming in / out have ended)
+        // Resets the board on display and starts victory music
         if (gameNotOver && game.gameOver() && !game.stepMode && !game.destMode) {
             gameNotOver = false;
             winner = game.winner();
@@ -87,7 +101,7 @@ public class GameScreen implements Screen {
         // Moving camera part over
         boardWorld.draw(batch);
 
-        // Message Bar (FIXME - MESSAGE BAR)
+        // Message Bar Above the Game Board Image
         layout.setText(font, "Game Messages", Color.BLACK, boardW, Align.center, true);
         font.draw(batch, layout, 0, boardH + messageHeight - messagePad);
 
@@ -100,15 +114,9 @@ public class GameScreen implements Screen {
         layout.setText(font, "Players: " + game.getNumOfPlayers(), Color.BLACK, boardW, Align.left, true);
         font.draw(batch, layout, boardW - messageAvgLen - messagePad, boardH + messageHeight - messagePad);
 
-//        if (game != null) {
-//            for (Player p : game.getPlayersList()) {
-//                p.draw(gameUI);
-//            }
-//        }
-
         if (gameNotOver) {
             if (game != null) {
-                // FIXME change to player group
+                // Draws each token for each player p
                 for (PlayerGroup p : game.getPlayersList()) {
                     for (Player token : p.getTokens()) {
                         token.draw(gameUI);
@@ -139,45 +147,48 @@ public class GameScreen implements Screen {
 //                 System.out.println("holding in outside large screen");
                 game.holdProcess();
             } else if (game.stepMode) {
+                // Showing pieces moving step by step with sound
 //                 System.out.println("moving piece to destination");
                 game.step();
             } else if (game.currentPlayer().getCurrentToken() != null && game.currentPlayer().getCurrentToken().isSquareAction()) {
+                // Automatically continuing action for square actions (like move to this square)
                 game.activate();
             } else if (game.currentPlayer().isComputerPlayer() && game.currentPlayer().getCurrentToken() == null) {
+                // Automatically making the AI move
                 game.activateAI();
             } else if (Gdx.input.isTouched()) {
-                // REMOVE SPACE BAR OPTION - Gdx.input.isKeyJustPressed(Input.Keys.SPACE) ||
-                // Initiate a game move
+                // REMOVE SPACE BAR OPTION - Gdx.input.isKeyJustPressed(Input.Keys.SPACE)
                 System.out.println("activated");
+
+                // Initiate a game move
+                // Getting the position touched by the player
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-//                gameUI.camera.unproject(touchPos);
-//                gameUI.camera.unproject(touchPos);
+
+                /* Debugging Lines
                 System.out.println(touchPos.x + " " + touchPos.y);
                 System.out.println(gameUI.viewport.getScreenX());
                 System.out.println(gameUI.viewport.getScreenY());
                 System.out.println(gameUI.viewport.getScreenWidth());
                 System.out.println(gameUI.viewport.getScreenHeight());
                 System.out.println(boardW + " " + boardH);
-//                System.out.println(gameUI.viewport.getWorldWidth() + " " + (gameUI.viewport.getWorldHeight() - gameUI.messageHeight));
-//                gameUI.camera.unproject(touchPos, 0, 0, gameUI.boardW, gameUI.boardH);
+                 */
 
-//                gameUI.camera.unproject(touchPos, gameUI.viewport.getScreenX(), gameUI.viewport.getScreenY(), gameUI.boardW, gameUI.boardH);
-
-
-//                gameUI.camera.unproject(touchPos, gameUI.viewport.getScreenX(), gameUI.viewport.getScreenY(), gameUI.boardW, gameUI.boardH);
-//                System.out.println(temp.x + " " + temp.y);
-//                game.activate(touchPos.x, touchPos.y);
+                // Calculating x coordinate by subtracting the viewport's starting xPos from touchPos.x
                 float x = touchPos.x - gameUI.viewport.getScreenX();
+
+                // Calculating y coordinate by first finding the offset from viewport's starting yPos
+                // subtracting both touchPos.y and viewport's starting yPos from total screen height because
+                // screen's y axis has 0 at the top rather than the bottom.
                 float y = Gdx.graphics.getHeight() - touchPos.y - gameUI.viewport.getScreenY();
-//                float y = gameUI.viewport.getScreenHeight() - touchPos.y - gameUI.viewport.getScreenY();
+
+                // Finding the ratios for the xPos with respect to the whole viewport's size
                 float xRatio = x / gameUI.viewport.getScreenWidth();
                 float yRatio = y / gameUI.viewport.getScreenHeight();
+
+                // Activating the touch based on board units using the ratio conversion
                 System.out.println( (xRatio * boardW) + " " + (yRatio * (boardH + messageHeight)));
                 game.activate((xRatio * boardW), (yRatio * (boardH + messageHeight)));
 
-//                System.out.println((touchPos.x - gameUI.viewport.getScreenX()) + " " + (boardH + messageHeight - touchPos.y));
-//                game.activate((touchPos.x - gameUI.viewport.getScreenX()), (boardH + messageHeight - touchPos.y));
-//                game.activate();
             }
 
             // Show Dice
