@@ -54,6 +54,7 @@ public class GameEngine {
     private boolean stepHold = false;
     private static final int STEP_HOLD = 25;
     private int stepHoldTime = STEP_HOLD;
+    private boolean clickToken;
 
     // Sound Effects
     private Sound stepTap;
@@ -88,6 +89,9 @@ public class GameEngine {
         // sound
         stepTap = Gdx.audio.newSound(Gdx.files.internal("step.wav"));
         flySound = Gdx.audio.newMusic(Gdx.files.internal("whee.wav"));
+
+        //clicking for movement not enabled
+        clickToken = false;
     }
 
     public GameEngine(float Xrange, float Yrange, int squareTotal, int tokens) {
@@ -146,6 +150,16 @@ public class GameEngine {
 
     public void activate(float x, float y) {
         if (currentPlayer().getCurrentToken() == null) {
+            if (!clickToken) {
+                for (int i = 1; i <= currentPlayer().getTokens().size(); i += 1) {
+                    Player token = currentPlayer().getTokenNumber(i);
+                    if (!token.getLocation().equals(board.getEnd())) {
+                        currentPlayer().setCurrentToken(i);
+                        return;
+                    }
+                }
+            }
+
             if (tokensPerPlayer == 1) {
                 currentPlayer().setCurrentToken(1);
             } else {
@@ -480,5 +494,9 @@ public class GameEngine {
 
     public int getNumOfPlayers() {
         return numOfPlayers;
+    }
+
+    public void setClickToken(boolean cond) {
+        clickToken = cond;
     }
 }
