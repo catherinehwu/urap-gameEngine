@@ -461,7 +461,7 @@ public class GameEngine {
         float y = p.getLocation().getY();
         return new float[]{x, y, gameUI.camera.position.x, gameUI.camera.position.y};
     }
-    
+
     /**
      * Advances the turn by incrementing the curTurnIndex.
      * If the curTurnIndex goes out of bounds of the length of the players list,
