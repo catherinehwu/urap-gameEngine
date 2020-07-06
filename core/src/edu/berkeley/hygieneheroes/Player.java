@@ -8,6 +8,11 @@ import com.badlogic.gdx.utils.Align;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class for each individual token of a player (PlayerGroup).
+ * Each player of the actual game has a collection of player instances
+ * based on how many tokens are needed in that game.
+ */
 public class Player {
     // Player attributes
     private String name;
@@ -16,7 +21,6 @@ public class Player {
     private GameEngine game;
     private PlayerGroup playerGroup;
     private int tokenNum; //off by 1
-//    private boolean skipTurn;
 
     // Player GUI details
     private Texture playerTexture;
@@ -24,7 +28,6 @@ public class Player {
     private int sizeHeight = 32;
     private int prevRoll = 0;
     private int playerNum;
-    private Square prevLocation;
     private String message;
 
     // Player turn continuation tracker
@@ -41,10 +44,8 @@ public class Player {
         game = curGame;
         location = game.getBoard().getStart();
         tokenNum = tokenN;
-//        skipTurn = false;
 
         playerNum = pNum;
-        prevLocation = game.getBoard().getStart();
         determineAction = false;
         savedAction = "";
         message = "";
@@ -52,15 +53,26 @@ public class Player {
         playerTexture = new Texture(Gdx.files.internal(imageFileName));
     }
 
+    /**
+     * Initiates the turn for this token. Rolls the dice
+     * and moves the token. Returns whether or not the turn is complete
+     * (as in if the turn should advance to the next player).
+     *
+     * @param gameUI - GUI object for display purposes
+     * @return if this token / player's turn is complete
+     */
     public boolean guiTurn(BoardGameEngine gameUI) {
         message = "";
         Square curLoc = location;
         int stepVal = guiRoll(true);
         boolean complete = guiMove(stepVal, gameUI);
-        prevLocation = curLoc;
         return complete;
     }
 
+    /**
+     * Draws the individual token at the token's x and y location.
+     * @param gameUI - GUI instance to display to
+     */
     public void draw(BoardGameEngine gameUI) {
         // FIXME - DEBUGGING text
 //        System.out.println(name);
@@ -84,6 +96,13 @@ public class Player {
 //        gameUI.font.draw(gameUI.batch, gameUI.layout, gameUI.messagePad, gameUI.boardH + gameUI.messageHeight - gameUI.messagePad - playerNum * 2 * gameUI.layout.height);
     }
 
+    /**
+     * Rolls the game dice. If SET is true, then it sets the last roll
+     * tracker to the result of the new roll (which is needed for game display).
+     *
+     * @param set - whether or not to set this as the last / previous roll
+     * @return the number rolled ( 1 ~ 6 for a typical dice)
+     */
     private int guiRoll(boolean set) {
         int roll = game.getDice().nextVal();
         if (set) {
@@ -93,6 +112,14 @@ public class Player {
         return roll;
     }
 
+    /**
+     * Moves the token by calculating its future location. Processes
+     * the actions on the destination square (i.e roll again).
+     *
+     * @param num - number to move the dice (could be positive or negative)
+     * @param gameUI - GUI object for display purposes
+     * @return if this token / player's turn is complete
+     */
     private boolean guiMove(int num, BoardGameEngine gameUI) {
         Board gameBoard = game.getBoard();
         int newLocationSeqNum = safeMove(num, gameBoard);
@@ -114,12 +141,29 @@ public class Player {
         return complete;
     }
 
+    /**
+     * Moves the token to a specific square with sequence number SQNUM.
+     * Uses function guiMove for the actual movement, but first calculates the positive
+     * or negative steps needed to move to the specific square.
+     *
+     * @param sqNum - square to move to
+     * @param gameUI - GUI object for display purposes
+     * @return if this token / player's turn is complete
+     */
     private boolean guiMoveTo(int sqNum, BoardGameEngine gameUI) {
         int curNum = location.getSeqNum();
         int difference = sqNum - curNum;
         return guiMove(difference, gameUI);
     }
 
+    /**
+     * Moves the token NUM steps. If positive, moves forward NUM steps.
+     * If negative, moves backward NUM steps.
+     *
+     * @param num - number token needs to move
+     * @param gameBoard - GUI object for display purposes
+     * @return the seq number of destination location
+     */
     private int safeMove(int num, Board gameBoard) {
         int locationSeqNum = location.getSeqNum();
         if (num < 0) {
@@ -138,6 +182,18 @@ public class Player {
         return locationSeqNum;
     }
 
+    /**
+     * Action taken due to square actions. Actually makes the
+     * automatic movement (flying to a different square or moving
+     * a certain steps forward). Only squareAction moves enter this
+     * method.
+     *
+     * Roll again, skip, reverse situations should never enter this method.
+     *
+     * @param key - action being processed
+     * @param gameUI - GUI object for display
+     * @return - whether or not this token / player's turn is complete
+     */
     private boolean guiAct(String key, BoardGameEngine gameUI) {
         char type = key.charAt(0);
         switch(type) {
@@ -196,6 +252,18 @@ public class Player {
         return false;
     }
 
+    /**
+     * Initiates the action on the square (displays message and warning to the player)
+     * but does not actually start the specified movements or actions yet. Sets
+     * SQUAREACTION to true or false depending of if this square requires an automatic
+     * move continuation (i.e move to sq num 0). Most actions apply just to this token
+     * but actions like skip turn apply to the PlayerGroup and reverse applies to
+     * the whole game.
+     *
+     * @param key - action to display or process
+     * @param gameUI - GUI object for display purposes
+     * @return - whether or not turn has been completed for this token / player
+     */
     private boolean guiDisplayAct(String key, BoardGameEngine gameUI) {
         char type = key.charAt(0);
         switch(type) {
@@ -265,6 +333,15 @@ public class Player {
         return false;
     }
 
+    /**
+     * Completes the action for a roll again to determine action square.
+     * Rolls the game dice again and sees if it matches with any of the targets
+     * on the current location square. If it matches, proceeds to process the specified
+     * action. Otherwise, do nothing.
+     *
+     * @param gameUI - GUI object for display purposes
+     * @return - whether or not turn is completed
+     */
     public boolean completeAction(BoardGameEngine gameUI) {
         determineAction = false;
         // Records this rolls in output
@@ -293,6 +370,14 @@ public class Player {
         return true;
     }
 
+    /**
+     * Initiates the automatic processing of a square's action
+     * (i.e move to start, move 10 forward). Updates squareAction
+     * variable to reflect if there are any more automatic
+     * square action processes to consider.
+     *
+     * @param gameUI - GUI object for display purposes
+     */
     public void squareAction(BoardGameEngine gameUI) {
         boolean complete = true;
 
@@ -309,6 +394,10 @@ public class Player {
         }
     }
 
+    /**
+     * Advances this token my moving its current location one step
+     * forward or backward (in the direction of the destination location).
+     */
     public void advance() {
         Board board = game.getBoard();
         if (location.getSeqNum() < destination.getSeqNum()) {
@@ -325,15 +414,6 @@ public class Player {
     public Square getLocation() {
         return location;
     }
-
-//    public boolean getSkipTurn() {
-//        return skipTurn;
-//    }
-
-//    public void turnSkipped() {
-//        skipTurn = false;
-//        message = "";
-//    }
 
     public void setMessage(String s) {
         message = s;
@@ -363,7 +443,4 @@ public class Player {
         return squareAction;
     }
 
-    public boolean isComputerPlayer() {
-        return false;
-    }
 }
