@@ -100,17 +100,20 @@ public class GameEngine {
         clickToken = false;
     }
 
+    // Constructor that takes in number of tokens per player
     public GameEngine(float Xrange, float Yrange, int squareTotal, int tokens) {
         this(Xrange, Yrange, squareTotal);
         tokensPerPlayer = tokens;
     }
 
+    // Adds a square with specified location and settings to the board
     public void addSquare(int num, float sqX, float sqY,
                           String picture, String text, String sound,
                           ArrayList<String> listOfActions) {
         board.setSquare(num, sqX, sqY, picture, text, sound, listOfActions);
     }
 
+    // Adds a player with specified name and token image to the game
     public void addPlayer(String name, String imageFile, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
@@ -123,7 +126,7 @@ public class GameEngine {
         sortPlayers();
     }
 
-    // FIXME AI Implementation
+    // Adds an AI player with specified image to the game
     public void addAI(String name, String imageFile, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
@@ -136,19 +139,38 @@ public class GameEngine {
         sortPlayers();
     }
 
+    // Reverses the turn cycling direction of the game
     public void reverse() {
         direction *= -1;
     }
 
+    // Returns the name of the current player
     public String currentTurnStr() {
         PlayerGroup current = playersList.get(curTurnIndex);
         return current.getName();
     }
 
+    // Returns the PlayerGroup object representing the current player
     public PlayerGroup currentPlayer() {
         return playersList.get(curTurnIndex);
     }
 
+    /**
+     * If the click token feature is not enabled, simply sets the current token to
+     * be the player's first token that is not already at the finish line.
+     *
+     * If the click token feature is enabled, sets the current token to be the token the player
+     * clicked on (with a small room for buffer). If the click is not within the buffer range of
+     * any of the player's tokens, sends a message back to the game and turn is not completed or
+     * activated.
+     *
+     * Activating the turn involves picking the token to move and then calling the
+     * helper function activate - which begins the GUI zooming in / out and panning
+     * functions.
+     *
+     * @param x - x coordinate for touch point
+     * @param y - y coordinate for touch point
+     */
     public void activate(float x, float y) {
         if (currentPlayer().getCurrentToken() == null) {
             if (!clickToken) {
@@ -189,6 +211,12 @@ public class GameEngine {
         activate();
     }
 
+    /**
+     * Activate function for AI Computer Player. AI simply choses a random token
+     * to move (as long as the token isn't already at the finish line).
+     *
+     * Calls helper function activate to being zooming in/out and panning functions.
+     */
     public void activateAI() {
         if (currentPlayer().getCurrentToken() == null) {
             if (tokensPerPlayer == 1) {
@@ -205,12 +233,23 @@ public class GameEngine {
         activate();
     }
 
+    /**
+     * Initiates the GUI zooming in / out and movement procedure.
+     */
     public void activate() {
         if (!zoomMode) {
             zoomMode = true;
         }
     }
 
+    /**
+     * Moves the player's token from current location to destination (As specified
+     * by what they rolled on the dice). Moves token one square at a time, pausing at
+     * each square and making a short tap sound each time.
+     *
+     * If the movement is automatic from a square action (and not from rolling the dice), a
+     * different sound is played and no individual taps are made.
+     */
     public void step() {
         Player cur = currentPlayer().getCurrentToken();
         if (cur.getDestination() == null || cur.getLocation() == cur.getDestination()) {
@@ -236,6 +275,9 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Helper function to keep track of the pause time at each square.
+     */
     private void stepHold() {
         if (stepHoldTime <= 0) {
             stepHoldTime = STEP_HOLD;
@@ -245,6 +287,11 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Function to keep track of the pause time between zooming in/out on
+     * start location and the initialization of moving the token pieces. Pause time
+     * on the large screen board.
+     */
     public void holdProcess() {
         if (bigScreenHold <= 0) {
             stepMode = true;
@@ -255,6 +302,20 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Initializes the game action determining steps (i.e rolling a dice
+     * or continuing a previous move due to a square's action).
+     *
+     * Keeps track of whether the move being processed is due to a roll or from
+     * a previous square action. Keeps track of whether or not the dice was rolled
+     * and if step sounds should be made. If the turn is complete after this move
+     * (as in the turn goes to the next player), changes the instance variable turncomplete
+     * so that the turn will advance later.
+     *
+     * Initiates the rollMode and holdMode.
+     *
+     * @param gameUI - used for displaying GUI in other methods that are called
+     */
     public void moveProcess(BoardGameEngine gameUI) {
         // Causes game to resume with a next turn or continuation of previous move
         turnComplete = false;
@@ -294,6 +355,16 @@ public class GameEngine {
         holdMode = true;
     }
 
+    /**
+     * Overall function that controls the zooming in and out process.
+     * Times the zooming in and out and transitions from one to another.
+     * First, uses the setZoom helper function to set the necessary variables
+     * needed for a smooth zoom in / out. Calls zoom in and zoom out based on
+     * a counter / timer.
+     *
+     * @param gameUI - used for zooming in/out (changing camera)
+     * @param p - the player token to zoom into
+     */
     public void zoomProcess(BoardGameEngine gameUI, Player p) {
         if (setZoom) {
             increment = setZoom(gameUI, p);
@@ -319,6 +390,12 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Helper function for zooming in.
+     * @param gameUI - used for zooming in/out (changing camera)
+     * @param x - destination x location for zoom in
+     * @param y - destination y location for zoom in
+     */
     private void zoomIn(BoardGameEngine gameUI, float x, float y) {
         gameUI.camera.zoom -= ZOOM_INTERVAL;
 
@@ -329,6 +406,19 @@ public class GameEngine {
         gameUI.camera.update();
     }
 
+    /**
+     * Helper function for zooming out.
+     *
+     * When zooming out terminates, initializes the following processes based on condition:
+     *      1. starts the moving mode (if this was the zoom in/out procedure for start location)
+     *      2. checks to see if turn was completed and advances turn
+     *      (if this was zoom in/out procedure for end location)
+     *      3. if turn advanced and next player is AI, automatically activate AI's turn
+     *
+     * @param gameUI - used for zooming in/out (changing camera)
+     * @param x - destination x location for zoom out
+     * @param y - destination y location for zoom out
+     */
     private void zoomOut(BoardGameEngine gameUI, float x, float y) {
         if (zoomCount == ZOOM_TIME) {
             setZoom = true;
@@ -345,8 +435,6 @@ public class GameEngine {
                     System.out.println("turn advancing");
                     currentPlayer().resetCurrentToken();
                     advanceTurn();
-                } else if (currentPlayer().isComputerPlayer()) {
-                    this.activateAI();
                 }
             }
         } else {
@@ -360,13 +448,32 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Helper function that finds the location and variables needed for zooming in/out calculations.
+     *
+     * @param gameUI - used for zooming in / out (finding camera location and position_
+     * @param p - player token to zoom in on
+     * @return a 4 element array with the x and y positions of the player's token and
+     * the x and y positions of the GUI camera
+     */
     private float[] setZoom(BoardGameEngine gameUI, Player p) {
         float x = p.getLocation().getX();
         float y = p.getLocation().getY();
         return new float[]{x, y, gameUI.camera.position.x, gameUI.camera.position.y};
     }
-
-    // FIXME changed to get current token
+    
+    /**
+     * Advances the turn by incrementing the curTurnIndex.
+     * If the curTurnIndex goes out of bounds of the length of the players list,
+     * modulo like math is performed to make it within bounds again.
+     *
+     * Keeps incrementing the turn index until it finds a player
+     * whose turn is not supposed to be skipped. For every player it encounters in which
+     * the player's turn should be skipped, resets the player's settings to state that
+     * turn has already been skipped.
+     *
+     * If next turn is AI, automatically initiates AI's turn and move.
+     */
     private void advanceTurn() {
         curTurnIndex += (1 * direction);
         while (curTurnIndex < 0) {
@@ -394,14 +501,20 @@ public class GameEngine {
             curTurnIndex -= numOfPlayers;
         }
 
-        // FIXME AI Implementation
+        // AI Turn Implementation
         if(currentPlayer().isComputerPlayer()) {
             System.out.println("true");
             this.activateAI();
         }
     }
 
-    // FIXME changed to get current token
+    /**
+     * Displays animation for a rolling dice. Cycles through different
+     * dice faces and images and lands on the one specified by
+     * the player's roll. Pauses between each image to create a rolling effect.
+     *
+     * @param gameUI - GUI instance to display on
+     */
     public void rollGui(BoardGameEngine gameUI) {
         Player current = currentPlayer().getCurrentToken();
         diceX = gameUI.boardW - gameUI.messageAvgLen - gameUI.messagePad - gameUI.messageHeight;
@@ -452,6 +565,9 @@ public class GameEngine {
         return null;
     }
 
+    /**
+     * Sorts the PlayerGroups based on the alphabet.
+     */
     private void sortPlayers() {
         Comparator<PlayerGroup> comp = new AlphabetComparator();
         Collections.sort(playersList, comp);
