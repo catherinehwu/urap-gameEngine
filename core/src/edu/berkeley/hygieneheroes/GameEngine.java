@@ -130,7 +130,7 @@ public class GameEngine {
     public void addAI(String name, String imageFile, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
-            tokens.add(new ComputerPlayer(name, imageFile, this, num, i)); // PRINTING WILL BE UGLY
+            tokens.add(new Player(name, imageFile, this, num, i)); // PRINTING WILL BE UGLY
         }
 
         // Creating an AI Computer PlayerGroup
