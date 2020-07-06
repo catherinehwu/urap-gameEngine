@@ -45,7 +45,7 @@ public class BoardGameEngine extends Game {
 			{"seqNum", "x", "y", "image", "sound", "text",
 					"roll again", "move by", "move to", "skip",
 					"roll to determine action", "conditions"};
-	private static int headersNum = 3;
+	private static int headersNum = 4;
 
 	// Player Token Images Settings
 	private static String[] tokenFiles = {"player1.png", "player2.png", "player3.png", "player4.png"};
@@ -251,9 +251,10 @@ public class BoardGameEngine extends Game {
 	 */
 	private void initializeCSV(String[] config) {
 		// Row 1 will be game name and instructions
-		// Ignore the header rows (row 2 - 3)
-		// Row 4 will be # of squares, x position range, y position range
-		// Row 5 onward are square IDs
+		// Row 2 Image Tokens reset
+		// Ignore the header rows (row 3 - 4)
+		// Row 5 will be # of squares, x position range, y position range
+		// Row 6 onward are square IDs
 		// For each square, index 0-2 set for sqNum, x coord, ycoord
 
 		String gameData = config[0];
@@ -261,6 +262,14 @@ public class BoardGameEngine extends Game {
 		gameName = gameDataParsed[0];
 		instructionsFile = gameDataParsed[1];
 		// welcomeScreen = gameDataParsed[2];
+
+		String imageToken = config[1];
+		String[] tokenRepl = imageToken.trim().split(",");
+		for (int i = 0; i < tokenRepl.length; i += 1) {
+			if (!tokenRepl[i].isEmpty()) {
+				tokenFiles[i] = tokenRepl[i].trim();
+			}
+		}
 
 		String boardRep = config[headersNum];
 		String[] boardData = boardRep.trim().split(",");
