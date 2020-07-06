@@ -1,4 +1,5 @@
 Dental Hygiene Game,instructions.txt,,,,,,,,,,
+/Users/macbook/Documents/URAP-Misc/scratchCat.png, /Users/macbook/Documents/URAP-Misc/scratchDog.png,,,,,,,,,
 Square ID,X position ,Y position ,Image to show,Sound to play ,Text to show,Roll again ,Change square by ,Go to square ID ,skip a turn,Roll (or spin or etc.) again to determine an action,Conditions to do this row
 ,,,,,,,"negative, to go back",,,Use rows below,
 29,1313,653,1,,,,,,,,
@@ -14,7 +15,7 @@ Square ID,X position ,Y position ,Image to show,Sound to play ,Text to show,Roll
 8,933,481,,,,,,,,1,
 ,,,,,,,,0,,,6
 9,1054,481,,failed.wav,,,,0,,,
-10,1150,481,,drop2.wav,,,,,,,
+10,1150,481,,/Users/macbook/Documents/URAP-Misc/urapdrop2.wav,,,,,,,
 11,1150,429,,,,,,,,,
 12,1150,39,,,,,,,,,
 13,1150,339,,,,1,,,,,
