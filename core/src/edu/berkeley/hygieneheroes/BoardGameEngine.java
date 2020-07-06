@@ -26,7 +26,8 @@ public class BoardGameEngine extends Game {
 	private GameEngine game;
 	public String victory = "victory.wav";
 	public String winningPage = "congrats.jpg";
-	public String configFileName = "dentalActualGame.csv";
+//	public String configFileName = "dentalActualGame.csv";
+	public String configFileName = "dentalActualGameWithName.csv";
 //	public String configFileName = "dentalQuickWin.csv";
 //	public String configFileName = "dentalMultipleDet.csv";
 //	public String configFileName = "dentalTestDet.csv";
@@ -44,10 +45,17 @@ public class BoardGameEngine extends Game {
 			{"seqNum", "x", "y", "image", "sound", "text",
 					"roll again", "move by", "move to", "skip",
 					"roll to determine action", "conditions"};
-	private static int headersNum = 2;
+	private static int headersNum = 3;
 
 	// Player Token Images Settings
 	private static String[] tokenFiles = {"player1.png", "player2.png", "player3.png", "player4.png"};
+
+	// Instructions / Game Name Settings
+	private Screen curScreen;
+	public String gameName;
+	public String instructionsFile;
+	public String welcomeScreen;
+	private boolean beginning;
 
 	// Overall GUI
 	public SpriteBatch batch;
@@ -94,7 +102,9 @@ public class BoardGameEngine extends Game {
 		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
 
 		// Sets the Main Menu Screen with Stage & Buttons
-		this.setScreen(new MainMenuScreen(this));
+		// this.setScreen(new MainMenuScreen(this));
+		beginning = true;
+		this.setScreen(new InstructionScreen(this));
 	}
 
 	@Override
@@ -120,7 +130,27 @@ public class BoardGameEngine extends Game {
 	 */
 	public void buttonSetGame(int num) {
 		game.setNumOfPlayers(num);
-		this.setScreen(new GameScreen(this, this.game));
+		curScreen = new GameScreen(this, this.game);
+		this.setScreen(curScreen);
+	}
+
+	/**
+	 * Change from instruction screen to main menu screen.
+	 */
+	public void toNextScreen() {
+		if (beginning) {
+			curScreen = new MainMenuScreen(this);
+			beginning = false;
+		}
+
+		if (curScreen instanceof MainMenuScreen) {
+			((MainMenuScreen) curScreen).reactivate();
+		}
+		this.setScreen(curScreen);
+	}
+
+	public void toInstrScreen() {
+		this.setScreen(new InstructionScreen(this));
 	}
 
 	/**
@@ -220,10 +250,17 @@ public class BoardGameEngine extends Game {
 	 * @param config - array of String - each element is one row of the CSV file
 	 */
 	private void initializeCSV(String[] config) {
-		// Ignore the header rows (row 1 - 2)
-		// Row 3 will be # of squares, x position range, y position range
-		// Row 4 onward are square IDs
+		// Row 1 will be game name and instructions
+		// Ignore the header rows (row 2 - 3)
+		// Row 4 will be # of squares, x position range, y position range
+		// Row 5 onward are square IDs
 		// For each square, index 0-2 set for sqNum, x coord, ycoord
+
+		String gameData = config[0];
+		String[] gameDataParsed = gameData.trim().split(",");
+		gameName = gameDataParsed[0];
+		instructionsFile = gameDataParsed[1];
+		// welcomeScreen = gameDataParsed[2];
 
 		String boardRep = config[headersNum];
 		String[] boardData = boardRep.trim().split(",");
@@ -239,7 +276,6 @@ public class BoardGameEngine extends Game {
 		int tokensPerPlayer = Integer.valueOf(boardData[3]);
 
 		game = new GameEngine(xNum, yNum, squareTotal, tokensPerPlayer);
-
 
 		for (int i = headersNum + 1; i < config.length; ) {
 			i = setUpSquareCSV(config[i], i, config);

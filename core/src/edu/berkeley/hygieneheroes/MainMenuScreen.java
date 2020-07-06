@@ -29,6 +29,7 @@ public class MainMenuScreen implements Screen {
     private TextButton doublePlay;
     private TextButton triplePlay;
     private TextButton quadPlay;
+    private TextButton instr;
     private Label name;
     private Label gameName;
     private Label instruction;
@@ -36,6 +37,9 @@ public class MainMenuScreen implements Screen {
     private TextField player3;
     private TextField player2;
     private TextField player1;
+
+    // Saving state
+    private int num;
 
     public MainMenuScreen(BoardGameEngine GameUI) {
         gameUI = GameUI;
@@ -97,29 +101,46 @@ public class MainMenuScreen implements Screen {
             }
         });
 
+        // Instruction Button
+        instr = new TextButton("Back to Instructions", skin);
+        instr.setColor(Color.RED);
+        instr.setWidth(gameUI.windWidth / 5);
+        instr.setHeight(gameUI.windHeight / 10);
+        instr.setPosition(gameUI.windWidth / 2, gameUI.windHeight / 6, Align.center);
+        instr.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameUI.toInstrScreen();
+            }
+        });
+
         // Label for Name
         name = new Label("Hygiene Heroes", skin);
         name.setColor(Color.BLACK);
         name.setX(gameUI.windWidth / 2, Align.center);
-        name.setY(gameUI.windHeight - gameUI.windHeight / 12);
+        name.setY(gameUI.windHeight);
+//        name.setY(gameUI.windHeight - gameUI.windHeight / 12);
 
         // Label for Specific Game Name
-        gameName = new Label("Dental Hygiene Game", skin);
+        gameName = new Label(gameUI.gameName, skin);
         gameName.setColor(Color.BLACK);
         gameName.setX(gameUI.windWidth / 2, Align.center);
-        gameName.setY(gameUI.windHeight - 2 * gameUI.windHeight / 12);
+        gameName.setY(gameUI.windHeight - gameUI.windHeight / 20);
+//        gameName.setY(gameUI.windHeight - 2 * gameUI.windHeight / 12);
 
         // Label for Instructions
         instruction = new Label("Choose number of players to start game!", skin);
         instruction.setColor(Color.BLACK);
         instruction.setX(gameUI.windWidth / 2, Align.center);
-        instruction.setY(gameUI.windHeight - 3 * gameUI.windHeight / 12);
+        instruction.setY(gameUI.windHeight - 3 * gameUI.windHeight / 20);
+//        instruction.setY(gameUI.windHeight - 3 * gameUI.windHeight / 12);
 
         // Adding Buttons & Labels to the Stage
         stage.addActor(singlePlay);
         stage.addActor(doublePlay);
         stage.addActor(triplePlay);
         stage.addActor(quadPlay);
+        stage.addActor(instr);
         stage.addActor(name);
         stage.addActor(gameName);
         stage.addActor(instruction);
@@ -133,6 +154,7 @@ public class MainMenuScreen implements Screen {
      * @param num - number of players selected for current game
      */
     private void getPlayerDetails(final int num) {
+        this.num = num;
         singlePlay.remove();
         doublePlay.remove();
         triplePlay.remove();
@@ -145,34 +167,36 @@ public class MainMenuScreen implements Screen {
         switch(num) {
             case 4:
                 player4 = new TextField("Player 4", skin);
-                player4.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 5))- 4 * gameUI.windHeight / 6, Align.center);
+                player4.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 15))- 4 * gameUI.windHeight / 6, Align.center);
                 Label player4Des = new Label("Type in Player 4's Name", skin);
                 player4Des.setColor(Color.BLUE);
-                player4Des.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 8))- 4 * gameUI.windHeight / 6, Align.center);
+                player4Des.setPosition(gameUI.windWidth / 2, (gameUI.windHeight)- 4 * gameUI.windHeight / 6, Align.center);
                 stage.addActor(player4);
                 stage.addActor(player4Des);
             case 3:
                 player3 = new TextField("Player 3", skin);
-                player3.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 5))- 3 * gameUI.windHeight / 6, Align.center);
+                player3.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 15))- 3 * gameUI.windHeight / 6, Align.center);
                 Label player3Des = new Label("Type in Player 3's Name", skin);
                 player3Des.setColor(Color.BLUE);
-                player3Des.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 8))- 3 * gameUI.windHeight / 6, Align.center);
+                player3Des.setPosition(gameUI.windWidth / 2, (gameUI.windHeight)- 3 * gameUI.windHeight / 6, Align.center);
                 stage.addActor(player3);
                 stage.addActor(player3Des);
             case 2:
                 player2 = new TextField("Player 2", skin);
-                player2.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 5))- 2 * gameUI.windHeight / 6, Align.center);
+                player2.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 15))- 2 * gameUI.windHeight / 6, Align.center);
                 Label player2Des = new Label("Type in Player 2's Name", skin);
                 player2Des.setColor(Color.BLUE);
-                player2Des.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 8))- 2 * gameUI.windHeight / 6, Align.center);
+                player2Des.setPosition(gameUI.windWidth / 2, (gameUI.windHeight)- 2 * gameUI.windHeight / 6, Align.center);
                 stage.addActor(player2);
                 stage.addActor(player2Des);
             case 1:
                 player1 = new TextField("Player 1", skin);
-                player1.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 5))- gameUI.windHeight / 6, Align.center);
+                player1.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 15))- gameUI.windHeight / 6, Align.center);
+//                player1.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 5))- gameUI.windHeight / 6, Align.center);
                 Label player1Des = new Label("Type in Player 1's Name", skin);
                 player1Des.setColor(Color.BLUE);
-                player1Des.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 8))- gameUI.windHeight / 6, Align.center);
+                player1Des.setPosition(gameUI.windWidth / 2, (gameUI.windHeight) - gameUI.windHeight / 6, Align.center);
+//                player1Des.setPosition(gameUI.windWidth / 2, (gameUI.windHeight - (gameUI.windHeight / 8))- gameUI.windHeight / 6, Align.center);
                 stage.addActor(player1);
                 stage.addActor(player1Des);
                 break;
@@ -212,6 +236,13 @@ public class MainMenuScreen implements Screen {
             }
         });
         stage.addActor(submit);
+    }
+
+    public void reactivate() {
+        setMainMenu();
+        if (num != 0) {
+            getPlayerDetails(num);
+        }
     }
 
     @Override
