@@ -1,6 +1,7 @@
 package edu.berkeley.hygieneheroes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
@@ -188,7 +189,8 @@ public class GameScreen implements Screen {
                 // Activating the touch based on board units using the ratio conversion
                 System.out.println( (xRatio * boardW) + " " + (yRatio * (boardH + messageHeight)));
                 game.activate((xRatio * boardW), (yRatio * (boardH + messageHeight)));
-
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                gameUI.toInstrScreen();
             }
 
             // Show Dice
