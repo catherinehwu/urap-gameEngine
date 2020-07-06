@@ -1,0 +1,5 @@
+Start with 3 germ tokens in START.
+The youngest player rolls first.
+Take turns rolling a die.
+Choose which germ to move forward.  You must move one germ each roll. 
+Whoever gets all 3 germs to the CAVITY first, wins! 
