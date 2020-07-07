@@ -10,6 +10,7 @@ public class Square {
     private String squareImage;
     private String squareText;
     private String squareSound;
+    private String defaultSound;
     private ArrayList<String> actions;
 
     // Changing x and y to be floats
@@ -44,6 +45,29 @@ public class Square {
 
     public String getSquareSound() {
         return squareSound;
+    }
+
+    public String getDefaultSound() {
+        return defaultSound;
+    }
+
+    public void setDefaultSound(String sound) {
+        defaultSound = sound;
+    }
+
+    // Gets sound - either specific or default (by game or by column type)
+    public String getSound() {
+        if (getSquareSound() != null) {
+            return getSquareSound();
+        }
+        return getDefaultSound();
+    }
+
+    // Resets default sound back to null
+    public void resetSound() {
+        if (defaultSound != null) {
+            defaultSound = null;
+        }
     }
 
 }
