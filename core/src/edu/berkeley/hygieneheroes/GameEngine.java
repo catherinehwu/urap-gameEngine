@@ -5,10 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 
 /**
  * GameEngine represents the underlying model for
@@ -67,6 +64,9 @@ public class GameEngine {
     private Music flySound;
     private boolean stepSound;
 
+    // Default Square Sounds HashMap
+    public HashMap<String, String> actionSounds = new HashMap<>();
+
     // Changing constructor to take in floats
     public GameEngine(float Xrange, float Yrange, int squareTotal) {
         board = new Board(Xrange, Yrange, squareTotal);
@@ -95,6 +95,15 @@ public class GameEngine {
         // sound
         stepTap = Gdx.audio.newSound(Gdx.files.internal("step.wav"));
         flySound = Gdx.audio.newMusic(Gdx.files.internal("whee.wav"));
+
+        // default sounds
+        actionSounds.put("A", "defaultSounds/a.wav");
+        actionSounds.put("B", "defaultSounds/b.wav");
+        actionSounds.put("C", "defaultSounds/c.wav");
+        actionSounds.put("D", "defaultSounds/d.wav");
+        actionSounds.put("E", "defaultSounds/e.wav");
+        actionSounds.put("F", "defaultSounds/f.wav");
+        actionSounds.put("G", "defaultSounds/g.wav");
 
         //clicking for movement not enabled
         clickToken = false;
@@ -370,10 +379,11 @@ public class GameEngine {
             increment = setZoom(gameUI, p);
             zoomIn = true;
             setZoom = false;
-            if (destMode && p.getLocation().getSquareSound() != null) {
-                String file = p.getLocation().getSquareSound();
+            if (destMode && p.getLocation().getSound() != null) {
+                String file = p.getLocation().getSound();
                 Sound sqSound = Gdx.audio.newSound(Gdx.files.internal(file));
                 sqSound.play();
+                p.getLocation().resetSound();
             }
             return;
         } else {
