@@ -27,7 +27,8 @@ public class BoardGameEngine extends Game {
 	public String victory = "victory.wav";
 	public String winningPage = "congrats.jpg";
 //	public String configFileName = "dentalActualGame.csv";
-	public String configFileName = "dentalActualGameWithName.csv";
+//	public String configFileName = "dentalActualGameWithName.csv";
+	public String configFileName = "dentalActualGameDefSound.csv";
 //	public String configFileName = "dentalQuickWin.csv";
 //	public String configFileName = "dentalMultipleDet.csv";
 //	public String configFileName = "dentalTestDet.csv";
