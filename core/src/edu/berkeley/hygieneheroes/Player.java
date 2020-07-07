@@ -1,6 +1,7 @@
 package edu.berkeley.hygieneheroes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Align;
@@ -266,6 +267,13 @@ public class Player {
      */
     private boolean guiDisplayAct(String key, BoardGameEngine gameUI) {
         char type = key.charAt(0);
+
+        // Setting default sounds based on parsing
+        if (destination.getSquareSound() == null) {
+            String defaultSound = game.actionSounds.get(String.valueOf(type));
+            destination.setDefaultSound(defaultSound);
+        }
+
         switch(type) {
             case 'a':
             case 'A':
