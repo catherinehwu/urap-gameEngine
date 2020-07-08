@@ -255,8 +255,9 @@ public class BoardGameEngine extends Game {
 		// Row 1 will be game name and instructions
 		// Row 2 Image Tokens reset
 		// Ignore the header rows (row 3 - 4)
-		// Row 5 will be # of squares, x position range, y position range
-		// Row 6 onward are square IDs
+		// Row 5 designer specified column sounds
+		// Row 6 will be # of squares, x position range, y position range
+		// Row 7 onward are square IDs
 		// For each square, index 0-2 set for sqNum, x coord, ycoord
 
 		String gameData = config[0];
