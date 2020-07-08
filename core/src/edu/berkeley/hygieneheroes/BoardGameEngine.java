@@ -59,6 +59,11 @@ public class BoardGameEngine extends Game {
 	public String welcomeScreen;
 	private boolean beginning;
 
+	// Splash Image
+	public String splashImage = "splash.png";
+	public float splashImageW = 456;
+	public float splashImageH = 361;
+
 	// Overall GUI
 	public SpriteBatch batch;
 	public BitmapFont font;

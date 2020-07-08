@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -52,7 +53,10 @@ public class InstructionScreen implements Screen {
         String instr = instrFile.readString();
         instruction = new Label(instr, skin);
         instruction.setColor(Color.BLACK);
-        instruction.setX(gameUI.windWidth / 2, Align.center);
+        instruction.setX(0, Align.left);
+        instruction.setWidth(gameUI.windWidth / 4);
+        instruction.setWrap(true);
+//        instruction.setX(gameUI.windWidth / 2, Align.center);
         instruction.setY(gameUI.windHeight - 10 * gameUI.windHeight / 20);
 
         // Start Game Button
@@ -67,9 +71,17 @@ public class InstructionScreen implements Screen {
             }
         });
 
+        // Image for Splash Screen
+        SplashImage instrImage = new SplashImage(gameUI.splashImage, gameUI.splashImageW, gameUI.splashImageH,
+                gameUI.windWidth / 4, instruction.getY(), 3 * gameUI.windWidth / 4,instruction.getY() - start.getY());
+//        instrImage.setWidth(3 * gameUI.windWidth / 4);
+//        instrImage.setHeight(instruction.getY() - start.getY());
+        instrImage.setPosition(gameUI.windWidth / 4, instruction.getY());
+
         stage.addActor(name);
         stage.addActor(gameName);
         stage.addActor(instruction);
+        stage.addActor(instrImage);
         stage.addActor(start);
         stage.setViewport(gameUI.viewport);
         Gdx.input.setInputProcessor(stage);
