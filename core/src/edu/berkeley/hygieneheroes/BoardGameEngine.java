@@ -28,7 +28,8 @@ public class BoardGameEngine extends Game {
 	public String winningPage = "congrats.jpg";
 //	public String configFileName = "dentalActualGame.csv";
 //	public String configFileName = "dentalActualGameWithName.csv";
-	public String configFileName = "dentalActualGameDefSound.csv";
+//	public String configFileName = "dentalActualGameDefSound.csv";
+	public String configFileName = "dentalActualGameColSound.csv";
 //	public String configFileName = "dentalQuickWin.csv";
 //	public String configFileName = "dentalMultipleDet.csv";
 //	public String configFileName = "dentalTestDet.csv";
@@ -46,7 +47,7 @@ public class BoardGameEngine extends Game {
 			{"seqNum", "x", "y", "image", "sound", "text",
 					"roll again", "move by", "move to", "skip",
 					"roll to determine action", "conditions"};
-	private static int headersNum = 4;
+	private static int headersNum = 5; //instead of 4
 
 	// Player Token Images Settings
 	private static String[] tokenFiles = {"player1.png", "player2.png", "player3.png", "player4.png"};
@@ -287,6 +288,10 @@ public class BoardGameEngine extends Game {
 
 		game = new GameEngine(xNum, yNum, squareTotal, tokensPerPlayer);
 
+		String columnAction = config[headersNum - 1];
+		String[] columnActionSounds = columnAction.trim().split(",");
+		setUpSound(columnActionSounds);
+
 		for (int i = headersNum + 1; i < config.length; ) {
 			i = setUpSquareCSV(config[i], i, config);
 		}
@@ -503,6 +508,40 @@ public class BoardGameEngine extends Game {
 		System.out.println("Determined - ");
 		System.out.println(result.charAt(0));
 		return new String[] {result.toString(), "" + (rowTracker - row - 1)};
+	}
+
+	private void setUpSound(String[] columnActionSounds) {
+		for(int i = 0; i < columnActionSounds.length; i += 1) {
+			if (columnActionSounds[i].isEmpty()) {
+				continue;
+			}
+			String key;
+			switch (headerSetup[i]) {
+				case "roll again":
+					key = "A";
+					break;
+				case "move by":
+					key = "B";
+					break;
+				case "move to":
+					key = "D";
+					break;
+				case "skip":
+					key = "E";
+					break;
+				case "roll to determine action":
+					key = "G";
+					break;
+				default:
+					key = null;
+			}
+			game.setSoundInList(key, columnActionSounds[i]);
+
+			// For moving forward and backward sounds
+			if (key.equals("B")) {
+				game.setSoundInList("C", columnActionSounds[i]);
+			}
+		}
 	}
 
 	/**
