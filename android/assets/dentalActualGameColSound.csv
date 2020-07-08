@@ -3,7 +3,7 @@ Dental Hygiene Game,instructions.txt,,,,,,,,,,
 Square ID,X position ,Y position ,Image to show,Sound to play ,Text to show,Roll again ,Change square by ,Go to square ID ,skip a turn,Roll (or spin or etc.) again to determine an action,Conditions to do this row
 ,,,,,,,"negative, to go back",,,Use rows below,
 ,,,,,,columnSound/roll.wav,columnSound/advance.wav,columnSound/teleport.wav,columnSound/skip.wav,columnSound/det.wav,
-29,1313,653,1,,,,,,,,
+29,1313,653,1,1,,,,,,,
 0,0,481,,,,,,,,,
 1,139,481,,success.wav,,,,,,,
 2,246,481,,,,,,10,,,
