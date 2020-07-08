@@ -141,7 +141,7 @@ public class BoardGameEngine extends Game {
 	 */
 	public void toNextScreen() {
 		if (beginning) {
-			curScreen = new MainMenuScreen(this);
+			curScreen = new MainMenuScreen(this, game);
 			beginning = false;
 		}
 
@@ -285,14 +285,30 @@ public class BoardGameEngine extends Game {
 		ratio = CONSTANTW / xNum;
 		boardW = windWidth = xNum * ratio;
 		boardH = windHeight = yNum * ratio;
-		int tokensPerPlayer = Integer.valueOf(boardData[3]);
 
-		game = new GameEngine(xNum, yNum, squareTotal, tokensPerPlayer);
+		// Setting Up Game with Token Number and Player Number
+		int tokensPerPlayer = 1; //DEFAULT
+		int maxNumPlayer = 4; //DEFAULT
+		if (boardData.length == 5) {
+			if (!boardData[4].isEmpty()) {
+				maxNumPlayer = Integer.valueOf(boardData[4]);
+			}
+		}
+		if (boardData.length >= 4) {
+			if (!boardData[3].isEmpty()) {
+				tokensPerPlayer = Integer.valueOf(boardData[3]);
+			}
+			game = new GameEngine(xNum, yNum, squareTotal, tokensPerPlayer, maxNumPlayer);
+		} else {
+			game = new GameEngine(xNum, yNum, squareTotal);
+		}
 
+		// Setting up designer specified sounds per column
 		String columnAction = config[headersNum - 1];
 		String[] columnActionSounds = columnAction.trim().split(",");
 		setUpSound(columnActionSounds);
 
+		// Set up all the squares of the board
 		for (int i = headersNum + 1; i < config.length; ) {
 			i = setUpSquareCSV(config[i], i, config);
 		}
