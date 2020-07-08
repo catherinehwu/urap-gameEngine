@@ -21,6 +21,7 @@ public class GameEngine {
     private int curTurnIndex;
     private int direction;
     private int numOfPlayers;
+    public int maxPlayers;
     public int tokensPerPlayer;
     private Random rand;
 
@@ -73,7 +74,8 @@ public class GameEngine {
         playersList = new ArrayList<>();
         curTurnIndex = 0;
         direction = 1;
-        tokensPerPlayer = 1;
+        tokensPerPlayer = 1; // DEFAULT VALUES
+        maxPlayers = 4; // DEFAULT VALUES
         rand = new Random();
 
         //standard dice with 1~6
@@ -113,6 +115,12 @@ public class GameEngine {
     public GameEngine(float Xrange, float Yrange, int squareTotal, int tokens) {
         this(Xrange, Yrange, squareTotal);
         tokensPerPlayer = tokens;
+    }
+
+    // Constructor that takes in number of max players
+    public GameEngine(float Xrange, float Yrange, int squareTotal, int tokens, int maxNumPlayers) {
+        this(Xrange, Yrange, squareTotal, tokens);
+        maxPlayers = maxNumPlayers;
     }
 
     // Adds a square with specified location and settings to the board
