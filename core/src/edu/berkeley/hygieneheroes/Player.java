@@ -270,7 +270,7 @@ public class Player {
 
         // Setting default sounds based on parsing
         if (destination.getSquareSound() == null) {
-            String defaultSound = game.actionSounds.get(String.valueOf(type));
+            String defaultSound = game.getSoundFromList(String.valueOf(type));
             destination.setDefaultSound(defaultSound);
         }
 

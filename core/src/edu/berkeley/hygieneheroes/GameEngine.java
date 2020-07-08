@@ -65,7 +65,7 @@ public class GameEngine {
     private boolean stepSound;
 
     // Default Square Sounds HashMap
-    public HashMap<String, String> actionSounds = new HashMap<>();
+    private HashMap<String, String> actionSounds = new HashMap<>();
 
     // Changing constructor to take in floats
     public GameEngine(float Xrange, float Yrange, int squareTotal) {
@@ -470,6 +470,20 @@ public class GameEngine {
         float x = p.getLocation().getX();
         float y = p.getLocation().getY();
         return new float[]{x, y, gameUI.camera.position.x, gameUI.camera.position.y};
+    }
+
+
+    public void setSoundInList(String key, String soundFile) {
+        if (key != null) {
+            actionSounds.put(key, soundFile);
+        }
+    }
+
+    public String getSoundFromList(String key) {
+        if (actionSounds.containsKey(key)) {
+            return actionSounds.get(key);
+        }
+        return null;
     }
 
     /**
