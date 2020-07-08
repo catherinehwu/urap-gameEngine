@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Align;
  */
 public class MainMenuScreen implements Screen {
     private BoardGameEngine gameUI;
+    private GameEngine game;
     private Stage stage;
     private String uiFile = "uiskin.json";
 
@@ -41,8 +42,9 @@ public class MainMenuScreen implements Screen {
     // Saving state
     private int num;
 
-    public MainMenuScreen(BoardGameEngine GameUI) {
+    public MainMenuScreen(BoardGameEngine GameUI, GameEngine curGame) {
         gameUI = GameUI;
+        game = curGame;
         setMainMenu();
     }
 
@@ -126,20 +128,49 @@ public class MainMenuScreen implements Screen {
         gameName.setColor(Color.BLACK);
         gameName.setX(gameUI.windWidth / 2, Align.center);
         gameName.setY(gameUI.windHeight - gameUI.windHeight / 20);
-//        gameName.setY(gameUI.windHeight - 2 * gameUI.windHeight / 12);
 
         // Label for Instructions
         instruction = new Label("Choose number of players to start game!", skin);
         instruction.setColor(Color.BLACK);
         instruction.setX(gameUI.windWidth / 2, Align.center);
         instruction.setY(gameUI.windHeight - 3 * gameUI.windHeight / 20);
-//        instruction.setY(gameUI.windHeight - 3 * gameUI.windHeight / 12);
 
         // Adding Buttons & Labels to the Stage
+        // Removing Unnecessary Buttons - based on Max Num of Players
+        /*
+        switch(game.maxPlayers) {
+            case 4:
+                stage.addActor(quadPlay);
+            case 3:
+                stage.addActor(triplePlay);
+            case 2:
+                stage.addActor(doublePlay);
+            case 1:
+                stage.addActor(singlePlay);
+                break;
+        } */
+
+        // Nulling Out Buttons that are Invalid - due to Max Num Of Players
+        switch(game.maxPlayers) {
+            case 1:
+                doublePlay.setColor(Color.MAROON);
+                doublePlay.clearListeners();
+            case 2:
+                triplePlay.setColor(Color.MAROON);
+                triplePlay.clearListeners();
+            case 3:
+                quadPlay.setColor(Color.MAROON);
+                quadPlay.clearListeners();
+                break;
+            default:
+                break;
+        }
         stage.addActor(singlePlay);
         stage.addActor(doublePlay);
         stage.addActor(triplePlay);
         stage.addActor(quadPlay);
+
+        // Adding additional actors (labels)
         stage.addActor(instr);
         stage.addActor(name);
         stage.addActor(gameName);
