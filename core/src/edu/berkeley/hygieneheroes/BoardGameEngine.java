@@ -532,6 +532,13 @@ public class BoardGameEngine extends Game {
 		return new String[] {result.toString(), "" + (rowTracker - row - 1)};
 	}
 
+	/**
+	 * Sets up designer specified default sounds. Takes in an array
+	 * of all the sound files specified. Matches them with a corresponding
+	 * type of action and sets the default sound of that particular action
+	 * to be given file name.
+	 * @param columnActionSounds list of sound files
+	 */
 	private void setUpSound(String[] columnActionSounds) {
 		for(int i = 0; i < columnActionSounds.length; i += 1) {
 			if (columnActionSounds[i].isEmpty()) {
