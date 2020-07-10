@@ -154,7 +154,7 @@ public class GameScreen implements Screen {
             } else if (game.currentPlayer().getCurrentToken() != null && game.currentPlayer().getCurrentToken().isSquareAction()) {
                 // Automatically continuing action for square actions (like move to this square)
                 game.activate();
-            } else if (game.currentPlayer().isComputerPlayer() && game.currentPlayer().getCurrentToken() == null) {
+            } else if (game.currentPlayer().isComputerPlayer()) {
                 // Automatically making the AI move
                 game.activateAI();
             } else if (Gdx.input.isTouched()) {
