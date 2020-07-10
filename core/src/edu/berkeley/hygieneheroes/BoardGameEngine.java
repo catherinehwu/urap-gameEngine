@@ -55,8 +55,8 @@ public class BoardGameEngine extends Game {
 
 	// Animated Token Images Settings
 	private static String[][] tokenFilesList =
-		{ 	{"scratchCat1.png", "scratchCat2.png", "scratchCat3.png", "scratchCat4.png"},
-			{"scratchDog1.png", "scratchDog2.png", "scratchDog3.png"},
+		{ 	{"player1.png"},
+			{"player2.png"},
 			{"player3.png"},
 			{"player4.png"}
 		};
