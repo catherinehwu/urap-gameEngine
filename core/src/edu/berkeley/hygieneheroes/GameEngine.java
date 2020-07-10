@@ -143,11 +143,37 @@ public class GameEngine {
         sortPlayers();
     }
 
+    // Adds a player with specified name and token animated images to the game
+    public void addPlayer(String name, String[] imageFiles, int num) {
+        ArrayList<Player> tokens = new ArrayList<Player>();
+        for (int i = 0; i < tokensPerPlayer; i += 1) {
+            tokens.add(new Player(name, imageFiles, this, num, i)); // PRINTING WILL BE UGLY
+        }
+
+        // Creating a PlayerGroup for Human Player
+        PlayerGroup newPlayer = new PlayerGroup(tokens, name, board);
+        playersList.add(newPlayer);
+        sortPlayers();
+    }
+
     // Adds an AI player with specified image to the game
     public void addAI(String name, String imageFile, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
             tokens.add(new Player(name, imageFile, this, num, i)); // PRINTING WILL BE UGLY
+        }
+
+        // Creating an AI Computer PlayerGroup
+        PlayerGroup computer = new PlayerGroup(tokens, name, board,true);
+        playersList.add(computer);
+        sortPlayers();
+    }
+
+    // Adds an AI player with specified image files (animated) to the game
+    public void addAI(String name, String[] imageFiles, int num) {
+        ArrayList<Player> tokens = new ArrayList<Player>();
+        for (int i = 0; i < tokensPerPlayer; i += 1) {
+            tokens.add(new Player(name, imageFiles, this, num, i)); // PRINTING WILL BE UGLY
         }
 
         // Creating an AI Computer PlayerGroup
