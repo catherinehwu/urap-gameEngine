@@ -27,9 +27,10 @@ public class BoardGameEngine extends Game {
 	public String victory = "victory.wav";
 	public String winningPage = "congrats.jpg";
 //	public String configFileName = "dentalActualGame.csv";
+	public String configFileName = "dentalActualGameAnimate.csv";
 //	public String configFileName = "dentalActualGameWithName.csv";
 //	public String configFileName = "dentalActualGameDefSound.csv";
-	public String configFileName = "dentalActualGameColSound.csv";
+//	public String configFileName = "dentalActualGameColSound.csv";
 //	public String configFileName = "dentalQuickWin.csv";
 //	public String configFileName = "dentalMultipleDet.csv";
 //	public String configFileName = "dentalTestDet.csv";
@@ -51,6 +52,14 @@ public class BoardGameEngine extends Game {
 
 	// Player Token Images Settings
 	private static String[] tokenFiles = {"player1.png", "player2.png", "player3.png", "player4.png"};
+
+	// Animated Token Images Settings
+	private static String[][] tokenFilesList =
+		{ 	{"scratchCat1.png", "scratchCat2.png", "scratchCat3.png", "scratchCat4.png"},
+			{"scratchDog1.png", "scratchDog2.png", "scratchDog3.png"},
+			{"player3.png"},
+			{"player4.png"}
+		};
 
 	// Instructions / Game Name Settings
 	private Screen curScreen;
@@ -581,8 +590,13 @@ public class BoardGameEngine extends Game {
 	 * @param num - player number (i.e player 1, player 2, etc).
 	 */
 	public void setPlayer(String name, int num) {
-		String image = tokenFiles[num - 1];
-		game.addPlayer(name, image, num);
+		// Set Up Player with Static Image Files
+		//String image = tokenFiles[num - 1];
+		//game.addPlayer(name, image, num);
+
+		// Set Up Player with Animation Files
+		String[] images = tokenFilesList[num - 1];
+		game.addPlayer(name, images, num);
 	}
 
 	/**
@@ -592,8 +606,13 @@ public class BoardGameEngine extends Game {
 	 * @param num - player number
 	 */
 	public void setAI(String name, int num) {
-		String image = tokenFiles[num - 1];
-		game.addAI(name, image, num);
+		// Set Up Player with Static Image Files
+		// String image = tokenFiles[num - 1];
+		// game.addAI(name, image, num);
+
+		// Set Up Player with Animation Files
+		String[] images = tokenFilesList[num - 1];
+		game.addAI(name, images, num);
 	}
 
 	@Override
