@@ -284,7 +284,9 @@ public class BoardGameEngine extends Game {
 		String[] tokenRepl = imageToken.trim().split(",");
 		for (int i = 0; i < tokenRepl.length; i += 1) {
 			if (!tokenRepl[i].isEmpty()) {
-				tokenFiles[i] = tokenRepl[i].trim();
+				String[] animatedTokenImg = tokenRepl[i].split("\\s");
+				tokenFilesList[i] = animatedTokenImg;
+				// tokenFiles[i] = tokenRepl[i].trim();
 			}
 		}
 
