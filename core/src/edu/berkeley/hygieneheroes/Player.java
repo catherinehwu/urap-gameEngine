@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Align;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,12 +22,16 @@ public class Player {
     private Square location;
     private GameEngine game;
     private PlayerGroup playerGroup;
-    private int tokenNum; //off by 1
+    private int tokenNum; //off by 1 - token number 1 is given the index 0
+
+    // Animation Images
+    private int imageIndex;
+    private ArrayList<Texture> costumes;
 
     // Player GUI details
     private Texture playerTexture;
-    private int sizeWidth = 32;
-    private int sizeHeight = 32;
+    private int sizeWidth = 64; //32;
+    private int sizeHeight = 64; //32;
     private int prevRoll = 0;
     private int playerNum;
     private String message;
@@ -52,6 +57,19 @@ public class Player {
         message = "";
 
         playerTexture = new Texture(Gdx.files.internal(imageFileName));
+        costumes = new ArrayList<>();
+        costumes.add(playerTexture);
+    }
+
+    public Player(String playerName, String[] imageFiles, GameEngine curGame, int pNum, int tokenN) {
+        this(playerName, imageFiles[0], curGame, pNum, tokenN);
+        imageIndex = 0;
+        costumes = new ArrayList<>();
+
+        for (String img : imageFiles) {
+            Texture t = new Texture(Gdx.files.internal(img));
+            costumes.add(t);
+        }
     }
 
     /**
@@ -413,6 +431,12 @@ public class Player {
         } else {
             location = board.getSquare(location.getSeqNum() - 1);
         }
+        costumeAdvance();
+    }
+
+    private void costumeAdvance() {
+        imageIndex += 1;
+        playerTexture = costumes.get(imageIndex % costumes.size());
     }
 
     public String getName() {
