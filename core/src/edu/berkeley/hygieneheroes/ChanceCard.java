@@ -4,15 +4,15 @@ import java.util.ArrayList;
 
 public class ChanceCard {
     private String cardImage;
-    private String cardText;
     private String cardSound;
+    private String cardText;
     private String defaultSound;
     private ArrayList<String> actions;
 
-    public ChanceCard(String image, String text, String sound, ArrayList<String> chanceActions) {
+    public ChanceCard(String image, String sound, String text, ArrayList<String> chanceActions) {
         cardImage = image;
-        cardText = text;
         cardSound = sound;
+        cardText = text;
         actions = chanceActions;
     }
 

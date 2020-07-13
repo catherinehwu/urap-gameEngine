@@ -187,8 +187,8 @@ public class GameEngine {
     }
 
     // Adding a Chance Card to the Game
-    public void addChance(String type, String cardImage, String cardText, String cardSound, ArrayList<String> actions) {
-        ChanceCard newCard = new ChanceCard(cardImage, cardText, cardSound, actions);
+    public void addChance(String type, String cardImage, String cardSound, String cardText, ArrayList<String> actions) {
+        ChanceCard newCard = new ChanceCard(cardImage, cardSound, cardText, actions);
         if (chanceCards.containsKey(type)) {
             chanceCards.get(type).add(newCard);
         } else {
