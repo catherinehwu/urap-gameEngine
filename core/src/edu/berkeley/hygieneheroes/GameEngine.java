@@ -18,6 +18,8 @@ public class GameEngine {
     private Dice dice;
     private Board board;
     private ArrayList<PlayerGroup> playersList;
+    private HashMap<String, ArrayList<ChanceCard>> chanceCards;
+    private HashMap<String, Integer> nextChanceCardIndex;
     private int curTurnIndex;
     private int direction;
     private int numOfPlayers;
@@ -72,6 +74,8 @@ public class GameEngine {
     public GameEngine(float Xrange, float Yrange, int squareTotal) {
         board = new Board(Xrange, Yrange, squareTotal);
         playersList = new ArrayList<>();
+        chanceCards = new HashMap<>();
+        nextChanceCardIndex = new HashMap<>();
         curTurnIndex = 0;
         direction = 1;
         tokensPerPlayer = 1; // DEFAULT VALUES
@@ -180,6 +184,46 @@ public class GameEngine {
         PlayerGroup computer = new PlayerGroup(tokens, name, board,true);
         playersList.add(computer);
         sortPlayers();
+    }
+
+    // Adding a Chance Card to the Game
+    public void addChance(String type, String cardImage, String cardText, String cardSound, ArrayList<String> actions) {
+        ChanceCard newCard = new ChanceCard(cardImage, cardText, cardSound, actions);
+        if (chanceCards.containsKey(type)) {
+            chanceCards.get(type).add(newCard);
+        } else {
+            ArrayList<ChanceCard> newChanceGroup = new ArrayList<>();
+            newChanceGroup.add(newCard);
+            chanceCards.put(type, newChanceGroup);
+        }
+    }
+
+    // Drawing a Chance Card
+    public ChanceCard draw(String type) {
+        int index = nextChanceCardIndex.get(type);
+        ArrayList<ChanceCard> chanceDeck = chanceCards.get(type);
+        if (index + 1 < chanceDeck.size()) {
+            nextChanceCardIndex.put(type, index + 1);
+        } else {
+            shuffleChance(type);
+        }
+        return chanceDeck.get(index);
+    }
+
+    // Shuffle All Chance Cards
+    public void shuffleAll() {
+        for(String type : chanceCards.keySet()) {
+            Collections.shuffle(chanceCards.get(type));
+            nextChanceCardIndex.put(type, 0);
+        }
+    }
+
+    // Shuffles specific
+    private void shuffleChance(String type) {
+        if (chanceCards.containsKey(type)) {
+            Collections.shuffle(chanceCards.get(type));
+            nextChanceCardIndex.put(type, 0);
+        }
     }
 
     // Reverses the turn cycling direction of the game
