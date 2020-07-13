@@ -33,7 +33,7 @@ public class BoardGameEngine extends Game {
 //	public String configFileName = "dentalActualGameColSound.csv";
 //	public String configFileName = "dentalQuickWin.csv";
 //	public String configFileName = "dentalMultipleDet.csv";
-//	public String configFileName = "dentalTestDet.csv";
+//	public String configFileName = "dentalTestDet.csv,";
 //	public String configFileName = "dentalWithDetermine.csv";
 //	public String configFileName = "dentalColor.txt";
 //	public String configFileName = "dentalColorG6.txt";
@@ -324,10 +324,15 @@ public class BoardGameEngine extends Game {
 		String[] columnActionSounds = columnAction.trim().split(",");
 		setUpSound(columnActionSounds);
 
-		// Set up all the squares of the board
-		for (int i = headersNum + 1; i < config.length; ) {
+		// Set up all the squares of the board (squareTotal rows starting from headersNum + 1 row)
+		for (int i = headersNum + 1; i < (headersNum + 1) + squareTotal; ) {
 			i = setUpSquareCSV(config[i], i, config);
 		}
+
+		for (int i = (headersNum + 1) + squareTotal; i < config.length; ) {
+			i = setUpChanceCSV(config[i], i, config);
+		}
+		game.shuffleAll();
 	}
 
 	/**
@@ -541,6 +546,77 @@ public class BoardGameEngine extends Game {
 		System.out.println("Determined - ");
 		System.out.println(result.charAt(0));
 		return new String[] {result.toString(), "" + (rowTracker - row - 1)};
+	}
+
+	// Setting up Chance Cards
+	private int setUpChanceCSV(String settings, int row, String[] config) {
+		// Assume sqData has same number of columns as headerSetup
+		String[] chanceData = settings.trim().split(",");
+
+		// Count keeps track of the current row number and increments
+		// to properly account for which row should be processed next
+		int count = row;
+
+		// Defining Default Square Attribute Variables
+		String type = "";
+		String image = null;
+		String sound = null;
+		String text = null;
+		ArrayList<String> chanceActions = new ArrayList<>();
+
+		// For each column in this row (which is now the chanceData array),
+		// check to see which column type it belongs to and modify
+		// the corresponding attribute if given value is valid (not null or empty string).
+		for (int i = 0; i < chanceData.length; i += 1) {
+			String columnH = headerSetup[i];
+			switch (columnH) {
+				case "seqNum":
+					if (!chanceData[i].isEmpty()) {
+						type = chanceData[i];
+					}
+					break;
+				case "x":
+				case "y":
+					break;
+				case "image":
+					if (chanceData[i] != null && !chanceData[i].isEmpty()) {
+						image = chanceData[i];
+					}
+					break;
+				case "sound":
+					if (chanceData[i] != null && !chanceData[i].isEmpty()) {
+						sound = chanceData[i];
+					}
+					break;
+				case "text":
+					if (chanceData[i] != null && !chanceData[i].isEmpty()) {
+						text = chanceData[i];
+					}
+					break;
+				default:
+					if (chanceData[i] != null && !chanceData[i].isEmpty()) {
+						String[] results = actionDetails(chanceData[i], i, count, config);
+						String action = results[0];
+						if (action != null) {
+							chanceActions.add(action);
+						}
+						if (action.startsWith("G")) {
+							count += Integer.valueOf(results[1]);
+						}
+					}
+					break;
+			}
+		}
+
+		game.addChance(type, image, sound, text, chanceActions);
+		// DEBUGGING
+		System.out.println(type + image + sound + text);
+		for (String act : chanceActions) {
+			System.out.println(act);
+		}
+
+		count += 1;
+		return count;
 	}
 
 	/**
