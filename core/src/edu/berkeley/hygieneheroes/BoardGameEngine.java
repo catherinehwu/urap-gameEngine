@@ -27,7 +27,8 @@ public class BoardGameEngine extends Game {
 	public String victory = "victory.wav";
 	public String winningPage = "congrats.jpg";
 //	public String configFileName = "dentalActualGame.csv";
-	public String configFileName = "dentalActualGameAnimate.csv";
+	public String configFileName = "dentalActualGameChance.csv";
+//	public String configFileName = "dentalActualGameAnimate.csv";
 //	public String configFileName = "dentalActualGameWithName.csv";
 //	public String configFileName = "dentalActualGameDefSound.csv";
 //	public String configFileName = "dentalActualGameColSound.csv";
@@ -325,11 +326,12 @@ public class BoardGameEngine extends Game {
 		setUpSound(columnActionSounds);
 
 		// Set up all the squares of the board (squareTotal rows starting from headersNum + 1 row)
-		for (int i = headersNum + 1; i < (headersNum + 1) + squareTotal; ) {
+		int i = headersNum + 1;
+		for (int sqNum = 0; sqNum < squareTotal; sqNum += 1) {
 			i = setUpSquareCSV(config[i], i, config);
 		}
 
-		for (int i = (headersNum + 1) + squareTotal; i < config.length; ) {
+		while (i < config.length) {
 			i = setUpChanceCSV(config[i], i, config);
 		}
 		game.shuffleAll();
@@ -609,6 +611,7 @@ public class BoardGameEngine extends Game {
 		}
 
 		game.addChance(type, image, sound, text, chanceActions);
+
 		// DEBUGGING
 		System.out.println(type + image + sound + text);
 		for (String act : chanceActions) {
