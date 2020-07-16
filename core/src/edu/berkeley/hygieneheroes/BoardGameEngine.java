@@ -27,7 +27,8 @@ public class BoardGameEngine extends Game {
 	public String victory = "victory.wav";
 	public String winningPage = "congrats.jpg";
 //	public String configFileName = "dentalActualGame.csv";
-	public String configFileName = "dentalActualGameChance.csv";
+//	public String configFileName = "dentalActualGameChance.csv";
+	public String configFileName = "dentalActualGameChanceAction.csv";
 //	public String configFileName = "dentalActualGameAnimate.csv";
 //	public String configFileName = "dentalActualGameWithName.csv";
 //	public String configFileName = "dentalActualGameDefSound.csv";
@@ -48,7 +49,7 @@ public class BoardGameEngine extends Game {
 	private static String[] headerSetup =
 			{"seqNum", "x", "y", "image", "sound", "text",
 					"roll again", "move by", "move to", "skip",
-					"roll to determine action", "conditions"};
+					"roll to determine action", "conditions", "chance card"};
 	private static int headersNum = 5; //instead of 4
 
 	// Player Token Images Settings
@@ -474,6 +475,9 @@ public class BoardGameEngine extends Game {
 				action = determinedAction[0];
 				additional = determinedAction[1];
 				break;
+			case "chance card":
+				action = "H" + value;
+				break;
 			default:
 				System.out.println(colType);
 				System.out.println(column);
@@ -527,9 +531,10 @@ public class BoardGameEngine extends Game {
 				String value = parsedOptions[i];
 				if (headerSetup[i].equals("conditions")) {
 					numbers += value;
-				} else if (!parsedOptions[i].isEmpty()) {
+				} else if (!parsedOptions[i].trim().isEmpty()) {
 					String[] actionKeys = actionDetails(parsedOptions[i], i, rowTracker, config);
 					nextAction = actionKeys[0];
+					System.out.println(nextAction + " " + i);
 					rowTracker += Integer.valueOf(actionKeys[1]); //increments row if needed
 				}
 			}
@@ -547,6 +552,7 @@ public class BoardGameEngine extends Game {
 		}
 		System.out.println("Determined - ");
 		System.out.println(result.charAt(0));
+		System.out.println(result);
 		return new String[] {result.toString(), "" + (rowTracker - row - 1)};
 	}
 

@@ -44,6 +44,12 @@ public class Player {
     private Square destination;
     private boolean squareAction;
 
+    // Tracking Chance Cards
+    private ChanceCard drawn;
+    private boolean chanceAction;
+    private String chanceActStored;
+    private boolean notChanceAction;
+
     public Player(String playerName, String imageFile, GameEngine curGame, int pNum, int tokenN) {
         name = playerName;
         imageFileName = imageFile;
@@ -55,6 +61,7 @@ public class Player {
         determineAction = false;
         savedAction = "";
         message = "";
+        notChanceAction = true;
 
         playerTexture = new Texture(Gdx.files.internal(imageFileName));
         costumes = new ArrayList<>();
@@ -264,7 +271,14 @@ public class Player {
                 determineAction = true;
                 savedAction = key;
                 return false;
+            case 'H':
+                // Drawing chance card
+                String chanceType = key.substring(1);
+                drawn = game.draw(chanceType);
+                System.out.println("Drew this card: " + drawn);
+                return newChanceCardAct(gameUI);
             default:
+                System.out.println(key);
                 System.out.println("Unknown command.");
                 break;
         }
@@ -287,7 +301,7 @@ public class Player {
         char type = key.charAt(0);
 
         // Setting default sounds based on parsing
-        if (destination.getSquareSound() == null) {
+        if (destination != null && destination.getSquareSound() == null) {
             String defaultSound = game.getSoundFromList(String.valueOf(type));
             destination.setDefaultSound(defaultSound);
         }
@@ -352,6 +366,17 @@ public class Player {
                 savedAction = key;
                 squareAction = false;
                 break;
+            case 'H':
+                // drawing a chance card
+                System.out.println("Drawing chance card of type: " + key.substring(1));
+                message = " Drawing chance card of type: " + key.substring(1);
+//                String chanceType = key.substring(1);
+//                drawn = game.draw(chanceType);
+//                System.out.println(drawn);
+                squareAction = true;
+                chanceAction = true;
+                break;
+                //return displayChanceCard(drawn, gameUI);
             default:
                 System.out.println("Unknown command.");
                 break;
@@ -404,21 +429,94 @@ public class Player {
      *
      * @param gameUI - GUI object for display purposes
      */
-    public void squareAction(BoardGameEngine gameUI) {
+    public boolean squareAction(BoardGameEngine gameUI) {
+        squareAction = false;
         boolean complete = true;
+
+        // Chance Card Situation
+        if (chanceActStored != null) {
+            System.out.println("Doing a saved chance action");
+            complete = this.guiAct(chanceActStored, gameUI) && complete;
+            chanceActStored = null;
+//            squareAction = !complete;
+//            notChanceAction = true;
+            if (destination != null) {
+                for (String act : destination.getActions()) {
+                    if (act.contains("H")) {
+                        chanceAction = true;
+                    }
+                }
+            }
+            return complete;
+        }
 
         for (String action : location.getActions()) {
             // assuming movement isn't an issue because game logic makes sense
             // (as in don't roll again and move to another square)
             // boolean used to relay whether turn is complete
-            complete = complete && this.guiAct(action, gameUI);
+//            if (action.indexOf("H") < 0) {
+//                complete = this.guiAct(action, gameUI) && complete;
+//            } else {
+//                complete = this.guiDisplayAct(action, gameUI) && complete;
+//            }
+            complete = this.guiAct(action, gameUI) && complete;
             draw(gameUI);
         }
-        squareAction = !complete;
-        if (destination != null && !destination.getActions().isEmpty()) {
-            squareAction = true;
-        }
+//        squareAction = !complete;
+//        if (destination != null && !destination.getActions().isEmpty()) {
+//            int actionCount = 0;
+//            for (String act : destination.getActions()) {
+//                if (act.indexOf("H") < 0) {
+//                    actionCount += 1;
+//                }
+//            }
+//            squareAction = actionCount != 0;
+//            squareAction = true;
+
+//        if (destination != null && !destination.getActions().isEmpty()) {
+//            return false;
+//        }
+        return complete;
     }
+
+    private boolean newChanceCardAct(BoardGameEngine gameUI) {
+        chanceAction = false;
+        squareAction = false;
+        boolean complete = true;
+        for (String action : drawn.getActions()) {
+            complete = guiDisplayAct(action, gameUI) && complete;
+            if (squareAction) {
+                chanceActStored = action;
+            }
+        }
+        return complete;
+    }
+
+//    private boolean applyChanceCard(BoardGameEngine gameUI) {
+//        boolean complete = true;
+//        for (String action : drawn.getActions()) {
+//            complete = guiAct(action, gameUI) && complete;
+//        }
+//        return complete;
+//    }
+//
+//    // Returns whether or not turn is complete
+//    public boolean displayChanceCard(BoardGameEngine gameUI) {
+//        boolean complete = true;
+//        for (String action : drawn.getActions()) {
+//            if (!this.guiDisplayAct(action, gameUI)) {
+//                chanceActStored = action;
+//                notChanceAction = false;
+//                complete = false;
+//            }
+//        }
+////        if (isSquareAction()) {
+////            complete = applyChanceCard(gameUI) && complete;
+////        }
+//        drawn = null;
+//        chanceAction = false;
+//        return complete && !determiningAction();
+//    }
 
     /**
      * Advances this token my moving its current location one step
@@ -463,6 +561,10 @@ public class Player {
         return determineAction;
     }
 
+    public boolean getChanceAction() {
+        return chanceAction;
+    }
+
     public Square getDestination() {
         return destination;
     }
@@ -475,4 +577,7 @@ public class Player {
         return squareAction;
     }
 
+//    public boolean isNotChanceAction() {
+//        return notChanceAction;
+//    }
 }

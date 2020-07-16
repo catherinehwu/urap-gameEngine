@@ -19,4 +19,13 @@ public class ChanceCard {
     public ArrayList<String> getActions() {
         return actions;
     }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (String act : actions) {
+            result.append(act);
+            result.append(" ");
+        }
+        return result.toString();
+    }
 }

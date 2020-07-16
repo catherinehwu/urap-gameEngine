@@ -151,7 +151,8 @@ public class GameScreen implements Screen {
                 // Showing pieces moving step by step with sound
 //                 System.out.println("moving piece to destination");
                 game.step();
-            } else if (game.currentPlayer().getCurrentToken() != null && game.currentPlayer().getCurrentToken().isSquareAction()) {
+            } else if (game.currentPlayer().getCurrentToken() != null && game.currentPlayer().getCurrentToken().isSquareAction()
+                && !game.currentPlayer().getCurrentToken().getChanceAction()) {
                 // Automatically continuing action for square actions (like move to this square)
                 game.activate();
             } else if (game.currentPlayer().isComputerPlayer()) {

@@ -415,13 +415,21 @@ public class GameEngine {
             turnComplete = p.completeAction(gameUI);
             stepSound = false;
             rolled = true;
-        } else if (p.isSquareAction()) {
+        } /* else if (p.getChanceAction()) {
+            System.out.println("displaying chance card");
+            turnComplete = p.displayChanceCard(gameUI);
+        } */ else if (p.isSquareAction()) {
             System.out.println("square action");
-            p.squareAction(gameUI);
+            turnComplete = p.squareAction(gameUI);
+            System.out.println("turn complete: " + turnComplete);
+            System.out.println("square action after: " + p.isSquareAction());
             if (!p.isSquareAction()) {
                 System.out.println("no more square action");
-                turnComplete = true;
             }
+//            if (!p.isSquareAction()) {
+//                System.out.println("no more square action");
+//                turnComplete = true;
+//            }
             stepSound = false;
         } else {
             // Completes next turn in the game
