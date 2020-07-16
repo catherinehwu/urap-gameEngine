@@ -50,9 +50,9 @@ public class BoardGameEngine extends Game {
 			{"seqNum", "x", "y", "image", "sound", "text",
 					"roll again", "move by", "move to", "skip",
 					"roll to determine action", "conditions", "chance card"};
-	private static int headersNum = 5; //instead of 4
+	private static int headersNum = 5; //instead of 4 because one row for default sounds
 
-	// Player Token Images Settings
+	// Player Token Static Images Settings
 	private static String[] tokenFiles = {"player1.png", "player2.png", "player3.png", "player4.png"};
 
 	// Animated Token Images Settings
@@ -91,7 +91,7 @@ public class BoardGameEngine extends Game {
 	private float ratio;
 	public float distBetwPlayers = 10;
 
-	// Message Bar (FIXME - MESSAGE BAR)
+	// Message Bar
 	public int messageHeight = 150;
 	public int messageAvgLen = 150;
 	public int messagePad = 20;
@@ -110,6 +110,7 @@ public class BoardGameEngine extends Game {
 			System.out.println("done init");
 		} catch (Exception e){
 			System.out.println("error");
+			System.out.println(e);
 			System.out.println(e.getMessage());
 		}
 
@@ -121,6 +122,8 @@ public class BoardGameEngine extends Game {
 
 		// Sets the Main Menu Screen with Stage & Buttons
 		// this.setScreen(new MainMenuScreen(this));
+
+		// Creates game from beginning so it starts with Instruction Screen
 		beginning = true;
 		this.setScreen(new InstructionScreen(this));
 	}
@@ -153,7 +156,9 @@ public class BoardGameEngine extends Game {
 	}
 
 	/**
-	 * Change from instruction screen to main menu screen.
+	 * Change from instruction screen to the main menu screen if at beginning.
+	 * If user is returning to previous screen (game or menu), it returns to that
+	 * screen instance (and reactivates main menu's buttons).
 	 */
 	public void toNextScreen() {
 		if (beginning) {
@@ -167,6 +172,9 @@ public class BoardGameEngine extends Game {
 		this.setScreen(curScreen);
 	}
 
+	/**
+	 * Sets the current screen to the Instruction Screen.
+	 */
 	public void toInstrScreen() {
 		this.setScreen(new InstructionScreen(this));
 	}
@@ -287,8 +295,8 @@ public class BoardGameEngine extends Game {
 		for (int i = 0; i < tokenRepl.length; i += 1) {
 			if (!tokenRepl[i].isEmpty()) {
 				String[] animatedTokenImg = tokenRepl[i].split("\\s");
-				tokenFilesList[i] = animatedTokenImg;
-				// tokenFiles[i] = tokenRepl[i].trim();
+				tokenFilesList[i] = animatedTokenImg; // Animated images version
+				// tokenFiles[i] = tokenRepl[i].trim(); // Static image token version
 			}
 		}
 
@@ -308,11 +316,13 @@ public class BoardGameEngine extends Game {
 		int tokensPerPlayer = 1; //DEFAULT
 		int maxNumPlayer = 4; //DEFAULT
 		if (boardData.length == 5) {
+			// Setting specified maximum number of players if present
 			if (!boardData[4].isEmpty()) {
 				maxNumPlayer = Integer.valueOf(boardData[4]);
 			}
 		}
 		if (boardData.length >= 4) {
+			// Setting specified number of tokens per player if present
 			if (!boardData[3].isEmpty()) {
 				tokensPerPlayer = Integer.valueOf(boardData[3]);
 			}
@@ -332,6 +342,7 @@ public class BoardGameEngine extends Game {
 			i = setUpSquareCSV(config[i], i, config);
 		}
 
+		// Read in all the remaining rows as set up for Chance Cards
 		while (i < config.length) {
 			i = setUpChanceCSV(config[i], i, config);
 		}
@@ -557,6 +568,19 @@ public class BoardGameEngine extends Game {
 	}
 
 	// Setting up Chance Cards
+
+	/**
+	 * Sets up a single chance card based on the SETTINGS passed in.
+	 * Parses and splits the row SETTINGS to find the type of chance card
+	 * and the action associated with the chance card. To find the action
+	 * associated with the chance card, it uses helper function actionDetails.
+	 *
+	 * @param settings the settings row for this chance card
+	 * @param row current row number in the config file
+	 * @param config the entire configuration file
+	 * @return the next available row to scan for a chance card because certain chance cards
+	 * may take up more than one row in the csv file
+	 */
 	private int setUpChanceCSV(String settings, int row, String[] config) {
 		// Assume sqData has same number of columns as headerSetup
 		String[] chanceData = settings.trim().split(",");
@@ -619,10 +643,10 @@ public class BoardGameEngine extends Game {
 		game.addChance(type, image, sound, text, chanceActions);
 
 		// DEBUGGING
-		System.out.println(type + image + sound + text);
-		for (String act : chanceActions) {
-			System.out.println(act);
-		}
+//		System.out.println(type + image + sound + text);
+//		for (String act : chanceActions) {
+//			System.out.println(act);
+//		}
 
 		count += 1;
 		return count;
