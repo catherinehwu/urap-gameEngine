@@ -287,7 +287,7 @@ public class GameEngine {
         PlayerGroup current = playersList.get(curTurnIndex);
         return current.getName();
     }
-    
+
     /**
      *  Returns the PlayerGroup object representing the current player
      */
