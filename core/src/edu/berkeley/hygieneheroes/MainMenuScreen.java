@@ -48,6 +48,12 @@ public class MainMenuScreen implements Screen {
         setMainMenu();
     }
 
+    /**
+     * Sets up the main menu with 4 buttons for 1, 2, 3, or 4 player game mode.
+     * Colors the button MAROON if it isn't an allowed game mode for this specific game.
+     * When a button is clicked, will transition into a screen that asks for
+     * player's game name.
+     */
     private void setMainMenu() {
         // Camera Initiate
         gameUI.cameraScreen();
@@ -269,6 +275,12 @@ public class MainMenuScreen implements Screen {
         stage.addActor(submit);
     }
 
+    /**
+     * Sets up the main menu again so that all the buttons are valid
+     * and will listen for input. If it was at beginning, only sets up the screen
+     * asking for number of players. If number of players was already specified,
+     * sets up the screen asking for player names.
+     */
     public void reactivate() {
         setMainMenu();
         if (num != 0) {
