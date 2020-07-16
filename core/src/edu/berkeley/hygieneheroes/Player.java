@@ -434,6 +434,7 @@ public class Player {
         if (chanceActStored != null) {
             System.out.println("Doing a saved chance action");
             complete = this.guiAct(chanceActStored, gameUI) && complete;
+            draw(gameUI);
             chanceActStored = null;
             if (destination != null) {
                 for (String act : destination.getActions()) {
