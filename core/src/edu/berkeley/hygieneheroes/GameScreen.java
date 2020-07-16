@@ -154,6 +154,7 @@ public class GameScreen implements Screen {
             } else if (game.currentPlayer().getCurrentToken() != null && game.currentPlayer().getCurrentToken().isSquareAction()
                 && !game.currentPlayer().getCurrentToken().getChanceAction()) {
                 // Automatically continuing action for square actions (like move to this square)
+                // Only automatic activation when the square action IS NOT draw a chance card
                 game.activate();
             } else if (game.currentPlayer().isComputerPlayer()) {
                 // Automatically making the AI move
