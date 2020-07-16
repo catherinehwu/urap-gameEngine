@@ -47,7 +47,7 @@ public class GameEngine {
     private static final double ZOOM_INTERVAL = 0.0135;
     private static final int ZOOM_HOLD_COUNT = 100;
     private static final int ZOOM_TIME = 50;
-    private static final int HOLD_COUNT = 50;
+    private static final int HOLD_COUNT = 75; //50;
     private int bigScreenHold = HOLD_COUNT;
     private int hold = ZOOM_HOLD_COUNT;
     private int zoomCount = ZOOM_TIME;
