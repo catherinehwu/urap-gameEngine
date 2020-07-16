@@ -48,7 +48,6 @@ public class Player {
     private ChanceCard drawn;
     private boolean chanceAction;
     private String chanceActStored;
-    private boolean notChanceAction;
 
     public Player(String playerName, String imageFile, GameEngine curGame, int pNum, int tokenN) {
         name = playerName;
@@ -61,7 +60,6 @@ public class Player {
         determineAction = false;
         savedAction = "";
         message = "";
-        notChanceAction = true;
 
         playerTexture = new Texture(Gdx.files.internal(imageFileName));
         costumes = new ArrayList<>();
@@ -291,7 +289,8 @@ public class Player {
      * SQUAREACTION to true or false depending of if this square requires an automatic
      * move continuation (i.e move to sq num 0). Most actions apply just to this token
      * but actions like skip turn apply to the PlayerGroup and reverse applies to
-     * the whole game.
+     * the whole game. Drawing a chance card only displays the message - the act of drawing
+     * a Chance Card happens later when guiAct is called.
      *
      * @param key - action to display or process
      * @param gameUI - GUI object for display purposes
@@ -370,13 +369,9 @@ public class Player {
                 // drawing a chance card
                 System.out.println("Drawing chance card of type: " + key.substring(1));
                 message = " Drawing chance card of type: " + key.substring(1);
-//                String chanceType = key.substring(1);
-//                drawn = game.draw(chanceType);
-//                System.out.println(drawn);
                 squareAction = true;
                 chanceAction = true;
                 break;
-                //return displayChanceCard(drawn, gameUI);
             default:
                 System.out.println("Unknown command.");
                 break;
@@ -430,18 +425,20 @@ public class Player {
      * @param gameUI - GUI object for display purposes
      */
     public boolean squareAction(BoardGameEngine gameUI) {
+        // Reset squareAction to be false because the squareAction is currently being
+        // addressed and taken care of.
         squareAction = false;
         boolean complete = true;
 
-        // Chance Card Situation
+        // Chance Card Continuation Situation
         if (chanceActStored != null) {
             System.out.println("Doing a saved chance action");
             complete = this.guiAct(chanceActStored, gameUI) && complete;
             chanceActStored = null;
-//            squareAction = !complete;
-//            notChanceAction = true;
             if (destination != null) {
                 for (String act : destination.getActions()) {
+                    // If destination requires user to draw chance card, makes sure game knows so that
+                    // it will wait for user input before drawing the card.
                     if (act.contains("H")) {
                         chanceAction = true;
                     }
@@ -454,31 +451,25 @@ public class Player {
             // assuming movement isn't an issue because game logic makes sense
             // (as in don't roll again and move to another square)
             // boolean used to relay whether turn is complete
-//            if (action.indexOf("H") < 0) {
-//                complete = this.guiAct(action, gameUI) && complete;
-//            } else {
-//                complete = this.guiDisplayAct(action, gameUI) && complete;
-//            }
             complete = this.guiAct(action, gameUI) && complete;
             draw(gameUI);
         }
-//        squareAction = !complete;
-//        if (destination != null && !destination.getActions().isEmpty()) {
-//            int actionCount = 0;
-//            for (String act : destination.getActions()) {
-//                if (act.indexOf("H") < 0) {
-//                    actionCount += 1;
-//                }
-//            }
-//            squareAction = actionCount != 0;
-//            squareAction = true;
-
-//        if (destination != null && !destination.getActions().isEmpty()) {
-//            return false;
-//        }
         return complete;
     }
 
+    /**
+     * Draws a new chance card. Turns the chance action off so that automatic
+     * actions can continue to happen - telling the system it no longer
+     * needs to wait for user input to draw a chance card. Sets square action to false because
+     * the square action will be completed in this method.
+     *
+     * Goes through all the actions of the chance card and displays them. The completion of these
+     * actions may or may not happen automatically, based on what they are. (similar to a normal
+     * move or turn structure).
+     *
+     * @param gameUI - used for GUI display
+     * @return whether or not turn has been completed
+     */
     private boolean newChanceCardAct(BoardGameEngine gameUI) {
         chanceAction = false;
         squareAction = false;
@@ -491,32 +482,6 @@ public class Player {
         }
         return complete;
     }
-
-//    private boolean applyChanceCard(BoardGameEngine gameUI) {
-//        boolean complete = true;
-//        for (String action : drawn.getActions()) {
-//            complete = guiAct(action, gameUI) && complete;
-//        }
-//        return complete;
-//    }
-//
-//    // Returns whether or not turn is complete
-//    public boolean displayChanceCard(BoardGameEngine gameUI) {
-//        boolean complete = true;
-//        for (String action : drawn.getActions()) {
-//            if (!this.guiDisplayAct(action, gameUI)) {
-//                chanceActStored = action;
-//                notChanceAction = false;
-//                complete = false;
-//            }
-//        }
-////        if (isSquareAction()) {
-////            complete = applyChanceCard(gameUI) && complete;
-////        }
-//        drawn = null;
-//        chanceAction = false;
-//        return complete && !determiningAction();
-//    }
 
     /**
      * Advances this token my moving its current location one step
@@ -576,8 +541,4 @@ public class Player {
     public boolean isSquareAction() {
         return squareAction;
     }
-
-//    public boolean isNotChanceAction() {
-//        return notChanceAction;
-//    }
 }
