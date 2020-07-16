@@ -70,7 +70,13 @@ public class GameEngine {
     // Default Square Sounds HashMap
     private HashMap<String, String> actionSounds = new HashMap<>();
 
-    // Changing constructor to take in floats
+    /**
+     * Constructor that takes in xrange and yrange of board image and
+     * total number of squares.
+     * @param Xrange - width / xrange of the board image
+     * @param Yrange - height / yrange of the board image
+     * @param squareTotal - number of squares in the game (including start and finish)
+     */
     public GameEngine(float Xrange, float Yrange, int squareTotal) {
         board = new Board(Xrange, Yrange, squareTotal);
         playersList = new ArrayList<>();
@@ -115,26 +121,45 @@ public class GameEngine {
         clickToken = false;
     }
 
-    // Constructor that takes in number of tokens per player
+    /**
+     * Constructor that also takes in a specific number of tokens per player.
+     * @param Xrange - width / xrange of board image
+     * @param Yrange - height / yrange of board image
+     * @param squareTotal - number of squares in the game (including start and finish)
+     * @param tokens - number of tokens for each player
+     */
     public GameEngine(float Xrange, float Yrange, int squareTotal, int tokens) {
         this(Xrange, Yrange, squareTotal);
         tokensPerPlayer = tokens;
     }
 
-    // Constructor that takes in number of max players
+    /**
+     * Constructor that also takes in a specific number of tokens per player and maximum number of players.
+     * @param Xrange - width / xrange of board image
+     * @param Yrange - height / yrange of board image
+     * @param squareTotal - number of squares in the game (including start and finish)
+     * @param tokens - number of tokens for each player
+     * @param maxNumPlayers - maximum number of players for this game
+     */
     public GameEngine(float Xrange, float Yrange, int squareTotal, int tokens, int maxNumPlayers) {
         this(Xrange, Yrange, squareTotal, tokens);
         maxPlayers = maxNumPlayers;
     }
 
-    // Adds a square with specified location and settings to the board
+    /**
+     * Adds a square with sequence number NUM, x coordinate SQX, y coordinate SQY, image as PICTURE, text as TEXT,
+     * sound in SOUND, and the corresponding LISTOFACTIONS to the board.
+     */
     public void addSquare(int num, float sqX, float sqY,
                           String picture, String text, String sound,
                           ArrayList<String> listOfActions) {
         board.setSquare(num, sqX, sqY, picture, text, sound, listOfActions);
     }
 
-    // Adds a player with specified name and token image to the game
+    /**
+     * Adds a player with specified name and token image to the game
+     * Also includes a corresponding player number.
+     */
     public void addPlayer(String name, String imageFile, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
@@ -147,7 +172,10 @@ public class GameEngine {
         sortPlayers();
     }
 
-    // Adds a player with specified name and token animated images to the game
+    /**
+     * Adds a player with specified name and token animated images to the game
+     * Also includes a corresponding player number.
+     */
     public void addPlayer(String name, String[] imageFiles, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
@@ -160,7 +188,10 @@ public class GameEngine {
         sortPlayers();
     }
 
-    // Adds an AI player with specified image to the game
+    /**
+     * Adds an AI player with specified name and token images to the game
+     * Also includes a corresponding player number.
+     */
     public void addAI(String name, String imageFile, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
@@ -173,7 +204,10 @@ public class GameEngine {
         sortPlayers();
     }
 
-    // Adds an AI player with specified image files (animated) to the game
+    /**
+     * Adds an AI player with specified name and token animated images to the game
+     * Also includes a corresponding player number.
+     */
     public void addAI(String name, String[] imageFiles, int num) {
         ArrayList<Player> tokens = new ArrayList<Player>();
         for (int i = 0; i < tokensPerPlayer; i += 1) {
@@ -186,7 +220,10 @@ public class GameEngine {
         sortPlayers();
     }
 
-    // Adding a Chance Card to the Game
+    /**
+     * Adds a new chance card with the type TYPE and all the attributes given in the parameter.
+     * Puts it into the chanceCards hashmap based on TYPE.
+     */
     public void addChance(String type, String cardImage, String cardSound, String cardText, ArrayList<String> actions) {
         ChanceCard newCard = new ChanceCard(cardImage, cardSound, cardText, actions);
         if (chanceCards.containsKey(type)) {
@@ -198,7 +235,13 @@ public class GameEngine {
         }
     }
 
-    // Drawing a Chance Card
+    /**
+     * Selects a chance card of the type TYPE from the chanceCards hashmap.
+     * Increments the index that tracks which card is at the top of the deck.
+     * If index has reached the end (the bottom of the deck), the cards are reshuffled.
+     * @param type - type of chance card to draw
+     * @return - the ChanceCard that was drawn
+     */
     public ChanceCard draw(String type) {
         int index = nextChanceCardIndex.get(type);
         ArrayList<ChanceCard> chanceDeck = chanceCards.get(type);
@@ -210,7 +253,9 @@ public class GameEngine {
         return chanceDeck.get(index);
     }
 
-    // Shuffle All Chance Cards
+    /**
+     * Shuffles All the Chance Cards in the game (no matter the type).
+     */
     public void shuffleAll() {
         for(String type : chanceCards.keySet()) {
             Collections.shuffle(chanceCards.get(type));
@@ -218,7 +263,9 @@ public class GameEngine {
         }
     }
 
-    // Shuffles specific
+    /**
+     * Shuffles specific TYPE of chance cards
+     */
     private void shuffleChance(String type) {
         if (chanceCards.containsKey(type)) {
             Collections.shuffle(chanceCards.get(type));
@@ -226,18 +273,24 @@ public class GameEngine {
         }
     }
 
-    // Reverses the turn cycling direction of the game
+    /**
+     * Reverses the turn cycling direction of the game
+     */
     public void reverse() {
         direction *= -1;
     }
 
-    // Returns the name of the current player
+    /**
+     * Returns the name of the current player
+     */
     public String currentTurnStr() {
         PlayerGroup current = playersList.get(curTurnIndex);
         return current.getName();
     }
-
-    // Returns the PlayerGroup object representing the current player
+    
+    /**
+     *  Returns the PlayerGroup object representing the current player
+     */
     public PlayerGroup currentPlayer() {
         return playersList.get(curTurnIndex);
     }
@@ -415,10 +468,7 @@ public class GameEngine {
             turnComplete = p.completeAction(gameUI);
             stepSound = false;
             rolled = true;
-        } /* else if (p.getChanceAction()) {
-            System.out.println("displaying chance card");
-            turnComplete = p.displayChanceCard(gameUI);
-        } */ else if (p.isSquareAction()) {
+        } else if (p.isSquareAction()) {
             System.out.println("square action");
             turnComplete = p.squareAction(gameUI);
             System.out.println("turn complete: " + turnComplete);
@@ -426,10 +476,6 @@ public class GameEngine {
             if (!p.isSquareAction()) {
                 System.out.println("no more square action");
             }
-//            if (!p.isSquareAction()) {
-//                System.out.println("no more square action");
-//                turnComplete = true;
-//            }
             stepSound = false;
         } else {
             // Completes next turn in the game
@@ -559,12 +605,32 @@ public class GameEngine {
     }
 
 
+    /**
+     * Sets the sound for a specific type of action (a specific square action
+     * column of the csv file). Keys should be one of the following:
+     * A - roll again
+     * B - move forward # steps
+     * C - move backward # steps
+     * D - move directly to square #
+     * E - skip turn
+     * F - reverse
+     * G - roll again to determine action
+     * H - chance cards
+     * @param key a specific type of square action type
+     * @param soundFile the sound that should be associated with given key
+     */
     public void setSoundInList(String key, String soundFile) {
         if (key != null) {
             actionSounds.put(key, soundFile);
         }
     }
 
+    /**
+     * Returns the sound file name associated with a key - a type of
+     * square action.
+     * @param key a specific type of square action type
+     * @return file name corresponding to key
+     */
     public String getSoundFromList(String key) {
         if (actionSounds.containsKey(key)) {
             return actionSounds.get(key);
@@ -683,26 +749,7 @@ public class GameEngine {
         Collections.sort(playersList, comp);
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
-    public Dice getDice() {
-        return dice;
-    }
-
     // accessor (set/get) methods
-    public ArrayList<PlayerGroup> getPlayersList() {
-        return playersList;
-    }
-
-    public void setNumOfPlayers(int num) {
-        numOfPlayers = num;
-    }
-
-    public int getNumOfPlayers() {
-        return numOfPlayers;
-    }
 
     /**
      * Sets the clickToken attribute to COND.
@@ -713,6 +760,26 @@ public class GameEngine {
      */
     public void setClickToken(boolean cond) {
         clickToken = cond;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public Dice getDice() {
+        return dice;
+    }
+
+    public ArrayList<PlayerGroup> getPlayersList() {
+        return playersList;
+    }
+
+    public void setNumOfPlayers(int num) {
+        numOfPlayers = num;
+    }
+
+    public int getNumOfPlayers() {
+        return numOfPlayers;
     }
 
     // output for troubleshooting
