@@ -41,6 +41,9 @@ public class GameScreen implements Screen {
     private int messageAvgLen;
     private int messagePad;
 
+    // Arial 32 Labels and Descriptions
+    private BitmapFont bigFont;
+
     /**
      * Constructor for a GameScreen. Sets up variables in this screen
      * to store the same values and references as those in the
@@ -72,6 +75,9 @@ public class GameScreen implements Screen {
 
         touchPos = new Vector3();
 
+        // Testing Arial 32
+        bigFont = new BitmapFont(Gdx.files.internal("arialNew2.fnt"), Gdx.files.internal("arialNew2.png"), false);
+        bigFont.setColor(Color.BLACK);
     }
 
     @Override
@@ -125,8 +131,10 @@ public class GameScreen implements Screen {
                 }
             }
 
-            layout.setText(font, "Current turn: " + game.currentTurnStr(), Color.RED, boardW, Align.center, true);
-            font.draw(batch, layout, 0, boardH + messageHeight - 4 * layout.height - messagePad);
+            // layout.setText(font, "Current turn: " + game.currentTurnStr(), Color.RED, boardW, Align.center, true);
+            // font.draw(batch, layout, 0, boardH + messageHeight - 4 * layout.height - messagePad);
+            layout.setText(bigFont, "Current turn: " + game.currentTurnStr(), Color.RED, boardW, Align.center, true);
+            bigFont.draw(batch, layout, 0, boardH + messageHeight - 4 * layout.height - messagePad);
 
             layout.setText(font, "Tap or press space to roll.", Color.BLACK, boardW, Align.center, true);
             font.draw(batch, layout, 0, boardH + messageHeight - 6 * layout.height - messagePad);
@@ -212,8 +220,10 @@ public class GameScreen implements Screen {
     }
 
     private void winningScreen() {
-        layout.setText(font, "Winner: " + winner.getName(), Color.RED, boardW, Align.center, true);
-        font.draw(batch, layout, 0, boardH + messageHeight - 8 * layout.height - messagePad);
+//        layout.setText(font, "Winner: " + winner.getName(), Color.RED, boardW, Align.center, true);
+//        font.draw(batch, layout, 0, boardH + messageHeight - 8 * layout.height - messagePad);
+        layout.setText(bigFont, "Winner: " + winner.getName(), Color.RED, boardW, Align.center, true);
+        bigFont.draw(batch, layout, 0, boardH + messageHeight - 2 * layout.height - messagePad);
     }
 
     @Override
