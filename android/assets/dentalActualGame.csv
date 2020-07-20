@@ -1,5 +1,8 @@
+Dental Hygiene Game,instructions.txt,,,,,,,,,,
+/Users/macbook/Documents/URAP-Misc/scratchCat.png scratchCat2.png,/Users/macbook/Documents/URAP-Misc/scratchDog.png,,,,,,,,,,
 Square ID,X position ,Y position ,Image to show,Sound to play ,Text to show,Roll again ,Change square by ,Go to square ID ,skip a turn,Roll (or spin or etc.) again to determine an action,Conditions to do this row
 ,,,,,,,"negative, to go back",,,Use rows below,
+,,,,,,,,,,,
 29,1313,653,2,,,,,,,,
 0,0,481,,,,,,,,,
 1,139,481,,,,,,,,,
