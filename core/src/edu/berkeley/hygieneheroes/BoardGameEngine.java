@@ -27,7 +27,8 @@ public class BoardGameEngine extends Game {
 	public String victory = "victory.wav";
 	public String winningPage = "congrats.jpg";
 //	public String configFileName = "dentalActualGame.csv";
-	public String configFileName = "dentalActualGameChance.csv";
+//	public String configFileName = "dentalActualGameChance.csv";
+	public String configFileName = "dentalInstructions.csv";
 //	public String configFileName = "dentalActualGameChanceAction.csv";
 //	public String configFileName = "dentalActualGameAnimate.csv";
 //	public String configFileName = "dentalActualGameWithName.csv";
@@ -49,7 +50,7 @@ public class BoardGameEngine extends Game {
 	private static String[] headerSetup =
 			{"seqNum", "x", "y", "image", "sound", "text",
 					"roll again", "move by", "move to", "skip",
-					"roll to determine action", "conditions", "chance card"};
+					"roll to determine action", "conditions", "chance card", "reverse"};
 	private static int headersNum = 5; //instead of 4 because one row for default sounds
 
 	// Player Token Static Images Settings
